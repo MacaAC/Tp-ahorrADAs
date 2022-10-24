@@ -4,9 +4,85 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
     <title>Document</title>
 </head>
 <body>
+        <header>
+            <nav class="flex flex-row bg-green-200 justify-between h-24 items-center text-white font-bold text-lg" 	>
+                <div class="flex flex-row m-8">
+                    <div class="m-3">icono</div>
+                    <div class="m-3">AhorrADAs</div>
+                </div>
+                <div class="m-8">
+                    <button class="m-3">Balance</button>
+                    <button class="m-3">Categorías</button>
+                    <button class="m-3">Reportes</button>
+                </div>
+            </nav>
+        </header>
     
+        <aside>
+            <section>
+                <div class="h-60 w-60 border-2">
+                    <h1 class="m-2 text-xl font-extrabold">
+                        Balances
+                    </h1>
+                    <div class="flex flex-row justify-between">
+                        <div class="m-2">Ganancias</div>
+                        <div class="m-2">0</div>
+                    </div>
+                    <div class="flex flex-row justify-between">
+                        <div class="m-2">Gastos</div>
+                        <div class="m-2">0</div>
+                    </div>
+                    <div class="flex flex-row justify-between">
+                        <div class="m-2">Total</div>
+                        <div class="m-2">0</div>
+                    </div>
+                </div>
+            </section>
+            <section>
+                <div class="h-60 w-60 border-2">
+                    <div class="flex flex-row justify-between">
+                        <h1 class="m-2 text-xl font-extrabold">Filtros</h1>
+                        <h5 class="text-blue-600 flex items-center mr-3">Ocultar Filtros</h5>
+                    </div>
+                    <div>
+                        <form>
+                            <div>
+                                <label>Tipo</label>
+                                <select>
+                                    <option>Todos</option>
+                                    <option>Gasto</option>
+                                    <option>Ganancia</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label>Categoría</label>
+                                <select>
+                                    <option>Todas</option>
+                                    <option>Comida</option>
+                                    <option>Servicios</option>
+                                    <option>Salidas</option>
+                                    <option>Educación</option>
+                                    <option>Transporte</option>
+                                    <option>Trabajo</option>
+                                </select>
+                            </div>                               
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </aside>
+    
+        <section>Operaciones</section>
+    
+        <section>Categorías</section>
+        <section>Editar categoría</section>
+        <section>Reportes</section>
+    
+        <footer><p></p></footer>
+
 </body>
 </html>
