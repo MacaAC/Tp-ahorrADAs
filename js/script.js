@@ -31,7 +31,7 @@ const generateTableOperations = () => {
                 <td class="mt-0 pt-0 pl-10 text-xs ">${selectedCategory}</td>
                 <td class="mt-0 pt-0 pl-10 text-sm">${date}</td>
                 <td class="mt-0 pt-0 pl-12 text-lg text-red-500 font-bold">${amount}</td>
-                <td class="pl-8 mt-0 pt-0 text-xs"><a class="mr-4">Editar<a/><a class="mr-4">Eliminar<a/></td>
+                <td class="pl-8 mt-0 pt-0 text-xs"><button class="mr-4">Editar<button/><button class="mr-4">Eliminar<button/></td>
             </tr>
             
         `
