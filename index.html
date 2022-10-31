@@ -142,8 +142,8 @@
 
 <!-- Agregar, editar y/o eliminar categorias -->
 
-    <section class="container flex justify-center mb-4 hidden" >
-        <div class="box w-[771px] h-[584px] bg-white p-6 rounded-md">
+    <section class="container flex justify-center mb-4" >
+        <div class="box w-[771px] bg-white p-6 rounded-md">
             <div>
                 <h2 class="text-4xl font-bold">Categorías</h2>
             </div> 
@@ -154,7 +154,7 @@
 
             <div class="flex flex-row">
                <div>
-                  <input type="text" class="block w-[605px] h-10 rounded-md">
+                  <input type="text" class="block w-[605px] h-10 border border-slate-400 rounded-md">
                </div>
                
                <div class="">
@@ -265,7 +265,7 @@
 
             <div class="">
                 <div>
-                   <input type="text" class="block w-[100%] h-10 rounded-md">
+                   <input type="text" class="block w-[100%] h-10 border border-slate-400 rounded-md">
                 </div>
 
 
@@ -326,7 +326,7 @@
 
                 <div class="">
                     <div>
-                       <input type="text" id="description" class="block w-[100%] h-10 rounded-md" required>
+                       <input type="text" id="description" class="block w-[100%] h-10 border border-slate-400 rounded-md" required>
                     </div>
     
                 </div>
@@ -339,7 +339,7 @@
 
                 
                 <div>
-                    <input type="number" id="amount" class="block w-[100%] h-10 rounded-md" required>
+                    <input type="number" id="amount" class="block w-[100%] h-10 border border-slate-400 rounded-md" required>
                 </div>
     
                 
@@ -352,7 +352,7 @@
 
                 
                 <div>
-                    <select name="select" id="type" class="block w-[100%] h-10 rounded-md" required>
+                    <select name="select" id="type" class="block w-[100%] h-10 border border-slate-400 rounded-md" required>
                         <option value="Gasto" selected>Gasto</option>
                         <option value="Ganancia">Ganancia</option>
                             
@@ -368,7 +368,7 @@
                 </div>
 
                 <div>
-                    <select name="select" id="selectCategory" class="block w-[100%] h-10 rounded-md" required>
+                    <select name="select" id="selectCategory" class="block w-[100%] h-10 border border-slate-400 rounded-md" required>
                         <option value="Comida" selected>Comida</option>
                         <option value="Servicios">Servicios</option>
                         <option value="Salidas">Salidas</option>
@@ -388,7 +388,7 @@
                 </div>
 
                 <div>
-                    <input type="date" name="fecha" id="date" class="block w-[100%] h-10 rounded-md" required>
+                    <input type="date" name="fecha" id="date" class="block w-[100%] h-10 border border-slate-400 rounded-md" required>
                 </div>
 
             </div>
@@ -410,6 +410,113 @@
         </div> 
 
     </section>
+
+    <!-- Formulario de editar operación -->
+
+    <section class="container flex justify-center mb-4">
+        
+        <div class="box w-[771px] h-[760px] bg-white p-6 rounded-md ">
+
+            <div>
+               <h2 class="text-4xl font-bold">Editar operación</h2>
+            </div> 
+   
+            <div>
+                <div class="mt-8 mb-2" >
+                    <label for="editDescription" class=" text-lg font-bold">Descripción</label>
+                </div>
+
+                <div class="">
+                    <div>
+                       <input type="text" id="editDescription" class="block w-[100%] h-10 border border-slate-400 rounded-md" required>
+                    </div>
+    
+                </div>
+
+            </div>
+            <div>
+                <div class="mt-8 mb-2" >
+                    <label for="editAmount" class=" text-lg font-bold">Monto</label>
+                </div>
+
+                
+                <div>
+                    <input type="number" id="editAmount" class="block w-[100%] h-10 border border-slate-400 rounded-md" required>
+                </div>
+    
+                
+            </div>
+
+            <div>
+                <div class="mt-8 mb-2" >
+                    <label for="type" class=" text-lg font-bold">Tipo</label>
+                </div>
+
+                
+                <div>
+                    <select name="select" id="editType" class="block w-[100%] h-10 border border-slate-400 rounded-md" required>
+                        <option value="Gasto" selected>Gasto</option>
+                        <option value="Ganancia">Ganancia</option>
+                            
+                    </select>
+                </div>
+    
+                
+            </div>
+
+            <div>
+                <div class="mt-8 mb-2">
+                    <label for="editSelectedCategory" class=" text-lg font-bold">Categoría</label>
+                </div>
+
+                <div>
+                    <select name="select" id="editSelectedCategory" class="block w-[100%] h-10 border border-slate-400 rounded-md" required>
+                        <option value="Comida" selected>Comida</option>
+                        <option value="Servicios">Servicios</option>
+                        <option value="Salidas">Salidas</option>
+                        <option value="Educación">Educación</option>
+                        <option value="Transporte">Transporte</option>
+                        <option value="Trabajo">Trabajo</option>
+                        
+                    </select>
+
+                </div>
+
+            </div>
+
+            <div>
+                <div class="mt-8 mb-2">
+                    <label for="editDate" class=" text-lg font-bold">Fecha</label>
+                </div>
+
+                <div>
+                    <input type="date" name="fecha" id="editDate" class="block w-[100%] h-10 border border-slate-400 rounded-md" required>
+                </div>
+
+            </div>
+
+            
+            <div class="flex flex-row justify-end mt-12">
+                <div class="">
+                    <button class=" w-[91px] h-10 rounded-md">Cancelar</button>
+                </div>
+    
+                <div class="">
+                    <button id="edit" class=" w-[91px] h-10 text-white border-none ml-2  bg-green-400 rounded-md ml-2">Editar</button>
+                </div>
+                    
+            </div>
+            
+       
+
+        </div> 
+
+    </section>
+    
+
+
+
+
     
     <footer><p></p></footer>
     <script src="js/script.js"></script>
