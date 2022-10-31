@@ -10,7 +10,9 @@ const operationsInfo = () => {
     const type = $("#type").value
     const selectedCategory = $("#selectCategory").value
     const date = $("#date").value
+    const id = operations.length + 1
     return {
+        id,
         description,
         amount,
         type,
@@ -23,7 +25,7 @@ const operationsInfo = () => {
 const generateTableOperations = () => {
     $("#table").innerHTML = ""
     operations.map(operation => {
-        const { description, selectedCategory, date, amount } = operation
+        const { id, description, selectedCategory, date, amount } = operation
         $("#table").innerHTML += `
             
             <tr>
@@ -31,7 +33,7 @@ const generateTableOperations = () => {
                 <td class="mt-0 pt-0 pl-10 text-xs ">${selectedCategory}</td>
                 <td class="mt-0 pt-0 pl-10 text-sm">${date}</td>
                 <td class="mt-0 pt-0 pl-12 text-lg text-red-500 font-bold">${amount}</td>
-                <td class="pl-8 mt-0 pt-0 text-xs"><a class="mr-4">Editar<a/><a class="mr-4">Eliminar<a/></td>
+                <td class="pl-8 mt-0 pt-0 text-xs"><button id="btnEditOperation" class="mr-4" onclick="operationEdit(${id})">Editar<button/><button id="btnDeleteOperation" class="mr-4">Eliminar<button/></td>
             </tr>
             
         `
@@ -45,6 +47,42 @@ $("#addOperation").addEventListener("click", () => {
 })
 
 /*------------------------------------------------------------------*/
+
+const findOperation = (id) => {
+    return operations.find(operation => operation.id === id)
+}
+
+//
+
+const operationEdit = (id) => {
+   // cleanCards()
+    //$form.classList.remove("d-none")
+    const changeOperation = findOperation(id)
+    $("#editDescription").value = changeOperation.description
+    $("#editAmount").value = changeOperation.amount
+    $("#editType").value = changeOperation.type
+    $("#editSelectedCategory").value = changeOperation.selectedCategory
+    $("#editDate").value =  changeOperation.date
+    $("#btnEditOperation").setAttribute("data-id", id)
+    $("#btnDeleteOperation").setAttribute("data-id", id)
+}
+
+
+//remover operacion, delete
+
+const removeOperation = (id) => {
+    return operations.filter(operation => operation.id !== parseInt(id))
+}
+
+
+$btnDelete.addEventListener("click", () => {
+    const operationId = $("#btnDeleteOperation").getAttribute("data-id")
+    removeOperation(operationId)
+    //$form.classList.add("d-none")
+    //generateCards(removeProduct(productId))
+})
+
+
 
 // generateBalance = ()=>{
 
