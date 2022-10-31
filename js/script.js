@@ -38,10 +38,22 @@ const generateTableOperations = () => {
     })
 }
 
+const cleanNewOperationsForm =()=>{
+    $("#form-new-operation").classList.add("hidden")
+}
+//tabla de operciones ya realizadas, que aparezca la tabla
+const showTable= ()=>{ 
+    $("#doneOperations").classList.remove("hidden")
+    $("#aside").classList.remove("hidden")
+}
+
+
 $("#addOperation").addEventListener("click", () => {
     operations.push(operationsInfo())
     console.log(operations)
     generateTableOperations()
+    cleanNewOperationsForm()
+    showTable()
 })
 
 /*------------------------------------------------------------------*/
@@ -53,3 +65,17 @@ $("#addOperation").addEventListener("click", () => {
 
 
 //let categorys = ["Comida", "Servicios", "Salidas", "Educación", "Transporte", "Trabajo"]
+
+
+// evento para que aparezca el form al presionar +nueva operación(maca)
+// const cleanFrontPage =()=> $("#front-page").innerHTML = ""
+
+ const cleanAside =()=> $("#aside").classList.add("hidden")
+ const cleanFrontPage =()=> $("#frontPage").classList.add("hidden")
+
+
+$("#btn-new-operations").addEventListener("click", () => {
+    cleanAside()
+    cleanFrontPage()
+    $("#form-new-operation").classList.remove("hidden")
+})
