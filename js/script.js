@@ -40,6 +40,7 @@ const generateTableOperations = () => {
     })
 }
 
+///////////////////////////////////////////////////////////////////
 const cleanNewOperationsForm =()=>{
     $("#form-new-operation").classList.add("hidden")
 }
