@@ -33,7 +33,7 @@ const generateTableOperations = () => {
                 <td class="mt-0 pt-0 pl-10 text-xs ">${selectedCategory}</td>
                 <td class="mt-0 pt-0 pl-10 text-sm">${date}</td>
                 <td class="mt-0 pt-0 pl-12 text-lg text-red-500 font-bold">${amount}</td>
-                <td class="pl-8 mt-0 pt-0 text-xs"><button id="btnEditOperation" class="mr-4" onclick="operationEdit(${id})">Editar<button/><button id="btnDeleteOperation" class="mr-4">Eliminar<button/></td>
+                <td class="pl-8 mt-0 pt-0 text-xs"><button id="btnEditOperation" class="mr-4" onclick="operationEdit(${id})">Editar</button><button id="btnDeleteOperation" class="mr-4" onclick="operationDelete(${id})">Eliminar</button></td>
             </tr>
             
         `
@@ -43,7 +43,7 @@ const generateTableOperations = () => {
 const cleanNewOperationsForm =()=>{
     $("#form-new-operation").classList.add("hidden")
 }
-//tabla de operciones ya realizadas, que aparezca la tabla
+//tabla de operaciones ya realizadas, que aparezca la tabla
 const showTable= ()=>{ 
     $("#doneOperations").classList.remove("hidden")
     $("#aside").classList.remove("hidden")
@@ -65,10 +65,14 @@ const findOperation = (id) => {
 }
 
 //
-
+// const addDataId = () =>{
+//     $("#btnEditOperation").setAttribute("data-id", id)
+//     $("#btnDeleteOperation").setAttribute("data-id", id)
+// }
 const operationEdit = (id) => {
-   // cleanCards()
-    //$form.classList.remove("d-none")
+    $("#editOperationsForm").classList.remove("hidden")
+    $("#doneOperations").classList.add("hidden")
+    cleanAside()
     const changeOperation = findOperation(id)
     $("#editDescription").value = changeOperation.description
     $("#editAmount").value = changeOperation.amount
@@ -76,7 +80,12 @@ const operationEdit = (id) => {
     $("#editSelectedCategory").value = changeOperation.selectedCategory
     $("#editDate").value =  changeOperation.date
     $("#btnEditOperation").setAttribute("data-id", id)
+
+  
+}
+const operationDelete = (id)=>{
     $("#btnDeleteOperation").setAttribute("data-id", id)
+    
 }
 
 
@@ -85,14 +94,18 @@ const operationEdit = (id) => {
 const removeOperation = (id) => {
     return operations.filter(operation => operation.id !== parseInt(id))
 }
+// console.log($("#btnEditOperation"))
+// $("#btnEditOperation").addEventListener("click", () => {
+//     $("#editOperationsForm").classList.remove("hidden")
+// })
 
 
-$btnDelete.addEventListener("click", () => {
-    const operationId = $("#btnDeleteOperation").getAttribute("data-id")
-    removeOperation(operationId)
-    //$form.classList.add("d-none")
-    //generateCards(removeProduct(productId))
-})
+// $("#btnDeleteOperation").addEventListener("click", () => {
+//     const operationId = $("#btnDeleteOperation").getAttribute("data-id")
+//     removeOperation(operationId)
+//     //$form.classList.add("d-none")
+//     generateTableOperations(removeOperation(operationId))
+// })
 
 
 
@@ -112,7 +125,7 @@ $btnDelete.addEventListener("click", () => {
  const cleanFrontPage =()=> $("#frontPage").classList.add("hidden")
 
 
-$("#btn-new-operations").addEventListener("click", () => {
+$("#btnNewOperations").addEventListener("click", () => {
     cleanAside()
     cleanFrontPage()
     $("#form-new-operation").classList.remove("hidden")
