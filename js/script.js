@@ -3,15 +3,20 @@ const $$ = (selector) => document.querySelectorAll(selector)
 
 // AGREGAR OPERACIONES A UN ARRAY DE OBJETOS
 
-let operations = []
-
+if (!localStorage.getItem('operations')) {
+    localStorage.setItem('operations', JSON.stringify([]))
+}
+// const operationsLocal = JSON.parse(localStorage.getItem('operations'))
+// operationsLocal.push(operationsInfo())
+// localStorage.setItem('operations', JSON.stringify(operationsLocal))
+let operationsLocal = []
 const operationsInfo = () => {
     const description = $("#description").value
     const amount = $("#amount").value
     const type = $("#type").value
     const selectedCategory = $("#selectCategory").value
     const date = $("#date").value
-    const id = operations.length + 1
+    const id = operationsLocal.length + 1
     return {
         id,
         description,
@@ -54,9 +59,11 @@ const generateTableOperations = (operations) => {
 //Añadir las operaciones a la tabla, tabla de operaciones ya realizadas, que aparezca la tabla
 
 $("#addOperation").addEventListener("click", () => {
-    operations.push(operationsInfo())
-    console.log(operations)
-    generateTableOperations(operations)
+    operationsLocal = JSON.parse(localStorage.getItem('operations'))
+    operationsLocal.push(operationsInfo())
+    localStorage.setItem('operations', JSON.stringify(operationsLocal))
+    console.log(operationsLocal)
+    generateTableOperations(operationsLocal)
     cleanNewOperationForm()
     showDoneOperations()
     showAside()
@@ -67,7 +74,6 @@ $("#addOperation").addEventListener("click", () => {
 $("#addOperationTable").addEventListener("click", () => {
     showNewOperationForm()
     cleanDoneOperations()
-    console.log(operations)
 })
 
 
@@ -76,7 +82,7 @@ $("#addOperationTable").addEventListener("click", () => {
 //Funcion que retorna un id especifico, es decir, una operacion especifica
 
 const findOperation = (id) => {
-    return operations.find(operation => operation.id === id)
+    return operationsLocal.find(operation => operation.id === id)
 }
 
 
@@ -86,13 +92,25 @@ const operationEdit = (id) => {
     cleanEditOperationsForm()
     cleanDoneOperations()
     cleanAside()
-    const changeOperation = findOperation(id)
-    $("#editDescription").value = changeOperation.description
-    $("#editAmount").value = changeOperation.amount
-    $("#editType").value = changeOperation.type
-    $("#editSelectedCategory").value = changeOperation.selectedCategory
-    $("#editDate").value =  changeOperation.date
+    const editedOperation = findOperation(id)
+    $("#editDescription").value = editedOperation.description
+    $("#editAmount").value = editedOperation.amount
+    $("#editType").value = editedOperation.type
+    $("#editSelectedCategory").value = editedOperation.selectedCategory
+    $("#editDate").value =  editedOperation.date
     
+}
+//editar operacion
+
+const saveOperationData = (id) => {
+    return {
+        id: id,
+        description: $("#description").value,
+        amount: $("#amount").value,
+        type: $("#type").value,
+        selectedCategory: $("#selectCategory").value,
+        date: $("#date").value
+    }
 }
 
 
@@ -109,18 +127,7 @@ const deleteOperation = (id) => {
 
 }
 
-//editar operacion
 
-const saveOperationData = (id) => {
-    return {
-        id: id,
-        description: $("#description").value,
-        amount: $("#amount").value,
-        type: $("#type").value,
-        selectedCategory: $("#selectCategory").value,
-        date: $("#date").value
-    }
-}
 
 
 // const editProduct = (id) => {
@@ -174,3 +181,5 @@ $("#btnNewOperations").addEventListener("click", () => {
 
 
 // )}
+ 
+
