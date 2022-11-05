@@ -173,13 +173,20 @@ $("#btnNewOperations").addEventListener("click", () => {
 
 
 
-// const balance = (a,b) =>{
-//     operations.map(operation => {
-//         const { id,amount, type} = operation
-//     }
+const balance = (A) =>{
+    // operationsLocal.map(operation => {
+    //     const { id,amount, type} = operation
+    // })
 
+// const {amount, type} = operationsLocal
+let result = 0
+if (type==="Gasto"){
+   result += A
+   return result
+} innerHeight.text
 
-
-// )}
+}
+console.log($("#addExpenses"))
  
 
+console.log(balance(3))
