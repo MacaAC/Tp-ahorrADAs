@@ -5,18 +5,27 @@ const $$ = (selector) => document.querySelectorAll(selector)
 
 if (!localStorage.getItem('operations')) {
     localStorage.setItem('operations', JSON.stringify([]))
+    
 }
 // const operationsLocal = JSON.parse(localStorage.getItem('operations'))
 // operationsLocal.push(operationsInfo())
 // localStorage.setItem('operations', JSON.stringify(operationsLocal))
-let operationsLocal = []
+
+const getDataInLocalStorage = (key) => {
+    return JSON.parse(localStorage.getItem(key))
+}
+
+const saveDataInLocalStorage = (key, data) => {
+    localStorage.setItem(key, JSON.stringify(data))
+}
+
 const operationsInfo = () => {
     const description = $("#description").value
     const amount = $("#amount").value
     const type = $("#type").value
     const selectedCategory = $("#selectCategory").value
     const date = $("#date").value
-    const id = operationsLocal.length + 1
+    const id = getDataInLocalStorage('operations').length + 1
     return {
         id,
         description,
@@ -29,10 +38,11 @@ const operationsInfo = () => {
 
 
 
-const generateTableOperations = (operations) => {
+const generateTableOperations = () => {
     $("#table").innerHTML = ""
-    operations.map(operation => {
-        const {id, description, selectedCategory, date, amount, type} = operation
+    console.log(getDataInLocalStorage('operations'))
+    getDataInLocalStorage('operations').map(operationL => {
+        const {id, description, selectedCategory, date, amount, type} = operationL
         const className = type === 'Gasto' ? "red-500" : "green-500"
         const operator = type === 'Gasto' ? "-" : "+"
 
@@ -59,14 +69,18 @@ const generateTableOperations = (operations) => {
 //Añadir las operaciones a la tabla, tabla de operaciones ya realizadas, que aparezca la tabla
 
 $("#addOperation").addEventListener("click", () => {
-    operationsLocal = JSON.parse(localStorage.getItem('operations'))
-    operationsLocal.push(operationsInfo())
-    localStorage.setItem('operations', JSON.stringify(operationsLocal))
-    console.log(operationsLocal)
-    generateTableOperations(operationsLocal)
+    
+    let operations = getDataInLocalStorage('operations')              
+    operations.push(operationsInfo())
+    
+    saveDataInLocalStorage('operations', operations) 
+    
+    generateTableOperations(getDataInLocalStorage('operations'))
+    
     cleanNewOperationForm()
     showDoneOperations()
     showAside()
+    
 })
 
 //Evento añadir operaciones desde la tabla
@@ -82,11 +96,12 @@ $("#addOperationTable").addEventListener("click", () => {
 //Funcion que retorna un id especifico, es decir, una operacion especifica
 
 const findOperation = (id) => {
-    return operationsLocal.find(operation => operation.id === id)
+    let operations = getDataInLocalStorage('operations') 
+    return operations.find(operation => operation.id === id)
 }
 
 
-// Funcion editar operación (falta setearla), precarga los datos
+// Funcion editar operación, precarga los datos
 
 const operationEdit = (id) => {
     cleanEditOperationsForm()
@@ -99,27 +114,127 @@ const operationEdit = (id) => {
     $("#editSelectedCategory").value = editedOperation.selectedCategory
     $("#editDate").value =  editedOperation.date
     
+    
 }
-//editar operacion
 
-const saveOperationData = (id) => {
+//funcion que edita la operacion por el usuario
+
+const newOperationData = (id) => {
+    const idO = getDataInLocalStorage('operations').length +1
     return {
-        id: id,
-        description: $("#description").value,
-        amount: $("#amount").value,
-        type: $("#type").value,
-        selectedCategory: $("#selectCategory").value,
-        date: $("#date").value
+        id: idO,
+        description: $("#editDescription").value,
+        amount: $("#editAmount").value,
+        type: $("#editType").value,
+        selectedCategory: $("#editSelectedCategory").value,
+        date: $("#editDate").value
     }
+
 }
+
+
+
+
+
+// const newOperationData = (id) => {
+    //     idOpEdited = $("#btnEditOperation").getAttribute("data-id")
+    //     console.log(idOpEdited)
+    //     return opEditada = {
+        //         id: parseInt(idOpEdited),
+        //         description: $("#editDescription").value,
+        //         amount: $("#editAmount").value,
+        //         type: $("#editType").value,
+        //         selectedCategory: $("#editSelectedCategory").value,
+//         date: $("#editDate").value
+//     }
+// }
+
+
+/*------------------------------------------------------------------*/
+// funcion que edita efectivamente la operacion
+
+//no termiona de funcionar ALDY
+const editedOperation= (id) => {
+    let operations = getDataInLocalStorage('operations') 
+    return operations.map(operation => {
+        console.log(operation.id, parseInt(id))
+        if (operation.id === parseInt(id)) {
+            console.log("entro en el if")
+            return newOperationData(id)
+            
+        }
+        return operation
+    })
+}
+
+
+// const editedOperation= (id) => {
+//    let op = getDataInLocalStorage('operations')
+//    let arr = operationEdit(id)
+//    op.filter(o => {
+//     if (description.id !== arr){
+//        return op
+//     }
+//    })
+
+// }
+
+
+
+
+/*---------------------------------------------------------*/
+
+//saveDataInLocalStorage('operations', editedOperation(id))
+
+// const edited = (id) =>{
+//     return operationsLocal.map(operationL => {
+//         if (opEditada.id === operationL.id){
+//            o
+//         }
+//         return operationL
+//     })
+// }
+
+
+
+
+
+// $btnEdit.addEventListener("click", () => {
+//     const productId = $btnEdit.getAttribute("data-id")
+//     $form.classList.add("d-none")
+//     generateCards(editProduct(productId))
+// })
+
+// $("#edit").addEventListener("click", ()=>{
+// //   const idOpEdited = $("#btnEditOperation").getAttribute("data-id")
+// //   generateTableOperations(editedOperation(idOpEdited))
+
+//     // console.log(idOpEdited)
+    
+//     // generateTableOperations(editedOperation(idOpEdited))
+// })
+
+$("#edit").addEventListener("click", ()=>{
+ const newOperation = getDataInLocalStorage('operations')
+ newOperation.push(newOperationData())
+ saveDataInLocalStorage('operations', newOperation)
+ showEditOperationsForm()
+ showDoneOperations()
+ showAside()
+ generateTableOperations(editedOperation())
+})
+
 
 
 //remover operacion, delete
 
 const removeOperation = (id) => {
-    return operations.filter(operation => operation.id !== parseInt(id))
+    let operations = getDataInLocalStorage('operations')
+    return operations.filter(operationL => operationL.id !== parseInt(id))
+
 }
 
+//saveDataInLocalStorage('operations', operations)
 
 const deleteOperation = (id) => {
 
@@ -127,17 +242,6 @@ const deleteOperation = (id) => {
 
 }
 
-
-
-
-// const editProduct = (id) => {
-//     return products.map(product => {
-//         if (product.id === parseInt(id)) {
-//             return saveProductData(id)
-//         }
-//         return product
-//     })
-// }
 
 
 //let categorys = ["Comida", "Servicios", "Salidas", "Educación", "Transporte", "Trabajo"]
@@ -159,6 +263,9 @@ const deleteOperation = (id) => {
  const cleanDoneOperations = () => $("#doneOperations").classList.add("hidden")
  const cleanEditOperationsForm = () => $("#editOperationsForm").classList.remove("hidden")
  const showEditOperationsForm = () => $("#editOperationsForm").classList.add("hidden")
+ const cleanCategoriesForm = () => $("#categoriesForm").classList.remove("hidden")
+ const showContainer = () => $("#container").classList.remove("hidden")
+
 
 // evento para hacer desaparecer la portada y aparece el formulario de nueva op
 
@@ -173,13 +280,109 @@ $("#btnNewOperations").addEventListener("click", () => {
 
 
 
-// const balance = (a,b) =>{
-//     operations.map(operation => {
-//         const { id,amount, type} = operation
-//     }
-
+// const balance = () =>{
+//     operationsLocal.map(operationL => {
+//         const { id, amount, type} = operationL
+//         let result = 0
+//         if(amount === "Gasto"){
+//           result += amount
+//           return $("#total").innerText = result
+//         }else{
+//         result = result - amount
+//         return $("#total").innerText = result
+//         }
+        
+//     })
+  
+// }
 
 
 // )}
  
 
+
+//ver tabla de categorias
+
+$("#aCategory").addEventListener("click", ()=>{
+    cleanCategoriesForm()
+    cleanFrontPage()
+    cleanDoneOperations()
+    cleanAside()
+})
+
+//categorias
+
+let categories = [
+{id: 1,
+category: "Comida",
+},
+
+{id: 2,
+category: "Servicios",
+},
+
+{id: 3,
+category: "Salidas",
+},
+
+{id: 4,
+category: "Educación",
+},
+
+{id: 5,
+category: "Transporte",
+},
+
+{id: 6,
+category: "Trabajo",
+},
+
+]
+
+
+const newCategory = () => {
+ const id = categories.length + 1
+ const category = $("#nameCategory").value
+ return {
+    id,
+    category,
+    
+}
+}
+
+
+const addCategoriesItems = () =>{
+
+    categories.map(item =>{
+
+       const {id, category} = item
+
+        $("#categoriesItems").innerHTML += ` <div class="flex flex-row">
+                    
+        <div class="flex w-[1300px] mt-8" >
+            <span>${category}</span>
+        </div>
+    
+        <div class="flex flex-row w-[200px] mt-8">
+            
+            <button class="ml-2">Editar</button>
+            <button class="ml-2">Eliminar</button>
+                
+        </div>
+    
+     </div> `
+
+    })
+
+
+}
+
+
+
+
+
+$("#addCategory").addEventListener("click", ()=>{
+    categories.push(newCategory())
+    console.log(categories)
+    addCategoriesItems()
+})
