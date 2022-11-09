@@ -242,7 +242,7 @@ const removeOperation = (id) => {
 //saveDataInLocalStorage('operations', operations)
 
 const deleteOperation = (id) => { 
-    generateTableOperations(removeOperation(id))
+    return generateTableOperations(removeOperation(id))
 }
 
 
@@ -300,9 +300,7 @@ $("#btnNewOperations").addEventListener("click", () => {
 // }
  
 
-const balance = ()=>{
 
-}
 
 
 //ver tabla de categorias
@@ -408,5 +406,7 @@ window.onload = ()=>{
 }
 
 
-
+const balance = () =>{
+getDataInLocalStorage(operations)
+}
 console.log($("#gastos").innerText = 6)
