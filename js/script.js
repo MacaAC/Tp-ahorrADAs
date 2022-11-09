@@ -53,7 +53,7 @@ const generateTableOperations = () => {
         const {id, description, selectedCategory, date, amount, type} = operation
         const className = type === 'Gasto' ? "red-500" : "green-500"
         const operator = type === 'Gasto' ? "-" : "+"
-
+ 
         $("#table").innerHTML += `
             
             <tr>
@@ -61,14 +61,14 @@ const generateTableOperations = () => {
                 <td class="mt-0 pt-0 pl-10 text-xs ">${selectedCategory}</td>
                 <td class="mt-0 pt-0 pl-10 text-sm">${date}</td>
                 <td class="mt-0 pt-0 pl-12 text-lg text-${className} font-bold">${operator}${amount}</td>
-                <td class="pl-8 mt-0 pt-0 text-xs"><button id="btnEditOperation" class="mr-4 btnEditOperation" data-id="${id}" onclick="operationEdit(${id})">Editar</button><button id="btnDeleteOperation" class="mr-4 btnDeleteOperation" data-id="${id}" onclick="deleteOperation(${id})">Eliminar</button></td>
+                <td class="pl-8 mt-0 pt-0 text-xs"><button class="mr-4 btnEditOperation" data-id="${id}" onclick="eventEditOperation(${id})">Editar</button><button class="mr-4 btnDeleteOperation" data-id="${id}" onclick="deleteOperation(${id})">Eliminar</button></td>
             </tr>
              
         `
     })
 }
 
-
+let tr = $("#hola")
 
 /*-----------------------------------------------------------------------------------*/
 
@@ -120,12 +120,8 @@ const operationEdit = (id) => {
     $("#editAmount").value = editedOperation.amount
     $("#editType").value = editedOperation.type
     $("#editSelectedCategory").value = editedOperation.selectedCategory
-    $("#editDate").value =  editedOperation.date
-
-                   
-    $("#editContainer").innerHTML = `<button id="edit" data-id="${id}" class=" w-[91px] h-10 text-white border-none ml-2  bg-green-400 rounded-md ml-2" onclick="updateOperation(${id})" >Editar</button>`
-    
-    
+    $("#editDate").value =  editedOperation.date                
+    $("#editContainer").innerHTML = `<button id="edit" data-id="${id}" class=" w-[91px] h-10 text-white border-none ml-2  bg-green-400 rounded-md ml-2" onclick="updateOperation(${id})" >Editar</button>`   
 }
 
 
@@ -143,8 +139,6 @@ const updateOperation = (id) => {
     })
 
 
-    console.log(updatedOperation)
-
     saveDataInLocalStorage('operations', updatedOperation)
     showEditOperationsForm()
     showDoneOperations()
@@ -155,7 +149,6 @@ const updateOperation = (id) => {
 //funcion que edita la operacion por el usuario
 
 const newOperationData = (id) => {
-    
     return {
         id: id,
         description: $("#editDescription").value,
@@ -164,30 +157,24 @@ const newOperationData = (id) => {
         selectedCategory: $("#editSelectedCategory").value,
         date: $("#editDate").value
     }
-
 }
 
 
-
-
-
 /*------------------------------------------------------------------*/
+
+
 
 //remover operacion, delete
 
 const removeOperation = (id) => {
     let operations = getDataInLocalStorage('operations')
-
-    return operations.filter(operation => operation.id !== id)
-
+    operations = operations.filter(operation => operation.id !== id)
+    saveDataInLocalStorage("operations",operations)
+    return operations
 }
 
-
-
-const deleteOperation = (id) => {
-    const updatedOperations = removeOperation(id)
-    generateTableOperations(updateOperation)
-    saveDataInLocalStorage('operations', updatedOperations)
+const deleteOperation = (id) => { 
+    return generateTableOperations(removeOperation(id))
 }
 
 
@@ -259,8 +246,7 @@ const addCategoriesItems = () =>{
 
        const {id, nameCategory} = item
 
-        $("#categoriesItems").innerHTML += ` <div class="flex flex-row">
-                    
+        $("#categoriesItems").innerHTML += ` <div class="flex flex-row">          
         <div class="flex w-[1300px] mt-8" >
             <span>${nameCategory}</span>
         </div>
@@ -323,6 +309,32 @@ $("#navBalance").addEventListener("click", ()=>{
 
 
 
+
+
+
+
+// date - fecha y hora
+
+window.onload = ()=>{
+    const inputDate = $("#date")
+    let date = new Date ()
+    let month =  date.getMonth() + 1
+    let day = date.getDate(); //obteniendo dia
+    let year = date.getFullYear(); 
+    if(day<10){
+    day='0'+day; }//agrega cero si el menor de 10
+    if(month<10){
+    month='0'+month} 
+    inputDate.value = year + "-" + month + "-" + day
+}
+
+
+const balance = () =>{
+getDataInLocalStorage(operations)
+}
+console.log($("#gastos").innerText = 6)
+
+
 /***********************************************************/
 
 
@@ -334,6 +346,3 @@ if (!localStorage.getItem('operations')) {
     showDoneOperations()
     generateTableOperations()
 }
-
-/*************************************************/
-
