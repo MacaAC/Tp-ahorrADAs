@@ -49,8 +49,8 @@ const operationsInfo = () => {
 const generateTableOperations = () => {
     $("#table").innerHTML = ""
     console.log(getDataInLocalStorage('operations'))
-    getDataInLocalStorage('operations').map(operationL => {
-        const {id, description, selectedCategory, date, amount, type} = operationL
+    getDataInLocalStorage('operations').map(operation => {
+        const {id, description, selectedCategory, date, amount, type} = operation
         const className = type === 'Gasto' ? "red-500" : "green-500"
         const operator = type === 'Gasto' ? "-" : "+"
 
@@ -71,8 +71,6 @@ const generateTableOperations = () => {
 
 
 /*-----------------------------------------------------------------------------------*/
-
-
 
 //Añadir las operaciones a la tabla, tabla de operaciones ya realizadas, que aparezca la tabla
 
@@ -110,7 +108,7 @@ const findOperation = (id) => {
 }
 
 
-// Funcion editar operación, precarga los datos y edita
+// Evento de editar operación, precarga los datos y edita
 
 const operationEdit = (id) => {
     cleanEditOperationsForm()
@@ -130,6 +128,9 @@ const operationEdit = (id) => {
     
 }
 
+
+//Funcion que efectivamente edita
+
 const updateOperation = (id) => {
   
     const newOperation = getDataInLocalStorage('operations')
@@ -148,15 +149,13 @@ const updateOperation = (id) => {
     showEditOperationsForm()
     showDoneOperations()
     showAside()
-    generateTableOperations(editedOperation())
+    generateTableOperations()
 }
    
-
-
 //funcion que edita la operacion por el usuario
 
 const newOperationData = (id) => {
-    //const idO = getDataInLocalStorage('operations').length +1
+    
     return {
         id: id,
         description: $("#editDescription").value,
@@ -167,6 +166,8 @@ const newOperationData = (id) => {
     }
 
 }
+
+
 
 
 
@@ -181,25 +182,13 @@ const removeOperation = (id) => {
 
 }
 
-console.log(removeOperation())
-//saveDataInLocalStorage('operations', operations)
+
 
 const deleteOperation = (id) => {
     const updatedOperations = removeOperation(id)
     generateTableOperations(updateOperation)
     saveDataInLocalStorage('operations', updatedOperations)
 }
-
-
-
-//let categorys = ["Comida", "Servicios", "Salidas", "Educación", "Transporte", "Trabajo"]
-
-
-
-
-// evento para que aparezca el form al presionar +nueva operación(maca)
-// const cleanFrontPage =()=> $("#front-page").innerHTML = ""
-
 
 
 // evento para hacer desaparecer la portada y aparece el formulario de nueva op
@@ -213,7 +202,101 @@ $("#btnNewOperations").addEventListener("click", () => {
 
 /*****************************************/
 
+//ver tabla de categorias
 
+$("#aCategory").addEventListener("click", ()=>{
+    cleanCategoriesForm()
+    cleanFrontPage()
+    cleanDoneOperations()
+    cleanAside()
+})
+
+
+localStorage.setItem('categories', JSON.stringify([
+    {id: 1,
+    nameCategory: "Comida",
+    },
+    
+    {id: 2,
+    nameCategory: "Servicios",
+    },
+    
+    {id: 3,
+    nameCategory: "Salidas",
+    },
+    
+    {id: 4,
+    nameCategory: "Educación",
+    },
+    
+    {id: 5,
+    nameCategory: "Transporte",
+    },
+    
+    {id: 6,
+    nameCategory: "Trabajo",
+    },
+]))
+
+
+//AGREGAR CATEGORIAS A UN ARRAY DE OBJETOS EN LOCAL STORAGE
+
+const categoriesInfo = () => {
+    const nameCategory = $("#nameCategory").value
+    const id = getDataInLocalStorage('categories').length + 1
+    return {
+        id,
+        nameCategory
+    }
+}
+
+
+const addCategoriesItems = () =>{
+
+    $("#categoriesItems").innerHTML = ""
+
+    getDataInLocalStorage('categories').map(item =>{
+
+       const {id, nameCategory} = item
+
+        $("#categoriesItems").innerHTML += ` <div class="flex flex-row">
+                    
+        <div class="flex w-[1300px] mt-8" >
+            <span>${nameCategory}</span>
+        </div>
+    
+        <div class="flex flex-row w-[200px] mt-8">
+            
+            <button class="ml-2" onclick="" >Editar</button>
+            <button class="ml-2">Eliminar</button>
+                
+        </div>
+    
+     </div> `
+
+    })
+
+
+}
+
+
+
+$("#addCategory").addEventListener("click", ()=>{
+    let categories = getDataInLocalStorage('categories')
+    categories.push(categoriesInfo())
+    saveDataInLocalStorage('categories', categories)
+    console.log(categories)
+    addCategoriesItems(getDataInLocalStorage('categories'))
+    $("#nameCategory").value = ""
+    //agregar show y hidden
+})
+
+
+
+
+
+
+/*********************************************************/
 
 // const balance = () =>{
 //     operationsLocal.map(operationL => {
@@ -232,95 +315,15 @@ $("#btnNewOperations").addEventListener("click", () => {
 // }
 
 
+$("#navBalance").addEventListener("click", ()=>{
+    if (localStorage.getItem('operations')){
 
-
-//ver tabla de categorias
-
-$("#aCategory").addEventListener("click", ()=>{
-    cleanCategoriesForm()
-    cleanFrontPage()
-    cleanDoneOperations()
-    cleanAside()
+    }
 })
 
-//categorias
-
-let categories = [
-{id: 1,
-category: "Comida",
-},
-
-{id: 2,
-category: "Servicios",
-},
-
-{id: 3,
-category: "Salidas",
-},
-
-{id: 4,
-category: "Educación",
-},
-
-{id: 5,
-category: "Transporte",
-},
-
-{id: 6,
-category: "Trabajo",
-},
-
-]
 
 
-const newCategory = () => {
- const id = categories.length + 1
- const category = $("#nameCategory").value
- return {
-    id,
-    category,
-    
-}
-}
-
-
-const addCategoriesItems = () =>{
-
-    categories.map(item =>{
-
-       const {id, category} = item
-
-        $("#categoriesItems").innerHTML += ` <div class="flex flex-row">
-                    
-        <div class="flex w-[1300px] mt-8" >
-            <span>${category}</span>
-        </div>
-    
-        <div class="flex flex-row w-[200px] mt-8">
-            
-            <button class="ml-2">Editar</button>
-            <button class="ml-2">Eliminar</button>
-                
-        </div>
-    
-     </div> `
-
-    })
-
-
-}
-
-
-
-
-
-$("#addCategory").addEventListener("click", ()=>{
-    categories.push(newCategory())
-    console.log(categories)
-    addCategoriesItems()
-})
-
-/*********************************************************/
+/***********************************************************/
 
 
 if (!localStorage.getItem('operations')) {
@@ -331,3 +334,6 @@ if (!localStorage.getItem('operations')) {
     showDoneOperations()
     generateTableOperations()
 }
+
+/*************************************************/
+
