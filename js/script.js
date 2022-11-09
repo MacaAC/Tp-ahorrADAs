@@ -53,7 +53,7 @@ const generateTableOperations = () => {
                 <td class="mt-0 pt-0 pl-10 text-xs ">${selectedCategory}</td>
                 <td class="mt-0 pt-0 pl-10 text-sm">${date}</td>
                 <td class="mt-0 pt-0 pl-12 text-lg text-${className} font-bold">${operator}${amount}</td>
-                <td class="pl-8 mt-0 pt-0 text-xs"><button class="mr-4 btnEditOperation" data-id="${id}" onclick="editOperation(${id})">Editar</button><button class="mr-4 btnDeleteOperation" data-id="${id}" onclick="deleteOperation(${id})">Eliminar</button></td>
+                <td class="pl-8 mt-0 pt-0 text-xs"><button class="mr-4 btnEditOperation" data-id="${id}" onclick="eventEditOperation(${id})">Editar</button><button class="mr-4 btnDeleteOperation" data-id="${id}" onclick="deleteOperation(${id})">Eliminar</button></td>
             </tr>
              
         `
@@ -153,7 +153,7 @@ const newOperationData = (id) => {
 // funcion que edita efectivamente la operacion
 
 //no termiona de funcionar ALDY
-const editedOperation= (id) => {
+const editOperation= (id) => {
     let operations = getDataInLocalStorage('operations') 
      operations.map(operation => {
         if (operation.id === id) {
@@ -167,7 +167,7 @@ const editedOperation= (id) => {
     return operations
 }
 
-const editOperation = () => {
+const eventEditOperation = () => {
     showEditOperationsForm()
 }
 
@@ -298,10 +298,11 @@ $("#btnNewOperations").addEventListener("click", () => {
 //     })
   
 // }
-
-
-console.log($("#addExpenses"))
  
+
+const balance = ()=>{
+
+}
 
 
 //ver tabla de categorias
@@ -389,3 +390,23 @@ $("#addCategory").addEventListener("click", ()=>{
     console.log(categories)
     addCategoriesItems()
 })
+
+
+// date - fecha y hora
+
+window.onload = ()=>{
+    const inputDate = $("#date")
+    let date = new Date ()
+    let month =  date.getMonth() + 1
+    let day = date.getDate(); //obteniendo dia
+    let year = date.getFullYear(); 
+    if(day<10){
+    day='0'+day; }//agrega cero si el menor de 10
+    if(month<10){
+    month='0'+month} 
+    inputDate.value = year + "-" + month + "-" + day
+}
+
+
+
+console.log($("#gastos").innerText = 6)
