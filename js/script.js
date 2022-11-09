@@ -61,14 +61,14 @@ const generateTableOperations = () => {
                 <td class="mt-0 pt-0 pl-10 text-xs ">${selectedCategory}</td>
                 <td class="mt-0 pt-0 pl-10 text-sm">${date}</td>
                 <td class="mt-0 pt-0 pl-12 text-lg text-${className} font-bold">${operator}${amount}</td>
-                <td class="pl-8 mt-0 pt-0 text-xs"><button class="mr-4 btnEditOperation" data-id="${id}" onclick="eventEditOperation(${id})">Editar</button><button class="mr-4 btnDeleteOperation" data-id="${id}" onclick="deleteOperation(${id})">Eliminar</button></td>
+                <td class="pl-8 mt-0 pt-0 text-xs"><button class="mr-4 btnEditOperation" data-id="${id}" onclick="operationEdit(${id})">Editar</button><button class="mr-4 btnDeleteOperation" data-id="${id}" onclick="deleteOperation(${id})">Eliminar</button></td>
             </tr>
              
         `
     })
 }
 
-let tr = $("#hola")
+
 
 /*-----------------------------------------------------------------------------------*/
 //Añadir las operaciones a la tabla, tabla de operaciones ya realizadas, que aparezca la tabla
@@ -324,10 +324,35 @@ window.onload = ()=>{
     day='0'+day; }//agrega cero si el menor de 10
     if(month<10){
     month='0'+month} 
-    inputDate.value = year + "-" + month + "-" + day
+    inputDate.value= year + "-" + month + "-" + day
+}
+let operations = getDataInLocalStorage("operations")
+console.log(operations)
+for(const operation of operations){
+    console.log(operation.date)
+    let formatDate = operation.date.split("-").reverse().join("-")
+    console.log(formatDate)
+    
+    operations.date = formatDate
+    console.log(operation.date)
+    // saveDataInLocalStorage("operations",operations)
+}
+ /*seteando al primer dia del mes**********************************************************/
+
+window.onload = ()=>{
+    const inputFiltersDate = $("#filtersDate")
+    let date = new Date ()
+    let month =  date.getMonth() + 1
+    let day = 1; //obteniendo dia
+    let year = date.getFullYear(); 
+    if(day<10){
+    day='0'+day; }//agrega cero si el menor de 10
+    if(month<10){
+    month='0'+month} 
+    inputFiltersDate.value= year + "-" + month + "-" + day
 }
 
-
+/***********************************************************/
 const balance = () =>{
 getDataInLocalStorage(operations)
 }
