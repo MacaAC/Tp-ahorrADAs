@@ -45,7 +45,7 @@ const generateTableOperations = () => {
         const {id, description, selectedCategory, date, amount, type} = operationL
         const className = type === 'Gasto' ? "red-500" : "green-500"
         const operator = type === 'Gasto' ? "-" : "+"
-
+ 
         $("#table").innerHTML += `
             
             <tr>
@@ -53,14 +53,14 @@ const generateTableOperations = () => {
                 <td class="mt-0 pt-0 pl-10 text-xs ">${selectedCategory}</td>
                 <td class="mt-0 pt-0 pl-10 text-sm">${date}</td>
                 <td class="mt-0 pt-0 pl-12 text-lg text-${className} font-bold">${operator}${amount}</td>
-                <td class="pl-8 mt-0 pt-0 text-xs"><button id="btnEditOperation" class="mr-4 btnEditOperation" data-id="${id}" onclick="operationEdit(${id})">Editar</button><button id="btnDeleteOperation" class="mr-4 btnDeleteOperation" data-id="${id}" onclick="deleteOperation(${id})">Eliminar</button></td>
+                <td class="pl-8 mt-0 pt-0 text-xs"><button class="mr-4 btnEditOperation" data-id="${id}" onclick="editOperation(${id})">Editar</button><button class="mr-4 btnDeleteOperation" data-id="${id}" onclick="deleteOperation(${id})">Eliminar</button></td>
             </tr>
              
         `
     })
 }
 
-
+let tr = $("#hola")
 
 /*-----------------------------------------------------------------------------------*/
 
@@ -120,9 +120,8 @@ const operationEdit = (id) => {
 //funcion que edita la operacion por el usuario
 
 const newOperationData = (id) => {
-    const idO = getDataInLocalStorage('operations').length +1
     return {
-        id: idO,
+        id: id,
         description: $("#editDescription").value,
         amount: $("#editAmount").value,
         type: $("#editType").value,
@@ -156,17 +155,21 @@ const newOperationData = (id) => {
 //no termiona de funcionar ALDY
 const editedOperation= (id) => {
     let operations = getDataInLocalStorage('operations') 
-    return operations.map(operation => {
-        console.log(operation.id, parseInt(id))
-        if (operation.id === parseInt(id)) {
+     operations.map(operation => {
+        if (operation.id === id) {
             console.log("entro en el if")
             return newOperationData(id)
             
         }
-        return operation
+        operation
     })
+    saveDataInLocalStorage("operations",operations)
+    return operations
 }
 
+const editOperation = () => {
+    showEditOperationsForm()
+}
 
 // const editedOperation= (id) => {
 //    let op = getDataInLocalStorage('operations')
@@ -216,12 +219,12 @@ const editedOperation= (id) => {
 
 $("#edit").addEventListener("click", ()=>{
  const newOperation = getDataInLocalStorage('operations')
- newOperation.push(newOperationData())
+//  newOperation.push(newOperationData())
  saveDataInLocalStorage('operations', newOperation)
  showEditOperationsForm()
  showDoneOperations()
  showAside()
- generateTableOperations(editedOperation())
+ generateTableOperations()
 })
 
 
@@ -230,16 +233,16 @@ $("#edit").addEventListener("click", ()=>{
 
 const removeOperation = (id) => {
     let operations = getDataInLocalStorage('operations')
-    return operations.filter(operationL => operationL.id !== parseInt(id))
+    operations = operations.filter(operation => operation.id !== id)
+    saveDataInLocalStorage("operations",operations)
+    return operations
 
 }
 
 //saveDataInLocalStorage('operations', operations)
 
-const deleteOperation = (id) => {
-
+const deleteOperation = (id) => { 
     generateTableOperations(removeOperation(id))
-
 }
 
 
@@ -261,8 +264,8 @@ const deleteOperation = (id) => {
  const cleanNewOperationForm = () => $("#formNewOperation").classList.add("hidden")
  const showDoneOperations = () => $("#doneOperations").classList.remove("hidden")
  const cleanDoneOperations = () => $("#doneOperations").classList.add("hidden")
- const cleanEditOperationsForm = () => $("#editOperationsForm").classList.remove("hidden")
- const showEditOperationsForm = () => $("#editOperationsForm").classList.add("hidden")
+ const cleanEditOperationsForm = () => $("#editOperationsForm").classList.add("hidden")
+ const showEditOperationsForm = () => $("#editOperationsForm").classList.remove("hidden")
  const cleanCategoriesForm = () => $("#categoriesForm").classList.remove("hidden")
  const showContainer = () => $("#container").classList.remove("hidden")
 
