@@ -13,8 +13,11 @@ const showDoneOperations = () => $("#doneOperations").classList.remove("hidden")
 const cleanDoneOperations = () => $("#doneOperations").classList.add("hidden")
 const cleanEditOperationsForm = () => $("#editOperationsForm").classList.remove("hidden")
 const showEditOperationsForm = () => $("#editOperationsForm").classList.add("hidden")
-const cleanCategoriesForm = () => $("#categoriesForm").classList.remove("hidden")
+const showCategoriesForm = () => $("#categoriesForm").classList.remove("hidden")
+const cleanCategoriesForm = () => $("#categoriesForm").classList.add("hidden")
 const showContainer = () => $("#container").classList.remove("hidden")
+const showEditCategoryWindow = () => $("#editCategoryWindow").classList.remove("hidden")
+const cleanEditCategoryWindow = () => $("#editCategoryWindow").classList.add("hidden")
 
 /*******************************************************/
 
@@ -61,14 +64,13 @@ const generateTableOperations = () => {
                 <td class="mt-0 pt-0 pl-10 text-xs ">${selectedCategory}</td>
                 <td class="mt-0 pt-0 pl-10 text-sm">${date}</td>
                 <td class="mt-0 pt-0 pl-12 text-lg text-${className} font-bold">${operator}${amount}</td>
-                <td class="pl-8 mt-0 pt-0 text-xs"><button class="mr-4 btnEditOperation" data-id="${id}" onclick="eventEditOperation(${id})">Editar</button><button class="mr-4 btnDeleteOperation" data-id="${id}" onclick="deleteOperation(${id})">Eliminar</button></td>
+                <td class="pl-8 mt-0 pt-0 text-xs"><button class="mr-4 btnEditOperation" data-id="${id}" onclick="operationEdit(${id})">Editar</button><button class="mr-4 btnDeleteOperation" data-id="${id}" onclick="deleteOperation(${id})">Eliminar</button></td>
             </tr>
              
         `
     })
 }
 
-let tr = $("#hola")
 
 /*-----------------------------------------------------------------------------------*/
 //Añadir las operaciones a la tabla, tabla de operaciones ya realizadas, que aparezca la tabla
@@ -119,7 +121,8 @@ const operationEdit = (id) => {
     $("#editAmount").value = editedOperation.amount
     $("#editType").value = editedOperation.type
     $("#editSelectedCategory").value = editedOperation.selectedCategory
-    $("#editDate").value =  editedOperation.date                
+    $("#editDate").value =  editedOperation.date  
+
     $("#editContainer").innerHTML = `<button id="edit" data-id="${id}" class=" w-[91px] h-10 text-white border-none ml-2  bg-green-400 rounded-md ml-2" onclick="updateOperation(${id})" >Editar</button>`   
 }
 
@@ -191,10 +194,12 @@ $("#btnNewOperations").addEventListener("click", () => {
 //ver tabla de categorias
 
 $("#aCategory").addEventListener("click", ()=>{
-    cleanCategoriesForm()
+    showCategoriesForm()
     cleanFrontPage()
     cleanDoneOperations()
     cleanAside()
+    addCategoriesItems()
+    cleanEditCategoryWindow()
 })
 
 
@@ -252,7 +257,7 @@ const addCategoriesItems = () =>{
     
         <div class="flex flex-row w-[200px] mt-8">
             
-            <button class="ml-2" onclick="" >Editar</button>
+            <button class="ml-2" id="${id}" onclick="categoryEdit(${id})">Editar</button>
             <button class="ml-2">Eliminar</button>
                 
         </div>
@@ -273,9 +278,74 @@ $("#addCategory").addEventListener("click", ()=>{
     console.log(categories)
     addCategoriesItems(getDataInLocalStorage('categories'))
     $("#nameCategory").value = ""
-    //agregar show y hidden
+    
 })
 
+//Editar categorías
+
+const findCategory = (id) => {
+    let categories = getDataInLocalStorage('categories')
+    console.log(categories) 
+    return categories.find(category => category.id === id)
+}
+
+
+
+const categoryEdit = (id) => {
+    cleanCategoriesForm()
+    showEditCategoryWindow()
+    const editedCategory = findCategory(id)
+    $("#editCategoryInput").value = editedCategory.nameCategory
+
+    $("#editCategoryContainer").innerHTML = `<button id="${id}" class=" w-[91px] h-10 text-white border-none ml-2  bg-green-400 rounded-md ml-2" onclick="updateCategory(${id})">Editar</button>`
+
+}
+
+
+const newCategoryData = (id) => {
+    return {
+        id: id,
+        nameCategory: $("#editCategoryInput").value,
+        
+    }
+}
+
+const updateCategory = (id) => {
+    const newCategory = getDataInLocalStorage('categories')
+    const updatedCategory = newCategory.map(category => {
+        if(category.id === id){
+            return newCategoryData(id)
+        }
+        return category
+    })
+
+
+    saveDataInLocalStorage('categories', updatedCategory)
+
+    cleanEditCategoryWindow()
+    showCategoriesForm()
+    addCategoriesItems()
+
+}
+
+// const updateOperation = (id) => {
+  
+//     const newOperation = getDataInLocalStorage('operations')
+//     const updatedOperation = newOperation.map(operation => {
+//         if(operation.id === id){
+//             return newOperationData(id)
+//         }
+//         return operation
+
+//     })
+
+
+//     saveDataInLocalStorage('operations', updatedOperation)
+//     showEditOperationsForm()
+//     showDoneOperations()
+//     showAside()
+//     generateTableOperations()
+// }
 
 
 
@@ -302,13 +372,13 @@ $("#addCategory").addEventListener("click", ()=>{
 
 $("#navBalance").addEventListener("click", ()=>{
     if (localStorage.getItem('operations')){
-
+        showAside()
+        showDoneOperations()
+        generateTableOperations()
+        cleanCategoriesForm()
+        //falta agregar mas dom
     }
 })
-
-
-
-
 
 
 
@@ -345,3 +415,8 @@ if (!localStorage.getItem('operations')) {
     showDoneOperations()
     generateTableOperations()
 }
+
+
+
+/******************************************************/
+
