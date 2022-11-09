@@ -233,8 +233,6 @@ $("#btnNewOperations").addEventListener("click", () => {
 
 
 
- 
-
 
 //ver tabla de categorias
 
