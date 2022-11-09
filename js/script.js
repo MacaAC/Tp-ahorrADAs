@@ -71,7 +71,6 @@ const generateTableOperations = () => {
 let tr = $("#hola")
 
 /*-----------------------------------------------------------------------------------*/
-
 //Añadir las operaciones a la tabla, tabla de operaciones ya realizadas, que aparezca la tabla
 
 $("#addOperation").addEventListener("click", () => {
