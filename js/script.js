@@ -7,7 +7,10 @@ const $$ = (selector) => document.querySelectorAll(selector)
 const cleanAside = () => $("#aside").classList.add("hidden")
 const showAside = () => $("#aside").classList.remove("hidden")
 const cleanFrontPage = () => $("#frontPage").classList.add("hidden")
-const showNewOperationForm = () =>  $("#formNewOperation").classList.remove("hidden")
+const showNewOperationForm = () => {
+     $("#formNewOperation").classList.remove("hidden")
+     inputDate.value = todayDate()
+}
 const cleanNewOperationForm = () => $("#formNewOperation").classList.add("hidden")
 const showDoneOperations = () => $("#doneOperations").classList.remove("hidden")
 const cleanDoneOperations = () => $("#doneOperations").classList.add("hidden")
@@ -32,7 +35,7 @@ const operationsInfo = () => {
     const amount = $("#amount").value
     const type = $("#type").value
     const selectedCategory = $("#selectCategory").value
-    const date = $("#date").value
+    var date = $("#date").value
     const id = getDataInLocalStorage('operations').length + 1
     return {
         id,
@@ -48,18 +51,19 @@ const operationsInfo = () => {
 
 const generateTableOperations = () => {
     $("#table").innerHTML = ""
-    console.log(getDataInLocalStorage('operations'))
     getDataInLocalStorage('operations').map(operation => {
         const {id, description, selectedCategory, date, amount, type} = operation
         const className = type === 'Gasto' ? "red-500" : "green-500"
         const operator = type === 'Gasto' ? "-" : "+"
- 
+
+        var formatedDate = correctDate(date)
+           
         $("#table").innerHTML += `
             
             <tr>
                 <td class="pl-0 pr-10 mt-4 pt-0 text-lg font-bold">${description}</td>
                 <td class="mt-0 pt-0 pl-10 text-xs ">${selectedCategory}</td>
-                <td class="mt-0 pt-0 pl-10 text-sm">${date}</td>
+                <td class="mt-0 pt-0 pl-10 text-sm">${formatedDate}</td>
                 <td class="mt-0 pt-0 pl-12 text-lg text-${className} font-bold">${operator}${amount}</td>
                 <td class="pl-8 mt-0 pt-0 text-xs"><button class="mr-4 btnEditOperation" data-id="${id}" onclick="operationEdit(${id})">Editar</button><button class="mr-4 btnDeleteOperation" data-id="${id}" onclick="deleteOperation(${id})">Eliminar</button></td>
             </tr>
@@ -283,22 +287,6 @@ $("#addCategory").addEventListener("click", ()=>{
 
 /*********************************************************/
 
-// const balance = () =>{
-//     operationsLocal.map(operationL => {
-//         const { id, amount, type} = operationL
-//         let result = 0
-//         if(amount === "Gasto"){
-//           result += amount
-//           return $("#total").innerText = result
-//         }else{
-//         result = result - amount
-//         return $("#total").innerText = result
-//         }
-        
-//     })
-  
-// }
-
 
 $("#navBalance").addEventListener("click", ()=>{
     if (localStorage.getItem('operations')){
@@ -313,38 +301,38 @@ $("#navBalance").addEventListener("click", ()=>{
 
 
 // date - fecha y hora
-
-window.onload = ()=>{
-    const inputDate = $("#date")
-    let date = new Date ()
-    let month =  date.getMonth() + 1
-    let day = date.getDate(); //obteniendo dia
-    let year = date.getFullYear(); 
+const inputDate = $("#date")
+//se ejecuta en el formulario nEW oPERATION FORM
+const todayDate = () =>{
+    let newDate = new Date ()  
+    let month =  newDate.getMonth() + 1
+    let day = newDate.getDate(); //obteniendo dia
+    let year = newDate.getFullYear(); 
     if(day<10){
     day='0'+day; }//agrega cero si el menor de 10
     if(month<10){
     month='0'+month} 
-    inputDate.value= year + "-" + month + "-" + day
+    return inputDate.value= year + "-" + month + "-" + day
 }
-let operations = getDataInLocalStorage("operations")
-console.log(operations)
-for(const operation of operations){
-    console.log(operation.date)
-    let formatDate = operation.date.split("-").reverse().join("-")
-    console.log(formatDate)
-    
-    operations.date = formatDate
-    console.log(operation.date)
-    // saveDataInLocalStorage("operations",operations)
+
+
+//Dar vuelta la fecha
+
+const correctDate = (date) =>{
+        let formatDate = date.split("-").reverse().join("-")   
+        return formatDate
 }
+
+
  /*seteando al primer dia del mes**********************************************************/
 
 window.onload = ()=>{
     const inputFiltersDate = $("#filtersDate")
-    let date = new Date ()
-    let month =  date.getMonth() + 1
+    let newDate = new Date ()  
+    
+    let month =  newDate.getMonth() + 1
     let day = 1; //obteniendo dia
-    let year = date.getFullYear(); 
+    let year = newDate.getFullYear(); 
     if(day<10){
     day='0'+day; }//agrega cero si el menor de 10
     if(month<10){
@@ -353,19 +341,70 @@ window.onload = ()=>{
 }
 
 /***********************************************************/
-const balance = () =>{
-getDataInLocalStorage(operations)
+const divGastos = $("#gastos")
+// const balance = () =>{
+// // getDataInLocalStorage(operations)
+// // let arrayAmounts = []
+// // for (const operation of operations){
+// //     let amounts = parseInt(operation.amount)
+// //     // console.log(amounts)
+// //     arrayAmounts.push(amounts)
+// //     // console.log(arrayAmounts
+// // }
+// const res = arrayAmounts.reduce((acc,item)=>{
+//     return acc = acc +item
+//  })
+// return res
+// }
+// divGastos.innerText = 6
+
+const balance = ()=>{
+    let operations = getDataInLocalStorage('operations')
+    
+    let arrayAmountsBills = []
+    
+     for ( const operation of operations){
+        if(operation.type === "Gasto"){
+           let changeToNumber = parseInt(operation.amount)
+           arrayAmountsBills.push(changeToNumber) 
+           let totalBills = arrayAmountsBills.reduce((total,bills)=> total + bills) 
+        } if(operation.type === "Ganancia"){ 
+            arrayAmountsGananancias.push (amounts)
+            const resGanancias = arrayAmountsGastos.reduce((acc,item)=>{
+                return acc = acc +item
+             }) 
+             return resGanancias 
+        }
+     }
+     console.log(sumaTotal)
+
 }
-console.log($("#gastos").innerText = 6)
+
 
 
 /***********************************************************/
+$("#icon").addEventListener("click",()=>{
+    if (!localStorage.getItem('operations')) {
+        showFrontPage()
+        showAside()
+    } else{
+    cleanCategoriesForm()
+    cleanEditOperationsForm()
+    cleanNewOperationForm()
+    cleanFrontPage() 
+    showDoneOperations()
+    showAside()
+    generateTableOperations()
+    }
+})
+/***********************************************************/
+
 
 
 if (!localStorage.getItem('operations')) {
     localStorage.setItem('operations', JSON.stringify([]))
     
-}else{
+} else{
     cleanFrontPage() 
     showDoneOperations()
     generateTableOperations()
