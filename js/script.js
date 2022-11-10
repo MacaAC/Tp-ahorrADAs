@@ -179,7 +179,7 @@ const updateOperation = (id) => {
   showEditOperationsForm();
   showDoneOperations();
   showAside();
-  generateTableOperations();
+  //generateTableOperations();
   test()
 };
 
@@ -417,7 +417,7 @@ const removeFilters = () => {
 // Función que muestra la tabla según el filtro aplicado
 
 test = () => {
-    console.log($("#selectType").selectedOptions[0].id)
+  console.log($("#selectType").selectedOptions[0].id)
   switch ($("#selectType").selectedOptions[0].id) {
     case "spentFilter":
       filterByType("Gasto");
