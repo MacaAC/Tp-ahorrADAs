@@ -102,6 +102,9 @@ $("#addOperation").addEventListener("click", () => {
   saveDataInLocalStorage("operations", operations);
 
   generateTableOperations();
+printTotalProfit()  
+printTotalExpenses()
+printTotal()
 
   cleanNewOperationForm();
   showDoneOperations();
@@ -392,69 +395,59 @@ window.onload = ()=>{
 }
 
 /***********************************************************/
-const divGastos = $("#gastos")
-// const balance = () =>{
-// // getDataInLocalStorage(operations)
-// // let arrayAmounts = []
-// // for (const operation of operations){
-// //     let amounts = parseInt(operation.amount)
-// //     // console.log(amounts)
-// //     arrayAmounts.push(amounts)
-// //     // console.log(arrayAmounts
-// // }
-// const res = arrayAmounts.reduce((acc,item)=>{
-//     return acc = acc +item
-//  })
-// return res
-// }
-// divGastos.innerText = 6
 
-const balance = ()=>{
+//--------------------balance de ganancias
+
+let divProfits = $("#divProfits")
+const earningBalance = () =>{
     let operations = getDataInLocalStorage('operations')
-    
-    let arrayAmountsBills = []
-    
-     for ( const operation of operations){
-        if(operation.type === "Gasto"){
-           let changeToNumber = parseInt(operation.amount)
-           arrayAmountsBills.push(changeToNumber) 
-           let totalBills = arrayAmountsBills.reduce((total,bills)=> total + bills) 
-        } if(operation.type === "Ganancia"){ 
-            arrayAmountsGananancias.push (amounts)
-            const resGanancias = arrayAmountsGastos.reduce((acc,item)=>{
-                return acc = acc +item
-             }) 
-             return resGanancias 
+    let arrayProfitAmounts = []
+    let totalProfit
+    for (const operation of operations){
+        if(operation.type === "Ganancia"){
+           let amountToNumber = parseInt(operation.amount)
+           arrayProfitAmounts.push(amountToNumber) 
+           totalProfit = arrayProfitAmounts.reduce((total,profitAmounts)=> total + profitAmounts)
         }
-     }
-     console.log(sumaTotal)
-
+    }
+    return totalProfit
 }
 
+const printTotalProfit = ()=>{
+  divProfits.innerText = earningBalance()
+}
+//------------------balance de gastos
+let divExpenses = $("#divExpenses")
+const expensesBalance = () =>{
+    let operations = getDataInLocalStorage('operations')
+    let arrayExpensesAmounts = []
+    let totalExpenses
+    for (const operation of operations){
+        if(operation.type === "Gasto"){
+           let amountToNumber = parseInt(operation.amount)
+           arrayExpensesAmounts.push(amountToNumber) 
+           totalExpenses = arrayExpensesAmounts.reduce((total,expensesAmounts)=> total + expensesAmounts)
+        }
+    }
+     return totalExpenses
+    
+}
 
-// window.onload = () => {
-//   const inputDate = $("#date");
-//   let date = new Date();
-//   let month = date.getMonth() + 1;
-//   let day = date.getDate(); //obteniendo dia
-//   let year = date.getFullYear();
-//   if (day < 10) {
-//     day = "0" + day;
-//   } //agrega cero si el menor de 10
-//   if (month < 10) {
-//     month = "0" + month;
-//   }
-//   inputDate.value = year + "-" + month + "-" + day;
-// };
+const printTotalExpenses = ()=>{
+  divExpenses.innerText = expensesBalance()
+}
+//---------------------balance total
+
+const totalBalance = (a, b) => a - b
+
+const printTotal = ()=> {
+$("#divTotal").innerText = totalBalance(earningBalance(),expensesBalance())
+}
 
 
 // /****************************************************/
 
 
-// const balance = () => {
-//   getDataInLocalStorage(operations);
-// };
-// console.log(($("#gastos").innerText = 6));
 
 
 /***********************************************************/
@@ -538,4 +531,51 @@ if (!localStorage.getItem("operations")) {
     cleanFrontPage();
     showDoneOperations();
     generateTableOperations();
+    printTotalProfit()
+    printTotalExpenses()
+    printTotal()
   }
+
+
+  //--------------------------------------REPORTES------------------
+
+  //Funcion que devuelve la CATEGORIA CON MAYOR GANANCIA
+
+  let categories = getDataInLocalStorage("categories")
+  console.log(categories)
+  let operations = getDataInLocalStorage("operations")
+  console.log(operations)
+   for (const operation of operations){
+    console.log(operation.amount, operation.type , operation.selectedCategory)
+   }
+  
+const arrayAmounts = operations.map(({amount})=>amount)
+console.log("hola",arrayAmounts)
+  let highestAmount = Math.max.apply(null,arrayAmounts) 
+  let lowestAmount = Math.min.apply(null,arrayAmounts) 
+
+
+ const highestEarningCat = ()=>{
+    for (const operation of operations){
+        const {amount, type, selectedCategory} = operation
+        if(amount == highestAmount && type == "Ganancia"){
+            console.log( "mayor ganancia",operation)
+            return {selectedCategory,
+                    amount
+        }
+    }
+}
+ }
+
+ const lowestEarningCat = ()=>{
+    for (const operation of operations){
+        const {amount, type, selectedCategory} = operation
+        if(amount == highestAmount && type == "Ganancia"){
+            console.log( "mayor ganancia",operation)
+            return {selectedCategory,
+                    amount
+        }
+    }
+}
+ }
+
