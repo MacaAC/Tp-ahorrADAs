@@ -126,9 +126,9 @@ $("#addOperation").addEventListener("click", () => {
   saveDataInLocalStorage("operations", operations);
 
   generateTableOperations();
-printTotalProfit()  
-printTotalExpenses()
-printTotal()
+  printTotalProfit()  
+  printTotalExpenses()
+  printTotal()
 
   cleanNewOperationForm();
   showDoneOperations();
@@ -638,15 +638,6 @@ const filterByCategories = (selectedCategory, operations) => {
     //generateTableOperations(filteredLocalS);
     
 };
-
-
-
-
-  
-
-
-
-
 
 
 
