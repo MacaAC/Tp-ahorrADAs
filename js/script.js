@@ -126,6 +126,9 @@ $("#addOperation").addEventListener("click", () => {
   saveDataInLocalStorage("operations", operations);
 
   generateTableOperations();
+printTotalProfit()  
+printTotalExpenses()
+printTotal()
 
   cleanNewOperationForm();
   showDoneOperations();
@@ -493,69 +496,65 @@ window.onload = ()=>{
 }
 
 /***********************************************************/
-const divGastos = $("#gastos")
-// const balance = () =>{
-// // getDataInLocalStorage(operations)
-// // let arrayAmounts = []
-// // for (const operation of operations){
-// //     let amounts = parseInt(operation.amount)
-// //     // console.log(amounts)
-// //     arrayAmounts.push(amounts)
-// //     // console.log(arrayAmounts
-// // }
-// const res = arrayAmounts.reduce((acc,item)=>{
-//     return acc = acc +item
-//  })
-// return res
-// }
-// divGastos.innerText = 6
 
-const balance = ()=>{
+//--------------------balance de ganancias
+
+let divProfits = $("#divProfits")
+const earningBalance = () =>{
     let operations = getDataInLocalStorage('operations')
-    
-    let arrayAmountsBills = []
-    
-     for ( const operation of operations){
-        if(operation.type === "Gasto"){
-           let changeToNumber = parseInt(operation.amount)
-           arrayAmountsBills.push(changeToNumber) 
-           let totalBills = arrayAmountsBills.reduce((total,bills)=> total + bills) 
-        } if(operation.type === "Ganancia"){ 
-            arrayAmountsGananancias.push (amounts)
-            const resGanancias = arrayAmountsGastos.reduce((acc,item)=>{
-                return acc = acc +item
-             }) 
-             return resGanancias 
+    let arrayProfitAmounts = []
+    let totalProfit
+    for (const operation of operations){
+        if(operation.type === "Ganancia"){
+           let amountToNumber = parseInt(operation.amount)
+           arrayProfitAmounts.push(amountToNumber) 
+           totalProfit = arrayProfitAmounts.reduce((total,profitAmounts)=> total + profitAmounts)
         }
-     }
-     console.log(sumaTotal)
-
+    }
+    return totalProfit
+}
+//mañana
+const printTotalProfit = ()=>{
+  //let operations = getDataInLocalStorage('operations')
+ // getDataInLocalStorage("operations") ? divProfits.innerText = "0" :
+  divProfits.innerText = earningBalance()
+  
+}
+//------------------balance de gastos
+let divExpenses = $("#divExpenses")
+const expensesBalance = () =>{
+    let operations = getDataInLocalStorage('operations')
+    let arrayExpensesAmounts = []
+    let totalExpenses
+    for (const operation of operations){
+        if(operation.type === "Gasto"){
+           let amountToNumber = parseInt(operation.amount)
+           arrayExpensesAmounts.push(amountToNumber) 
+           totalExpenses = arrayExpensesAmounts.reduce((total,expensesAmounts)=> total + expensesAmounts)
+        }
+    }
+     return totalExpenses
+    
 }
 
+const printTotalExpenses = ()=>{
+  //let operations = getDataInLocalStorage('operations')
+  //getDataInLocalStorage("operations") ? divExpenses.innerText = "0" :
+   divExpenses.innerText = expensesBalance()
+}
+//---------------------balance total
 
-// window.onload = () => {
-//   const inputDate = $("#date");
-//   let date = new Date();
-//   let month = date.getMonth() + 1;
-//   let day = date.getDate(); //obteniendo dia
-//   let year = date.getFullYear();
-//   if (day < 10) {
-//     day = "0" + day;
-//   } //agrega cero si el menor de 10
-//   if (month < 10) {
-//     month = "0" + month;
-//   }
-//   inputDate.value = year + "-" + month + "-" + day;
-// };
+const totalBalance = (a, b) => a - b
+
+const printTotal = ()=> {
+  let operations = getDataInLocalStorage('operations')
+  getDataInLocalStorage("operations") ? $("#divTotal").innerText = "0" : $("#divTotal").innerText = totalBalance(earningBalance(),expensesBalance())
+}
 
 
 // /****************************************************/
 
 
-// const balance = () => {
-//   getDataInLocalStorage(operations);
-// };
-// console.log(($("#gastos").innerText = 6));
 
 
 /***********************************************************/
@@ -660,6 +659,89 @@ if (!localStorage.getItem("operations")) {
     cleanFrontPage();
     showDoneOperations();
     generateTableOperations();
-    
+    printTotalProfit()
+    printTotalExpenses()
+    printTotal()
+  }
+
+
+  //--------------------------------------REPORTES------------------
+
+  //Funcion que devuelve la CATEGORIA CON MAYOR GANANCIA y Mayor gasto
+
+
+  let categories = getDataInLocalStorage("categories")
+  //console.log(categories)
+  let operations = getDataInLocalStorage("operations")
+  //console.log(operations)
+ let arrayFoodEarn = []
+const arrayAmounts = operations.map(({amount})=>amount)
+
+let selectedCategoryVar
+
+const foodTotal =()=>{
+for (const operation of operations){
+    let {selectedCategory,amount,type}=operation
+    amount = parseInt(amount)
+    selectedCategoryVar = selectedCategory
+    if(selectedCategory=="Comida" && type=="Ganancia"){
+        arrayFoodEarn.push(amount)
+        foodCategoryTotal = arrayFoodEarn.reduce((acc,items) => {return acc = acc + items;})
+            }
 }
 
+return {
+    foodCategoryTotal,
+    selectedCategoryVar
+}
+}
+
+//------------------
+// operations.forEach(operation => {
+// Object.values(operation)
+
+// Object.values(operation).filter(value=>console.log(value))
+
+    //const categoriaComida = operations.filter(operation)
+    //console.log(categoriaComida)
+//});
+
+
+//----------------------------
+   let highestAmount = Math.max.apply(null,arrayAmounts) 
+  //let lowestAmount = Math.min.apply(null,arrayAmounts) 
+
+
+ const highestEarningCat = ()=>{
+    let selectedCategoryVar
+    for (const operation of operations){
+        const {amount, type, selectedCategory, date} = operation
+        if(amount == highestAmount && type == "Ganancia"){
+            //console.log( "mayor ganancia",operation)
+            return {selectedCategory,
+                    amount,
+                    date
+        }
+    }
+}
+ }
+//mayor gasto
+
+
+
+const highestSpendingCat = ()=>{
+    for (const operation of operations){
+        const {amount, type, selectedCategory} = operation
+        if(amount == highestAmount && type == "Gasto"){
+            //console.log( "mayor gasto",operation)
+            return {selectedCategory,
+                    amount
+        }
+    }
+}
+ }
+
+//Mes con mayor Ganancia 
+
+//let highestEarningMonth = highestEarningCat().date
+//highestEarningMonth = highestEarningMonth.split("-")[1]
