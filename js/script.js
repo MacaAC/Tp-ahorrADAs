@@ -412,9 +412,12 @@ const earningBalance = () =>{
     }
     return totalProfit
 }
-
+//mañana
 const printTotalProfit = ()=>{
+  //let operations = getDataInLocalStorage('operations')
+ // getDataInLocalStorage("operations") ? divProfits.innerText = "0" :
   divProfits.innerText = earningBalance()
+  
 }
 //------------------balance de gastos
 let divExpenses = $("#divExpenses")
@@ -434,14 +437,17 @@ const expensesBalance = () =>{
 }
 
 const printTotalExpenses = ()=>{
-  divExpenses.innerText = expensesBalance()
+  //let operations = getDataInLocalStorage('operations')
+  //getDataInLocalStorage("operations") ? divExpenses.innerText = "0" :
+   divExpenses.innerText = expensesBalance()
 }
 //---------------------balance total
 
 const totalBalance = (a, b) => a - b
 
 const printTotal = ()=> {
-$("#divTotal").innerText = totalBalance(earningBalance(),expensesBalance())
+  let operations = getDataInLocalStorage('operations')
+  getDataInLocalStorage("operations") ? $("#divTotal").innerText = "0" : $("#divTotal").innerText = totalBalance(earningBalance(),expensesBalance())
 }
 
 
@@ -539,27 +545,73 @@ if (!localStorage.getItem("operations")) {
 
   //--------------------------------------REPORTES------------------
 
-  //Funcion que devuelve la CATEGORIA CON MAYOR GANANCIA
+  //Funcion que devuelve la CATEGORIA CON MAYOR GANANCIA y Mayor gasto
+
 
   let categories = getDataInLocalStorage("categories")
-  console.log(categories)
+  //console.log(categories)
   let operations = getDataInLocalStorage("operations")
-  console.log(operations)
-   for (const operation of operations){
-    console.log(operation.amount, operation.type , operation.selectedCategory)
-   }
-  
+  //console.log(operations)
+ let arrayFoodEarn = []
 const arrayAmounts = operations.map(({amount})=>amount)
-console.log("hola",arrayAmounts)
-  let highestAmount = Math.max.apply(null,arrayAmounts) 
-  let lowestAmount = Math.min.apply(null,arrayAmounts) 
+
+let selectedCategoryVar
+
+const foodTotal =()=>{
+for (const operation of operations){
+    let {selectedCategory,amount,type}=operation
+    amount = parseInt(amount)
+    selectedCategoryVar = selectedCategory
+    if(selectedCategory=="Comida" && type=="Ganancia"){
+        arrayFoodEarn.push(amount)
+        foodCategoryTotal = arrayFoodEarn.reduce((acc,items) => {return acc = acc + items;})
+            }
+}
+
+return {
+    foodCategoryTotal,
+    selectedCategoryVar
+}
+}
+
+//------------------
+// operations.forEach(operation => {
+// Object.values(operation)
+
+// Object.values(operation).filter(value=>console.log(value))
+
+    //const categoriaComida = operations.filter(operation)
+    //console.log(categoriaComida)
+//});
+
+
+//----------------------------
+   let highestAmount = Math.max.apply(null,arrayAmounts) 
+  //let lowestAmount = Math.min.apply(null,arrayAmounts) 
 
 
  const highestEarningCat = ()=>{
+    let selectedCategoryVar
+    for (const operation of operations){
+        const {amount, type, selectedCategory, date} = operation
+        if(amount == highestAmount && type == "Ganancia"){
+            //console.log( "mayor ganancia",operation)
+            return {selectedCategory,
+                    amount,
+                    date
+        }
+    }
+}
+ }
+//mayor gasto
+
+
+
+const highestSpendingCat = ()=>{
     for (const operation of operations){
         const {amount, type, selectedCategory} = operation
-        if(amount == highestAmount && type == "Ganancia"){
-            console.log( "mayor ganancia",operation)
+        if(amount == highestAmount && type == "Gasto"){
+            //console.log( "mayor gasto",operation)
             return {selectedCategory,
                     amount
         }
@@ -567,15 +619,7 @@ console.log("hola",arrayAmounts)
 }
  }
 
- const lowestEarningCat = ()=>{
-    for (const operation of operations){
-        const {amount, type, selectedCategory} = operation
-        if(amount == highestAmount && type == "Ganancia"){
-            console.log( "mayor ganancia",operation)
-            return {selectedCategory,
-                    amount
-        }
-    }
-}
- }
+//Mes con mayor Ganancia 
 
+//let highestEarningMonth = highestEarningCat().date
+//highestEarningMonth = highestEarningMonth.split("-")[1]
