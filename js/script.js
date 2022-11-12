@@ -5,7 +5,9 @@ const $$ = (selector) => document.querySelectorAll(selector);
 
 // Funciones de clean y show atributos
 
-const cleanAside = () => $("#aside").classList.add("hidden");
+const cleanAside = () => $("#aside").classList.add("hidden");const cleanWhiteBox = () => $("#whiteBox").classList.add("hidden");
+const showWhiteBox = () => $("#whiteBox").classList.remove("hidden")
+
 
 const showAside = () =>{ 
     $("#aside").classList.remove("hidden");
@@ -28,6 +30,8 @@ const showEditOperationsForm = () => $("#editOperationsForm").classList.remove("
 const showCategoriesForm = () => $("#categoriesForm").classList.remove("hidden");
 const cleanCategoriesForm = () => $("#categoriesForm").classList.add("hidden");
 const showContainer = () => $("#container").classList.remove("hidden");
+const cleanContainer = () => $("#container").classList.add("hidden");
+
 const showEditCategoryWindow = () => $("#editCategoryWindow").classList.remove("hidden");
 const cleanEditCategoryWindow = () => $("#editCategoryWindow").classList.add("hidden");
 
@@ -124,7 +128,8 @@ $("#addOperation").addEventListener("click", () => {
   operations.push(operationsInfo());
 
   saveDataInLocalStorage("operations", operations);
-
+  showContainer()
+  showWhiteBox()
   generateTableOperations();
 printTotalProfit()  
 printTotalExpenses()
@@ -133,6 +138,7 @@ printTotal()
   cleanNewOperationForm();
   showDoneOperations();
   showAside();
+
 });
 
 
@@ -142,6 +148,10 @@ printTotal()
 $("#addOperationTable").addEventListener("click", () => {
   showNewOperationForm();
   cleanDoneOperations();
+  cleanContainer()
+  $("#description").value = ""
+  $("#amount").value = ""
+
 });
 
 
@@ -257,6 +267,7 @@ $("#btnNewOperations").addEventListener("click", () => {
   cleanAside();
   cleanFrontPage();
   showNewOperationForm();
+  cleanWhiteBox()
 });
 
 
@@ -264,13 +275,14 @@ $("#btnNewOperations").addEventListener("click", () => {
 
 //ver tabla de categorias
 
-$("#aCategory").addEventListener("click", () => {
+$("#navCategory").addEventListener("click", () => {
   showCategoriesForm();
   cleanFrontPage();
   cleanDoneOperations();
   cleanAside();
   generateCategoriesItems();
   cleanEditCategoryWindow();
+  cleanWhiteBox()
 });
 
 
@@ -311,7 +323,6 @@ const categoriesSelectInput = (idInput) =>{
 }
 
 window.addEventListener('load', ()=>{
-    alert("hola")
     categoriesSelectInput($("#selectCategoryFilters"))
     const option = document.createElement("option")
     const allText = document.createTextNode("Todas")
@@ -448,6 +459,7 @@ $("#navBalance").addEventListener("click", () => {
     generateTableOperations();
     cleanCategoriesForm();
     cleanNewOperationForm();
+    showWhiteBox()
    // categoriesSelectInput($("#selectCategoryFilters"))
     //falta agregar mas dom
   }
@@ -562,7 +574,7 @@ const printTotal = ()=> {
 
 $("#icon").addEventListener("click",()=>{
     if (!localStorage.getItem('operations')) {
-        showFrontPage()
+        showWhiteBox()
         showAside()
     } else{
     cleanCategoriesForm()
@@ -572,6 +584,7 @@ $("#icon").addEventListener("click",()=>{
     showDoneOperations()
     showAside()
     generateTableOperations()
+    showWhiteBox()
     }
 })
 /***********************************************************/
