@@ -20,15 +20,16 @@
             </div>
             <div class="m-8">
                 <a id="navBalance" class="m-3">Balance</a>
-                <a id="aCategory" class="m-3">Categorías</a>
+                <a id="navCategory" class="m-3">Categorías</a>
                 <a class="m-3">Reportes</a>
             </div>
         </nav>
     </header>
 
-    <section>
-        <div id="container" class="flex flex-row justify-center my-10 ">
-            <div id="aside" class="w-1/5 mr-5 ">
+    
+        <section id="container" class="flex flex-row justify-center my-10 ">
+    
+            <aside id="aside" class="w-1/5 mr-5 ">
                 
                     <div class="h-50 mb-8 border-2 rounded-lg bg-white">
                         <h1 class="m-2 text-xl font-extrabold">
@@ -94,10 +95,12 @@
                             </form>
                         </div>
                     </div>
-                
-            </div>
-           <div id="frontPage" class="box w-[771px] bg-white p-6 rounded-md ">
-                
+            </aside>
+
+
+            
+           <section id="whiteBox" class="box w-[800px] bg-white p-6 rounded-md ">
+                <div id="frontPage">
                     <div class="flex flex-row justify-between">
                         <h1 class="m-2 text-xl font-extrabold">Operaciones</h1>
                         <button id="btnNewOperations" class="flex items-center text-white text-xl font-extrabold bg-green-400 rounded-lg px-3">+Nueva Operación</button>
@@ -106,50 +109,42 @@
                         <img class="h-44 my-10" src="img/undraw_vault_re_s4my.svg">
                         <p class="font-medium">Sin resultados</p>
                         <p>Cambia los filtros o agrega operaciones</p>
-                    </div>
-               
-            </div>    
-        </div>  
-    </section>
+                    </div> 
+                </div>
+                    
+                    <div id="doneOperations" class="hidden box w-[771px] bg-white p-8 rounded-md">
 
-<!-- Tabla de agregar operaciones -->
-
-<section id="doneOperations" class="container flex justify-center my-12 hidden">
-    <div class="box w-[771px] bg-white p-8 rounded-md">
-
-        <div class="flex justify-between">
-            <h2 class="text-4xl font-bold">Operaciones</h2>
-            <button id="addOperationTable" class="w-[200px] h-10 text-white border-none ml-2  bg-green-400 rounded-md">+ Nueva operación</button>
-        </div> 
-
-      <div>
-        
-        <table class="table">
-            
-              <thead>
-                <tr>
-                  <th class="pl-0 pr-10 text-lg">Descripción</th>
-                  <th class="p-8 text-lg">Categoría</th>
-                  <th class="p-12 text-lg">Fecha</th>
-                  <th class="p-12 text-lg">Monto</th>
-                  <th class="p-10 text-lg">Acciones</th>
-                </tr>
-
-              </thead>
-
-            <tbody id="table">
-
-            </tbody>
-          </table>
-
-        </div>  
-
-    </div>
-
-
-</section>
-
-
+                        <div class="flex justify-between">
+                            <h2 class="text-4xl font-bold">Operaciones</h2>
+                            <button id="addOperationTable" class="w-[200px] h-10 text-white border-none ml-2  bg-green-400 rounded-md">+ Nueva operación</button>
+                        </div> 
+                
+                      <div>
+                        
+                        <table class="table">
+                            
+                              <thead>
+                                <tr>
+                                  <th class="pl-0 pr-10 text-lg">Descripción</th>
+                                  <th class="p-8 text-lg">Categoría</th>
+                                  <th class="p-12 text-lg">Fecha</th>
+                                  <th class="p-12 text-lg">Monto</th>
+                                  <th class="p-10 text-lg">Acciones</th>
+                                </tr>
+                
+                              </thead>
+                
+                            <tbody id="table">
+                
+                            </tbody>
+                          </table>
+                
+                        </div>  
+                
+                    </div>        
+           </section>    
+        </section>  
+    
 
 <!-- Agregar, editar y/o eliminar categorias -->
 
@@ -255,7 +250,7 @@
 
                 <div class="">
                     <div>
-                       <input type="text" id="description" class="block w-[100%] h-10 border border-slate-400 rounded-md" maxlength="10" required>
+                       <input type="text" id="description" class="p-2 block w-[100%] h-10 border border-slate-400 rounded-md" maxlength="10" required>
                     </div>
     
                 </div>
@@ -269,7 +264,7 @@
 
                 
                 <div>
-                    <input type="number" id="amount" class="block w-[100%] h-10 border border-slate-400 rounded-md" required>
+                    <input type="number" id="amount" class="block w-[100%] h-10 p-2 border border-slate-400 rounded-md" required>
                 </div>
     
                 
