@@ -4,14 +4,18 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://cdn.tailwindcss.com"></script>
     <title>Document</title>
 </head>
+
+
 <body class="bg-slate-200">
     <header>
         <nav class="flex flex-row bg-green-400 justify-between h-24 items-center text-white font-bold text-lg" 	>
             <div id="icon" class="flex flex-row m-8">
-                <div class="m-3"><img class="text-white" src="img/savings_FILL0_wght400_GRAD0_opsz48.svg"></div>
+                <!-- <img class="text-white" src="img/savings_FILL0_wght400_GRAD0_opsz48.svg"> -->
+                <div class="m-3"><i class="fa-solid fa-piggy-bank text-3xl"></i></div>
                 <div class="m-3">AhorrADAs</div>
             </div>
             <div class="m-8">
@@ -62,14 +66,14 @@
                                 </div>
                                 <div class="flex flex-col ml-4">
                                     <label>Categoría</label>
-                                    <select class="border border-slate-200 w-4/5 rounded-lg">
-                                        <option>Todas</option>
-                                        <option>Comida</option>
+                                    <select id="selectCategoryFilters" class="border border-slate-200 w-4/5 rounded-lg">
+                                         <option>Todas</option>
+                                        <!--<option>Comida</option>
                                         <option>Servicios</option>
                                         <option>Salidas</option>
                                         <option>Educación</option>
                                         <option>Transporte</option>
-                                        <option>Trabajo</option>
+                                        <option>Trabajo</option> -->
                                     </select>
                                 </div>    
                                 <div class="flex flex-col ml-4">
@@ -171,6 +175,8 @@
             </div>
 
             <div id="categoriesItems" class="flex flex-col mt-6">
+
+            </div>
                 
         </div>
     </section>
@@ -197,7 +203,7 @@
 
             <div class="flex flex-row justify-end mt-4">
                 <div class="">
-                    <button class=" w-[91px] h-10 rounded-md">Cancelar</button>
+                    <button id="cancelCategoryInEdition" class="w-[91px] h-10 rounded-md">Cancelar</button>
                 </div>
 
                 <div id="editCategoryContainer">
@@ -249,7 +255,7 @@
 
                 <div class="">
                     <div>
-                       <input type="text" id="description" class="block w-[100%] h-10 border border-slate-400 rounded-md" required>
+                       <input type="text" id="description" class="block w-[100%] h-10 border border-slate-400 rounded-md" maxlength="10" required>
                     </div>
     
                 </div>
@@ -293,12 +299,7 @@
 
                 <div>
                     <select name="select" id="selectCategory" class="block w-[100%] h-10 border border-slate-400 rounded-md" required>
-                        <option value="Comida" selected>Comida</option>
-                        <option value="Servicios">Servicios</option>
-                        <option value="Salidas">Salidas</option>
-                        <option value="Educación">Educación</option>
-                        <option value="Transporte">Transporte</option>
-                        <option value="Trabajo">Trabajo</option>
+                      
                         
                     </select>
 
@@ -320,7 +321,7 @@
             
             <div class="flex flex-row justify-end mt-12">
                 <div class="">
-                    <button class="w-[91px] h-10 rounded-md">Cancelar</button>
+                    <button id="" class="w-[91px] h-10 rounded-md">Cancelar</button>
                 </div>
     
                 <div class="">
@@ -352,7 +353,7 @@
 
                 <div class="">
                     <div>
-                       <input type="text" id="editDescription" class="block w-[100%] h-10 border border-slate-400 rounded-md" required>
+                       <input type="text" id="editDescription" class="block w-[100%] h-10 border border-slate-400 rounded-md" maxlength="10" required>
                     </div>
     
                 </div>
@@ -421,8 +422,8 @@
 
             
             <div class="flex flex-row justify-end mt-12">
-                <div class="">
-                    <button class=" w-[91px] h-10 rounded-md">Cancelar</button>
+                <div id="cancelEditOperation">
+                    <button  class=" w-[91px] h-10 rounded-md">Cancelar</button>
                 </div>
     
                 <div id="editContainer">
