@@ -11,11 +11,11 @@
 
 
 <body class="bg-slate-200">
-    <header>
+    <!-- <header>
         <nav class="flex flex-row bg-green-400 justify-between h-24 items-center text-white font-bold text-lg " 	>
             <div id="icon" class="flex flex-row m-8">
                 <!-- <img class="text-white" src="img/savings_FILL0_wght400_GRAD0_opsz48.svg"> -->
-                <div class="m-3"><i class="fa-solid fa-piggy-bank text-3xl"></i></div>
+                <!-- <div class="m-3"><i class="fa-solid fa-piggy-bank text-3xl"></i></div>
                 <div class="m-3">AhorrADAs</div>
             </div>
             <div class="m-8">
@@ -24,7 +24,34 @@
                 <a class="m-3">Reportes</a>
             </div>
         </nav>
-    </header>
+    </header>  -->
+    <header>
+        <nav class="flex items-center justify-between flex-wrap bg-green-400 p-6">
+            <div id="icon" class="flex items-center flex-shrink-0 text-white mr-6">
+                <div class="m-3"><i class="fa-solid fa-piggy-bank text-3xl"></i></div>
+              <span class="font-semibold text-xl tracking-tight">AhorrADAs</span>
+            </div>
+            <div class="block lg:hidden">
+              <button id='btnMenu' class="flex items-center px-3 py-2 border rounded text-white border-white shadow hover:shadow-lg hover:text-green-200">
+                <svg class="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Menu</title><path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"/></svg>
+              </button>
+            </div>
+            <div id='menu' class="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
+              <div class="text-sm font-extrabold  lg:flex-grow">
+                <a href="#responsive-header" id="navBalance" class="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-green-200 mr-4">
+                  Balance
+                </a>
+                <a href="#responsive-header" id="navCategory" class="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-green-200 mr-4">
+                  Categorías
+                </a>
+                <a href="#responsive-header" class="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-green-200">
+                  Reportes
+                </a>
+              </div>
+             </div>
+          </nav>
+    </header> 
+
 
     
         <section id="container" class="flex flex-row justify-center my-10 ">
