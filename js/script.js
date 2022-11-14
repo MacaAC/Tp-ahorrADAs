@@ -749,3 +749,9 @@ const highestSpendingCat = ()=>{
 
 //let highestEarningMonth = highestEarningCat().date
 //highestEarningMonth = highestEarningMonth.split("-")[1]
+
+
+//-------funcion navbar responsive
+$("#btnMenu").addEventListener('click', () => {
+  $("#menu").classList.toggle('hidden')
+})  
