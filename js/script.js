@@ -311,7 +311,7 @@ const categoriesSelectInput = (idInput) =>{
 }
 
 window.addEventListener('load', ()=>{
-    alert("hola")
+    
     categoriesSelectInput($("#selectCategoryFilters"))
     const option = document.createElement("option")
     const allText = document.createTextNode("Todas")
@@ -684,11 +684,16 @@ for (const operation of operations){
     let {selectedCategory,amount,type}=operation
     amount = parseInt(amount)
     selectedCategoryVar = selectedCategory
+
     if(selectedCategory=="Comida" && type=="Ganancia"){
         arrayFoodEarn.push(amount)
         foodCategoryTotal = arrayFoodEarn.reduce((acc,items) => {return acc = acc + items;})
             }
 }
+
+let prueba = operations.filter((operation)=> {
+  return selectedCategoryVar =="Comida" && type=="Ganancia"
+})
 
 return {
     foodCategoryTotal,
