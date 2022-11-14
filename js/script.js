@@ -5,7 +5,10 @@ const $$ = (selector) => document.querySelectorAll(selector);
 
 // Funciones de clean y show atributos
 
+const cleanWhiteBox = () => $("#whiteBox").classList.add("hidden");
+const showWhiteBox = () => $("#whiteBox").classList.remove("hidden")
 const cleanAside = () => $("#aside").classList.add("hidden");
+
 
 const showAside = () =>{ 
     $("#aside").classList.remove("hidden");
@@ -28,9 +31,20 @@ const showEditOperationsForm = () => $("#editOperationsForm").classList.remove("
 const showCategoriesForm = () => $("#categoriesForm").classList.remove("hidden");
 const cleanCategoriesForm = () => $("#categoriesForm").classList.add("hidden");
 const showContainer = () => $("#container").classList.remove("hidden");
+const cleanContainer = () => $("#container").classList.add("hidden");
+
 const showEditCategoryWindow = () => $("#editCategoryWindow").classList.remove("hidden");
 const cleanEditCategoryWindow = () => $("#editCategoryWindow").classList.add("hidden");
 
+
+const clean = (idHtml) => { 
+    idHtml.classList.add("hidden")
+
+}
+const show = (idHtml) => { 
+    idHtml.classList.remove("hidden")
+
+}
 
 
 /*******************************************************/
@@ -102,7 +116,7 @@ const generateTableOperations = (operations) => {
         $("#table").innerHTML += `
             
             <tr>
-                <td class="pl-0 pr-10 mt-4 pt-0 text-lg font-bold">${description}</td>
+                <td class="pl-0 pr-10 mt-4 pt-0 text-lg font-bold capitalize">${description}</td>
                 <td class="mt-0 pt-0 pl-10 text-xs ">${selectedCategory}</td>
                 <td class="mt-0 pt-0 pl-10 text-sm">${formatedDate}</td>
                 <td class="mt-0 pt-0 pl-12 text-lg text-${className} font-bold">${operator}${amount}</td>
@@ -124,15 +138,17 @@ $("#addOperation").addEventListener("click", () => {
   operations.push(operationsInfo());
 
   saveDataInLocalStorage("operations", operations);
-
+  showContainer()
+  showWhiteBox()
   generateTableOperations();
-printTotalProfit()  
-printTotalExpenses()
-printTotal()
+  printTotalProfit()  
+  printTotalExpenses()
+  printTotal()
 
   cleanNewOperationForm();
   showDoneOperations();
   showAside();
+
 });
 
 
@@ -142,6 +158,10 @@ printTotal()
 $("#addOperationTable").addEventListener("click", () => {
   showNewOperationForm();
   cleanDoneOperations();
+  cleanContainer()
+  $("#description").value = ""
+  $("#amount").value = ""
+
 });
 
 
@@ -257,6 +277,7 @@ $("#btnNewOperations").addEventListener("click", () => {
   cleanAside();
   cleanFrontPage();
   showNewOperationForm();
+  cleanWhiteBox()
 });
 
 
@@ -264,13 +285,14 @@ $("#btnNewOperations").addEventListener("click", () => {
 
 //ver tabla de categorias
 
-$("#aCategory").addEventListener("click", () => {
+$("#navCategory").addEventListener("click", () => {
   showCategoriesForm();
   cleanFrontPage();
   cleanDoneOperations();
   cleanAside();
   generateCategoriesItems();
   cleanEditCategoryWindow();
+  cleanWhiteBox()
 });
 
 
@@ -311,7 +333,6 @@ const categoriesSelectInput = (idInput) =>{
 }
 
 window.addEventListener('load', ()=>{
-    
     categoriesSelectInput($("#selectCategoryFilters"))
     const option = document.createElement("option")
     const allText = document.createTextNode("Todas")
@@ -448,6 +469,7 @@ $("#navBalance").addEventListener("click", () => {
     generateTableOperations();
     cleanCategoriesForm();
     cleanNewOperationForm();
+    showWhiteBox()
    // categoriesSelectInput($("#selectCategoryFilters"))
     //falta agregar mas dom
   }
@@ -562,7 +584,7 @@ const printTotal = ()=> {
 
 $("#icon").addEventListener("click",()=>{
     if (!localStorage.getItem('operations')) {
-        showFrontPage()
+        showWhiteBox()
         showAside()
     } else{
     cleanCategoriesForm()
@@ -572,6 +594,7 @@ $("#icon").addEventListener("click",()=>{
     showDoneOperations()
     showAside()
     generateTableOperations()
+    showWhiteBox()
     }
 })
 /***********************************************************/
@@ -639,18 +662,89 @@ const filterByCategories = (selectedCategory, operations) => {
     
 };
 
+//FILTRO POR FECHA
 
+// FILTRO POR A/Z
 
+const orderOperationsAz = () => {
+  const sortAz = getDataInLocalStorage('operations')
+  console.log(sortAz.description)
+//   sortAz.sort((a, b) => {
+//     if (a.description < b.description) {
+//         return -1
+//     }
+//     if (a.description > b.description) {
+//         return 1
+//     }
+//     return 0
+//   })
+}
+ 
+const fruits = ["Watermelon", "Apple", "Orange"]
+const numbers = [20, -3, 17, 5, 48, -10]
 
+// Para ordenar numericamente
+// a - b ordena de menor a mayor
+// b - a ordena de mayor a menor
+
+// console.log(numbers.sort((a, b) => a - b))
+// console.log(numbers.sort((a, b) => b - a))
+
+// Para ordenar alfabeticamente
+// a < b return -1, a > b return 1, sino return 0 => ordena A/Z
+// a < b return 1, a > b return -1, sino return 0 => ordena Z/A
+
+console.log(fruits.sort())
+console.log(fruits.sort().reverse())
+
+const users = [
+    {
+        name: "Juan Pablo",
+        profession: "Developer",
+        salary: 200000
+    },
+    {
+        name: "Miriam Alonso",
+        profession: "QA",
+        salary: 180000
+    },
+    {
+        name: "Agostina Tevez",
+        profession: "Technical Leader",
+        salary: 230000
+    },
+    {
+        name: "Kevin Lobos",
+        profession: "Functional Analyst",
+        salary: 190000
+    }
+]
   
+console.log(users.sort((a, b) => {
+    if (a.name < b.name) {
+        return -1
+    }
+    if (a.name > b.name) {
+        return 1
+    }
+    return 0
+}))
+console.log(users.sort((a, b) => {
+    if (a.name > b.name) {
+        return -1
+    }
+    if (a.name < b.name) {
+        return 1
+    }
+    return 0
+}))
 
 
 
 
 
 
-
-
+/////////////////////////////////////////////////////////
 if (!localStorage.getItem("operations")) {
     localStorage.setItem("operations", JSON.stringify([]));
 
@@ -750,3 +844,9 @@ const highestSpendingCat = ()=>{
 
 //let highestEarningMonth = highestEarningCat().date
 //highestEarningMonth = highestEarningMonth.split("-")[1]
+
+
+//-------funcion navbar responsive
+$("#btnMenu").addEventListener('click', () => {
+  $("#menu").classList.toggle('hidden')
+})  
