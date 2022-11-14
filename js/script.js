@@ -14,6 +14,8 @@ const showAside = () =>{
     categoriesSelectInput($("#selectCategoryFilters"))
 }
 const cleanFrontPage = () => $("#frontPage").classList.add("hidden");
+const showFrontPage = () => $("#frontPage").classList.remove("hidden");
+
 
 const showNewOperationForm = () => {
     $("#formNewOperation").classList.remove("hidden")
@@ -576,6 +578,9 @@ $("#icon").addEventListener("click",()=>{
     if (!localStorage.getItem('operations')) {
         showWhiteBox()
         showAside()
+        showFrontPage()
+        cleanCategoriesForm()
+
     } else{
     cleanCategoriesForm()
     cleanEditOperationsForm()
