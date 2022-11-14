@@ -666,10 +666,11 @@ const filterByCategories = (selectedCategory, operations) => {
 
 // FILTRO POR A/Z
 
-const orderOperationsAz = () => {
-  const sortAz = getDataInLocalStorage('operations')
-  console.log(sortAz.description)
-//   sortAz.sort((a, b) => {
+// const orderOperationsAz = () => {
+//   const sortAz = getDataInLocalStorage('operations')
+ 
+//    console.log(sortAz.description.toLowerCase().sort())
+//   sortAz.toLowerCase().sort((a,b)=>{
 //     if (a.description < b.description) {
 //         return -1
 //     }
@@ -678,10 +679,28 @@ const orderOperationsAz = () => {
 //     }
 //     return 0
 //   })
-}
+   
+// }
+
  
 const fruits = ["Watermelon", "Apple", "Orange"]
 const numbers = [20, -3, 17, 5, 48, -10]
+
+
+//FILTRO POR MAYOR Y MENOR MONTO
+
+const highestAmountFilter = () => {
+    let amountFilter = getDataInLocalStorage('operations')
+    
+    for (amounts of amountFilter) {
+       const {amount} = amountFilter
+       console.log(amount)
+
+    }
+}
+   
+
+
 
 // Para ordenar numericamente
 // a - b ordena de menor a mayor
