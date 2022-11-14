@@ -62,14 +62,28 @@ const saveDataInLocalStorage = (key, data) => {
 
 // AGREGAR OPERACIONES A UN ARRAY DE OBJETOS
 
-
 const operationsInfo = () => {
+    const operations = getDataInLocalStorage("operations") 
+    const categories = getDataInLocalStorage("categories") 
     const description = $("#description").value
-    const amount = $("#amount").value
+    const amount = parseInt($("#amount").value)
     const type = $("#type").value
-    const selectedCategory = $("#selectCategory").value
+
+    for (category of categories){
+      if ( $("#selectCategory").value == category.nameCategory){
+        var selectedCategory = category.id
+      }
+    }
+
     var date = $("#date").value
-    const id = makeid()
+
+    let id = parseInt(operations.length + 1)
+    for (const operation of operations){
+      if(operation.id==id){
+        id = id + 1
+      }
+    }
+
     return {
         id,
         description,
@@ -251,7 +265,7 @@ const removeOperation = (id) => {
 
 
 const deleteOperation = (id) => {
-    console.log(id)
+    id = parseInt(id)
     removeOperation(id);
     filterByOptions()
    // return generateTableOperations();
@@ -298,22 +312,22 @@ $("#navCategory").addEventListener("click", () => {
 
 if (!localStorage.getItem("categories")){
 localStorage.setItem ("categories", JSON.stringify([
-    { id: makeid(),
+    { id: 1,
       nameCategory: "Comida" },
 
-    { id: makeid(), 
+    { id: 2, 
       nameCategory: "Servicios" },
 
-    { id: makeid(), 
+    { id: 3, 
       nameCategory: "Salidas" },
 
-    { id: makeid(), 
+    { id: 4, 
       nameCategory: "Educación" },
 
-    { id: makeid(),
+    { id: 5,
       nameCategory: "Transporte" },
 
-    { id: makeid(), 
+    { id: 6, 
       nameCategory: "Trabajo" },
   ])
 );
@@ -349,12 +363,20 @@ window.addEventListener('load', ()=>{
 
 const categoriesInfo = () => {
   const nameCategory = $("#nameCategory").value;
-  const id = makeid();
+  let id = getDataInLocalStorage("categories").length + 1;
+  let categories = getDataInLocalStorage("categories")
+  for (const category of categories){
+    if(category.id == id){
+      id = id + 1
+    }
+  }
+
   return {
     id,
     nameCategory,
   };
 };
+
 
 
 const generateCategoriesItems = () => {
@@ -446,6 +468,7 @@ const removeCategory = (id) =>{
 
   
 const deleteCategory = (id) => {
+  id = parseInt(id)
   removeCategory(id)
   return generateCategoriesItems()
 }
