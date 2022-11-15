@@ -1,144 +1,96 @@
-
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => document.querySelectorAll(selector);
 
+// FUNCIONES REUTILIZABLES
 
 // Funciones de clean y show atributos
 
-const cleanWhiteBox = () => $("#whiteBox").classList.add("hidden");
-const showWhiteBox = () => $("#whiteBox").classList.remove("hidden")
-const cleanAside = () => $("#aside").classList.add("hidden");
-
+const clean = (idHtml) => idHtml.classList.add("hidden");
+const show = (idHtml) => idHtml.classList.remove("hidden");
 
 const showAside = () =>{ 
-    $("#aside").classList.remove("hidden");
-    categoriesSelectInput($("#selectCategoryFilters"))
-}
-const cleanFrontPage = () => $("#frontPage").classList.add("hidden");
-
-const showNewOperationForm = () => {
-    $("#formNewOperation").classList.remove("hidden")
-    inputDate.value = todayDate()
-    categoriesSelectInput($("#selectCategory"))
-
+  $("#aside").classList.remove("hidden");
+  categoriesSelectInput($("#selectCategoryFilters"))
 };
 
-const cleanNewOperationForm = () => $("#formNewOperation").classList.add("hidden");
-const showDoneOperations = () => $("#doneOperations").classList.remove("hidden");
-const cleanDoneOperations = () => $("#doneOperations").classList.add("hidden");
-const cleanEditOperationsForm = () => $("#editOperationsForm").classList.add("hidden");
-const showEditOperationsForm = () => $("#editOperationsForm").classList.remove("hidden");
-const showCategoriesForm = () => $("#categoriesForm").classList.remove("hidden");
-const cleanCategoriesForm = () => $("#categoriesForm").classList.add("hidden");
-const showContainer = () => $("#container").classList.remove("hidden");
-const cleanContainer = () => $("#container").classList.add("hidden");
+const showNewOperationForm = () => {
+  $("#formNewOperation").classList.remove("hidden")
+  inputDate.value = todayDate()
+  categoriesSelectInput($("#selectCategory"))
 
-const showEditCategoryWindow = () => $("#editCategoryWindow").classList.remove("hidden");
-const cleanEditCategoryWindow = () => $("#editCategoryWindow").classList.add("hidden");
-
-
-const clean = (idHtml) => { 
-    idHtml.classList.add("hidden")
-
-}
-const show = (idHtml) => { 
-    idHtml.classList.remove("hidden")
-
-}
-
+};
 
 /*******************************************************/
 
-
-const getDataInLocalStorage = (key) => {
-  return JSON.parse(localStorage.getItem(key));
-};
-
-
-const saveDataInLocalStorage = (key, data) => {
-  localStorage.setItem(key, JSON.stringify(data));
-};
+const getDataInLocalStorage = (key) => JSON.parse(localStorage.getItem(key));
+const saveDataInLocalStorage = (key, data) => localStorage.setItem(key, JSON.stringify(data));
 
 
 // AGREGAR OPERACIONES A UN ARRAY DE OBJETOS
 
 const operationsInfo = () => {
-    const operations = getDataInLocalStorage("operations") 
-    const categories = getDataInLocalStorage("categories") 
-    const description = $("#description").value
-    const amount = parseInt($("#amount").value)
-    const type = $("#type").value
+  const operations = getDataInLocalStorage("operations") 
+  const categories = getDataInLocalStorage("categories") 
+  const description = $("#description").value
+  const amount = parseInt($("#amount").value)
+  const type = $("#type").value
 
-    for (category of categories){
-      if ( $("#selectCategory").value == category.nameCategory){
-        var selectedCategory = category.id
-      }
+  for (category of categories){
+    if ( $("#selectCategory").value == category.nameCategory){
+      var selectedCategory = category.id
     }
+  }
 
-    var date = $("#date").value
+  var date = $("#date").value
 
-    let id = parseInt(operations.length + 1)
-    for (const operation of operations){
-      if(operation.id==id){
-        id = id + 1
-      }
+  let id = parseInt(operations.length + 1)
+
+  for (const operation of operations){
+    if(operation.id==id){
+      id = id + 1
     }
+  }
 
-    return {
-        id,
-        description,
-        amount,
-        type,
-        selectedCategory,
-        date
-    }
+  return {
+    id,
+    description,
+    amount,
+    type,
+    selectedCategory,
+    date
+  }
 }
 
 /**************************************************/
 
-const makeid = () => {
-    let result = '';
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    const charactersLength = characters.length;
-    for ( let i = 0; i < 10 ; i++ ) {
-        result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
-}
-
-
-/*******************************************************/
-
-
 const generateTableOperations = (operations) => {
    
-    let maybeFiltedOperations = getDataInLocalStorage("operations");
+  let maybeFiltedOperations = getDataInLocalStorage("operations");
 
-    if (operations) {
-        maybeFiltedOperations = operations;
-    }
+  if (operations) {
+    maybeFiltedOperations = operations;
+  }
       
-    $("#table").innerHTML = "";
+  $("#table").innerHTML = "";
 
-    maybeFiltedOperations.map((operation) => {
-        const { id, description, selectedCategory, date, amount, type } = operation;
-        const className = type === "Gasto" ? "red-500" : "green-500";
-        const operator = type === "Gasto" ? "-" : "+";
+  maybeFiltedOperations.map((operation) => {
+    const { id, description, selectedCategory, date, amount, type } = operation;
+    const className = type === "Gasto" ? "red-500" : "green-500";
+    const operator = type === "Gasto" ? "-" : "+";
 
-        var formatedDate = correctDate(date)
+    var formatedDate = correctDate(date)
 
-        $("#table").innerHTML += `
+    $("#table").innerHTML += `
             
-            <tr>
-                <td class="pl-0 pr-10 mt-4 pt-0 text-lg font-bold capitalize">${description}</td>
-                <td class="mt-0 pt-0 pl-10 text-xs ">${selectedCategory}</td>
-                <td class="mt-0 pt-0 pl-10 text-sm">${formatedDate}</td>
-                <td class="mt-0 pt-0 pl-12 text-lg text-${className} font-bold">${operator}${amount}</td>
-                <td class="pl-8 mt-0 pt-0 text-xs"><button class="mr-4 btnEditOperation" data-id="${id}" onclick="operationEdit('${id}')">Editar</button><button class="mr-4 btnDeleteOperation" data-id="${id}" onclick="deleteOperation('${id}')">Eliminar</button></td>
-            </tr>
-             
-        `;
+      <tr>
+        <td class="pl-0 pr-10 mt-4 pt-0 text-lg font-bold capitalize">${description}</td>
+          <td class="mt-0 pt-0 pl-10 text-xs ">${selectedCategory}</td>
+          <td class="mt-0 pt-0 pl-10 text-sm">${formatedDate}</td>
+          <td class="mt-0 pt-0 pl-12 text-lg text-${className} font-bold">${operator}${amount}</td>
+          <td class="pl-8 mt-0 pt-0 text-xs"><button class="mr-4 btnEditOperation" data-id="${id}" onclick="operationEdit('${id}')">Editar</button><button class="mr-4 btnDeleteOperation" data-id="${id}" onclick="deleteOperation('${id}')">Eliminar</button></td>
+      </tr>`;
   });
+
 };
 
 /*-----------------------------------------------------------------------------------*/
@@ -146,21 +98,22 @@ const generateTableOperations = (operations) => {
 
 //Añadir las operaciones a la tabla, generar la tabla con las mismas, DOM que muestra la tabla
 
-
 $("#addOperation").addEventListener("click", () => {
+
   let operations = getDataInLocalStorage("operations");
   operations.push(operationsInfo());
-
   saveDataInLocalStorage("operations", operations);
-  showContainer()
-  showWhiteBox()
+
+  show($("#container"))
+  show($("#whiteBox"))
+
   generateTableOperations();
   printTotalProfit()  
   printTotalExpenses()
   printTotal()
 
-  cleanNewOperationForm();
-  showDoneOperations();
+  clean($("#formNewOperation"));
+  show($("#doneOperations"));
   showAside();
 
 });
@@ -171,19 +124,17 @@ $("#addOperation").addEventListener("click", () => {
 
 $("#addOperationTable").addEventListener("click", () => {
   showNewOperationForm();
-  cleanDoneOperations();
-  cleanContainer()
+  clean($("#doneOperations"));
+  clean($("#container"))
+
   $("#description").value = ""
   $("#amount").value = ""
-
 });
 
 
 /*------------------------------------------------------------------*/
 
-
 //Funcion que retorna un id especifico, es decir, una operacion o categoria especifica
-
 
 const find = (objetsType, id) => {
   let results = getDataInLocalStorage(objetsType);
@@ -191,15 +142,14 @@ const find = (objetsType, id) => {
   return results.find((result) => result.id === id);
 };
 
-
 // Evento de editar operación, precarga los datos y botón dinámico
-
 
 const operationEdit = (id) => {
   
-  showEditOperationsForm()
-  cleanDoneOperations()
-  cleanAside()
+  show($("#editOperationsForm"))
+  clean($("#doneOperations"))
+  clean($("#aside"))
+
   const editedOperation = find("operations", id);
   console.log(editedOperation);
   $("#editDescription").value = editedOperation.description;
@@ -211,19 +161,17 @@ const operationEdit = (id) => {
   $("#editContainer").innerHTML = `<button id="edit" data-id="${id}" class=" w-[91px] h-10 text-white border-none ml-2  bg-green-400 rounded-md ml-2" onclick="updateOperation('${id}')" >Editar</button>`;
 };
 
-
 //funcion que edita la operación por el usuario
 
-
 const newOperationData = (id) => {
-    return {
-      id: id,
-      description: $("#editDescription").value,
-      amount: $("#editAmount").value,
-      type: $("#editType").value,
-      selectedCategory: $("#editSelectedCategory").value,
-      date: $("#editDate").value,
-    };
+  return {
+    id: id,
+    description: $("#editDescription").value,
+    amount: $("#editAmount").value,
+    type: $("#editType").value,
+    selectedCategory: $("#editSelectedCategory").value,
+    date: $("#editDate").value,
+  };
 };
 
 
@@ -239,8 +187,8 @@ const updateOperation = (id) => {
   });
 
   saveDataInLocalStorage("operations", updatedOperation);
-  cleanEditOperationsForm();
-  showDoneOperations();
+  clean($("#editOperationsForm"));
+  show($("#doneOperations"));
   showAside();
   
   const optionsFiltered = filterByOptions();
@@ -254,7 +202,6 @@ const updateOperation = (id) => {
 
 //Remover operación, delete
 
-
 const removeOperation = (id) => {
   let operations = getDataInLocalStorage("operations");
   console.log(id)
@@ -265,33 +212,28 @@ const removeOperation = (id) => {
 
 
 const deleteOperation = (id) => {
-    id = parseInt(id)
-    removeOperation(id);
-    filterByOptions()
-   // return generateTableOperations();
+  id = parseInt(id);
+  removeOperation(id);
+  filterByOptions();
 };
 
 /*******************************************************************/
 
-//CANCELAR operación a editar
+//CANCELAR operación a editar DOM
 
 $("#cancelEditOperation").addEventListener("click", ()=>{
-  cleanEditOperationsForm()
-  showDoneOperations()
+  clean($("#editOperationsForm"))
+  show($("#doneOperations"))
   showAside()
 })
 
-
-
-
 // evento para hacer desaparecer la portada y aparece el formulario de nueva op
 
-
 $("#btnNewOperations").addEventListener("click", () => {
-  cleanAside();
-  cleanFrontPage();
+  clean($("#aside"));
+  clean( $("#frontPage"));
   showNewOperationForm();
-  cleanWhiteBox()
+  clean($("#whiteBox"))
 });
 
 
@@ -300,13 +242,13 @@ $("#btnNewOperations").addEventListener("click", () => {
 //ver tabla de categorias
 
 $("#navCategory").addEventListener("click", () => {
-  showCategoriesForm();
-  cleanFrontPage();
-  cleanDoneOperations();
-  cleanAside();
+  show($("#categoriesForm"));
+  clean( $("#frontPage"));
+  clean($("#doneOperations"));
+  clean($("#aside"));
   generateCategoriesItems();
-  cleanEditCategoryWindow();
-  cleanWhiteBox()
+  clean( $("#editCategoryWindow"));
+  clean($("#whiteBox"))
 });
 
 
@@ -347,15 +289,14 @@ const categoriesSelectInput = (idInput) =>{
 }
 
 window.addEventListener('load', ()=>{
-    categoriesSelectInput($("#selectCategoryFilters"))
-    const option = document.createElement("option")
-    const allText = document.createTextNode("Todas")
-    option.appendChild(allText)
+  categoriesSelectInput($("#selectCategoryFilters"))
+  const option = document.createElement("option")
+  const allText = document.createTextNode("Todas")
+  option.appendChild(allText)
 
-    $("#selectCategoryFilters").append(option)
-    
-   // $("#selectCategoryFilters").innerHTML += `<option>Todas</option>`
-})
+  $("#selectCategoryFilters").append(option)
+      
+});
     
 
 //AGREGAR CATEGORIAS A UN ARRAY DE OBJETOS EN LOCAL STORAGE
@@ -364,7 +305,8 @@ window.addEventListener('load', ()=>{
 const categoriesInfo = () => {
   const nameCategory = $("#nameCategory").value;
   let id = getDataInLocalStorage("categories").length + 1;
-  let categories = getDataInLocalStorage("categories")
+  let categories = getDataInLocalStorage("categories");
+
   for (const category of categories){
     if(category.id == id){
       id = id + 1
@@ -378,7 +320,6 @@ const categoriesInfo = () => {
 };
 
 
-
 const generateCategoriesItems = () => {
   $("#categoriesItems").innerHTML = "";
   $("#selectCategory").innerHTML = ""
@@ -386,19 +327,17 @@ const generateCategoriesItems = () => {
   getDataInLocalStorage("categories").map((item) => {
     const { id, nameCategory } = item;
 
-    $("#categoriesItems").innerHTML += ` <div class="flex flex-row">          
-        <div class="flex w-[1300px] mt-8" >
-            <span>${nameCategory}</span>
-        </div>
+    $("#categoriesItems").innerHTML += `<div class="flex flex-row">          
+      <div class="flex w-[1300px] mt-8" >
+        <span>${nameCategory}</span>
+      </div>
     
-        <div class="flex flex-row w-[200px] mt-8">
-            
-            <button class="ml-2" id="${id}" onclick="categoryEdit('${id}')">Editar</button>
-            <button class="ml-2" id="${id}" onclick="deleteCategory('${id}')">Eliminar</button>
-                
-        </div>
+      <div class="flex flex-row w-[200px] mt-8">
+        <button class="ml-2" id="${id}" onclick="categoryEdit('${id}')">Editar</button>
+        <button class="ml-2" id="${id}" onclick="deleteCategory('${id}')">Eliminar</button>         
+      </div>
     
-    </div> `;
+    </div>`;
 
   });
 };
@@ -411,16 +350,16 @@ $("#addCategory").addEventListener("click", () => {
   saveDataInLocalStorage("categories", categories);
   console.log(categories);
   generateCategoriesItems(getDataInLocalStorage("categories"));
+
   $("#nameCategory").value = "";
 });
-
-
 
 //Editar categorías
 
 const categoryEdit = (id) => {
-  cleanCategoriesForm();
-  showEditCategoryWindow();
+  clean($("#categoriesForm"));
+  show( $("#editCategoryWindow"));
+
   const editedCategory = find("categories", id);
   $("#editCategoryInput").value = editedCategory.nameCategory;
 
@@ -447,8 +386,8 @@ const updateCategory = (id) => {
 
   saveDataInLocalStorage("categories", updatedCategory);
 
-  cleanEditCategoryWindow();
-  showCategoriesForm();
+  clean( $("#editCategoryWindow"));
+  show($("#categoriesForm"));
   generateCategoriesItems();
 };
 
@@ -458,11 +397,11 @@ const updateCategory = (id) => {
 // Remover categoría
 
 const removeCategory = (id) =>{
-    let categories = getDataInLocalStorage("categories")
+  let categories = getDataInLocalStorage("categories")
    
-    categories = categories.filter((category) => category.id !== id);
+  categories = categories.filter((category) => category.id !== id);
     
-    saveDataInLocalStorage("categories", categories)
+  saveDataInLocalStorage("categories", categories)
     
 }
 
@@ -476,68 +415,80 @@ const deleteCategory = (id) => {
 /*********************************************************/
 
 
-//CANCELAR categoría en edición
+//CANCELAR categoría en edición DOM
 
 $("#cancelCategoryInEdition").addEventListener("click", ()=>{
-    showCategoriesForm()
-    cleanEditCategoryWindow()
-})
+  show($("#categoriesForm"))
+  clean( $("#editCategoryWindow"))
+});
 
 /*********************************************************/
 
 $("#navBalance").addEventListener("click", () => {
   if (localStorage.getItem("operations")) {
     showAside();
-    showDoneOperations();
+    show($("#doneOperations"));
+
     generateTableOperations();
-    cleanCategoriesForm();
-    cleanNewOperationForm();
-    showWhiteBox()
-   // categoriesSelectInput($("#selectCategoryFilters"))
+
+    clean($("#categoriesForm"));
+    clean($("#formNewOperation"));
+    show($("#whiteBox"))
+   
     //falta agregar mas dom
   }
 });
 
 
-
 // date - fecha y hora
+
 const inputDate = $("#date")
+
 //se ejecuta en el formulario nEW oPERATION FORM
+
 const todayDate = () =>{
-    let newDate = new Date ()  
-    let month =  newDate.getMonth() + 1
-    let day = newDate.getDate(); //obteniendo dia
-    let year = newDate.getFullYear(); 
-    if(day<10){
-    day='0'+day; }//agrega cero si el menor de 10
-    if(month<10){
-    month='0'+month} 
-    return inputDate.value= year + "-" + month + "-" + day
+  let newDate = new Date ()  
+  let month =  newDate.getMonth() + 1
+  let day = newDate.getDate(); //obteniendo dia
+  let year = newDate.getFullYear();
+
+  if(day<10){
+    day='0'+day
+  }//agrega cero si el menor de 10
+  if(month<10){
+  month='0'+month
+  } 
+  return inputDate.value= year + "-" + month + "-" + day
 }
 
 
 //Dar vuelta la fecha
 
 const correctDate = (date) =>{
-        let formatDate = date.split("-").reverse().join("-")   
-        return formatDate
+  let formatDate = date.split("-").reverse().join("-")   
+  return formatDate
 }
 
 
 /* seteando al primer dia del mes */
 
 window.onload = ()=>{
-    const inputFiltersDate = $("#filtersDate")
-    let newDate = new Date ()  
-    
-    let month =  newDate.getMonth() + 1
-    let day = 1; //obteniendo dia
-    let year = newDate.getFullYear(); 
-    if(day<10){
-    day='0'+day; }//agrega cero si el menor de 10
-    if(month<10){
-    month='0'+month} 
-    inputFiltersDate.value= year + "-" + month + "-" + day
+  const inputFiltersDate = $("#filtersDate")
+
+  let newDate = new Date ()  
+  let month =  newDate.getMonth() + 1
+  let day = 1; //obteniendo dia
+  let year = newDate.getFullYear();
+
+  if(day<10){
+    day='0'+day
+  }//agrega cero si el menor de 10
+  if(month<10){
+  month='0'+month
+  }
+
+  inputFiltersDate.value= year + "-" + month + "-" + day
+
 }
 
 /***********************************************************/
@@ -546,18 +497,20 @@ window.onload = ()=>{
 
 let divProfits = $("#divProfits")
 const earningBalance = () =>{
-    let operations = getDataInLocalStorage('operations')
-    let arrayProfitAmounts = []
-    let totalProfit
-    for (const operation of operations){
-        if(operation.type === "Ganancia"){
-           let amountToNumber = parseInt(operation.amount)
-           arrayProfitAmounts.push(amountToNumber) 
-           totalProfit = arrayProfitAmounts.reduce((total,profitAmounts)=> total + profitAmounts)
-        }
-    }
-    return totalProfit
+  let operations = getDataInLocalStorage('operations')
+  let arrayProfitAmounts = []
+  let totalProfit
+
+  for (const operation of operations){
+    if(operation.type === "Ganancia"){
+        let amountToNumber = parseInt(operation.amount)
+        arrayProfitAmounts.push(amountToNumber) 
+        totalProfit = arrayProfitAmounts.reduce((total,profitAmounts)=> total + profitAmounts)
+      }
+  }
+  return totalProfit
 }
+
 //mañana
 const printTotalProfit = ()=>{
   //let operations = getDataInLocalStorage('operations')
@@ -565,28 +518,33 @@ const printTotalProfit = ()=>{
   divProfits.innerText = earningBalance()
   
 }
+
 //------------------balance de gastos
+
 let divExpenses = $("#divExpenses")
+
 const expensesBalance = () =>{
-    let operations = getDataInLocalStorage('operations')
-    let arrayExpensesAmounts = []
-    let totalExpenses
-    for (const operation of operations){
-        if(operation.type === "Gasto"){
-           let amountToNumber = parseInt(operation.amount)
-           arrayExpensesAmounts.push(amountToNumber) 
-           totalExpenses = arrayExpensesAmounts.reduce((total,expensesAmounts)=> total + expensesAmounts)
-        }
+  let operations = getDataInLocalStorage('operations')
+  let arrayExpensesAmounts = []
+  let totalExpenses
+
+  for (const operation of operations){
+    if(operation.type === "Gasto"){
+      let amountToNumber = parseInt(operation.amount)
+      arrayExpensesAmounts.push(amountToNumber) 
+      totalExpenses = arrayExpensesAmounts.reduce((total,expensesAmounts)=> total + expensesAmounts)
     }
-     return totalExpenses
+  }
+  return totalExpenses
     
-}
+};
 
 const printTotalExpenses = ()=>{
   //let operations = getDataInLocalStorage('operations')
   //getDataInLocalStorage("operations") ? divExpenses.innerText = "0" :
-   divExpenses.innerText = expensesBalance()
-}
+  divExpenses.innerText = expensesBalance()
+};
+
 //---------------------balance total
 
 const totalBalance = (a, b) => a - b
@@ -594,45 +552,39 @@ const totalBalance = (a, b) => a - b
 const printTotal = ()=> {
   let operations = getDataInLocalStorage('operations')
   getDataInLocalStorage("operations") ? $("#divTotal").innerText = "0" : $("#divTotal").innerText = totalBalance(earningBalance(),expensesBalance())
-}
+};
 
 
-// /****************************************************/
-
-
-
-
-/***********************************************************/
+//****************************************************/
 
 
 $("#icon").addEventListener("click",()=>{
-    if (!localStorage.getItem('operations')) {
-        showWhiteBox()
-        showAside()
-    } else{
-    cleanCategoriesForm()
-    cleanEditOperationsForm()
-    cleanNewOperationForm()
-    cleanFrontPage() 
-    showDoneOperations()
-    showAside()
-    generateTableOperations()
-    showWhiteBox()
-    }
-})
-/***********************************************************/
 
+  if (!localStorage.getItem('operations')){
+    show($("#whiteBox"))
+    showAside()
+  }else{
+    clean($("#categoriesForm"))
+    clean($("#editOperationsForm"))
+    clean($("#formNewOperation"))
+    clean( $("#frontPage")) 
+    show($("#doneOperations"))
+    showAside()
+
+    generateTableOperations()
+
+    show($("#whiteBox"))
+  }
+
+});
+
+/***********************************************************/
 
 //FILTROS
 
-
 // GASTO, GANANCIA, TODOS
 
-$("#selectType").addEventListener("change", (e) => {
-
-    filterByOptions(e.target.value)
- 
-});
+$("#selectType").addEventListener("change", (e) => filterByOptions(e.target.value));
 
 
 const filterByOptions = () => {
@@ -655,176 +607,146 @@ const filterByOptions = () => {
      
 };
 
-
-// Función que muestra la tabla según el filtro aplicado
-
-
-
-
 /************************************************************************/
 
 //FILTRO POR CATEGORÍAS
 
 $("#selectCategoryFilters").addEventListener("change", (e) => {
 
-    const optionsFiltered = filterByOptions();
-    const categoriesFiltered = filterByCategories(e.target.value, optionsFiltered); 
+  const optionsFiltered = filterByOptions();
+  const categoriesFiltered = filterByCategories(e.target.value, optionsFiltered); 
 
-    generateTableOperations(categoriesFiltered)
+  generateTableOperations(categoriesFiltered)
      
 });
 
 
 const filterByCategories = (selectedCategory, operations) => {
 
-    const filteredLocalS = operations.filter((operation) => operation.selectedCategory === selectedCategory);
+  const filteredLocalS = operations.filter((operation) => operation.selectedCategory === selectedCategory);
 
-    return filteredLocalS
-  
-    //generateTableOperations(filteredLocalS);
-    
+  return filteredLocalS
+     
 };
 
 //FILTRO POR FECHA
 
 // FILTRO POR A/Z
 
-// const orderOperationsAz = () => {
-//   const sortAz = getDataInLocalStorage('operations')
- 
-//    console.log(sortAz.description.toLowerCase().sort())
-//   sortAz.toLowerCase().sort((a,b)=>{
-//     if (a.description < b.description) {
-//         return -1
-//     }
-//     if (a.description > b.description) {
-//         return 1
-//     }
-//     return 0
-//   })
-   
-// }
+const orderOperationsAz = () => {
+  const sortAz = getDataInLocalStorage('operations')
 
- 
-const fruits = ["Watermelon", "Apple", "Orange"]
-const numbers = [20, -3, 17, 5, 48, -10]
-
-
-//FILTRO POR MAYOR Y MENOR MONTO
-
-const highestAmountFilter = () => {
-    let amountFilter = getDataInLocalStorage('operations')
-    
-    for (amounts of amountFilter) {
-       const {amount} = amountFilter
-       console.log(amount)
-
+  console.log(sortAz.sort((a, b) => {
+    if (a.description.toLowerCase() < b.description.toLowerCase()) {
+      return -1
     }
+    if (a.description.toLowerCase() > b.description.toLowerCase()) {
+      return 1
+    }
+    return 0
+  }))
 }
-   
 
+// FILTRO POR Z/A
 
+const orderOperationsZa = () => {
+  const sortZa = getDataInLocalStorage('operations')
 
-// Para ordenar numericamente
-// a - b ordena de menor a mayor
-// b - a ordena de mayor a menor
-
-// console.log(numbers.sort((a, b) => a - b))
-// console.log(numbers.sort((a, b) => b - a))
-
-// Para ordenar alfabeticamente
-// a < b return -1, a > b return 1, sino return 0 => ordena A/Z
-// a < b return 1, a > b return -1, sino return 0 => ordena Z/A
-
-console.log(fruits.sort())
-console.log(fruits.sort().reverse())
-
-const users = [
-    {
-        name: "Juan Pablo",
-        profession: "Developer",
-        salary: 200000
-    },
-    {
-        name: "Miriam Alonso",
-        profession: "QA",
-        salary: 180000
-    },
-    {
-        name: "Agostina Tevez",
-        profession: "Technical Leader",
-        salary: 230000
-    },
-    {
-        name: "Kevin Lobos",
-        profession: "Functional Analyst",
-        salary: 190000
+  console.log(sortZa.sort((a, b) => {
+    if (a.description.toLowerCase() < b.description.toLowerCase()) {
+      return 1
     }
-]
+    if (a.description.toLowerCase() > b.description.toLowerCase()) {
+      return -1
+    }
+    return 0
+  }))
+}
+
+// FILTRO MENOR MONTO
+
+const orderByMajorAmount = () =>{
+  const largerAmount = getDataInLocalStorage('operations')
+  console.log(largerAmount.sort((a, b) => {
+    return a.amount - b.amount
+   })
+  )
   
-console.log(users.sort((a, b) => {
-    if (a.name < b.name) {
-        return -1
-    }
-    if (a.name > b.name) {
-        return 1
-    }
-    return 0
-}))
-console.log(users.sort((a, b) => {
-    if (a.name > b.name) {
-        return -1
-    }
-    if (a.name < b.name) {
-        return 1
-    }
-    return 0
-}))
+}
+
+const orderByMinorAmount = () =>{
+  const minorAmount = getDataInLocalStorage('operations')
+  console.log(minorAmount.sort((a, b) => {
+    return b.amount - a.amount 
+  }))
+  
+}
+
+//$("#selectType").addEventListener("change", (e) => filterByOptions(e.target.value));
 
 
+//SE USA (falta terminar)
+
+const filterByOtherFilters = () => {
+  const otherFilters = $("#otherFilters").value
+  
+  if(otherFilters === "A/Z" ){
+    orderOperationsAz()
+    //y pintala en la tabla?
+  }
+  if( otherFilters === "Z/A"){
+    orderOperationsZa()
+  }
+  if(otherFilters === "Mayor monto"){
+    orderByMajorAmount()
+  }
+  if(otherFilters === "Menor monto"){
+    orderByMinorAmount()
+  }
+
+}
 
 
-
+//falta meterlo en la tabla
 
 /////////////////////////////////////////////////////////
 if (!localStorage.getItem("operations")) {
-    localStorage.setItem("operations", JSON.stringify([]));
+  localStorage.setItem("operations", JSON.stringify([]));
 
    
 } else {
-    cleanFrontPage();
-    showDoneOperations();
-    generateTableOperations();
-    printTotalProfit()
-    printTotalExpenses()
-    printTotal()
-  }
+  clean( $("#frontPage"));
+  show($("#doneOperations"));
+  generateTableOperations();
+  printTotalProfit()
+  printTotalExpenses()
+  printTotal()
+}
 
 
-  //--------------------------------------REPORTES------------------
+//--------------------------------------REPORTES------------------
 
-  //Funcion que devuelve la CATEGORIA CON MAYOR GANANCIA y Mayor gasto
+//Funcion que devuelve la CATEGORIA CON MAYOR GANANCIA y Mayor gasto
 
-
-  let categories = getDataInLocalStorage("categories")
+let categories = getDataInLocalStorage("categories")
   //console.log(categories)
-  let operations = getDataInLocalStorage("operations")
+let operations = getDataInLocalStorage("operations")
   //console.log(operations)
- let arrayFoodEarn = []
-const arrayAmounts = operations.map(({amount})=>amount)
+let arrayFoodEarn = []
+const arrayAmounts = operations.map(({amount}) => amount)
 
 let selectedCategoryVar
 
 const foodTotal =()=>{
 for (const operation of operations){
-    let {selectedCategory,amount,type}=operation
-    amount = parseInt(amount)
-    selectedCategoryVar = selectedCategory
+  let {selectedCategory, amount, type} = operation
+  amount = parseInt(amount)
+  selectedCategoryVar = selectedCategory
 
-    if(selectedCategory=="Comida" && type=="Ganancia"){
-        arrayFoodEarn.push(amount)
-        foodCategoryTotal = arrayFoodEarn.reduce((acc,items) => {return acc = acc + items;})
-            }
+  if(selectedCategory=="Comida" && type=="Ganancia"){
+    arrayFoodEarn.push(amount)
+    foodCategoryTotal = arrayFoodEarn.reduce((acc,items) => {return acc = acc + items;})
+  }
 }
 
 let prueba = operations.filter((operation)=> {
@@ -832,8 +754,8 @@ let prueba = operations.filter((operation)=> {
 })
 
 return {
-    foodCategoryTotal,
-    selectedCategoryVar
+  foodCategoryTotal,
+  selectedCategoryVar
 }
 }
 
@@ -849,46 +771,48 @@ return {
 
 
 //----------------------------
-   let highestAmount = Math.max.apply(null,arrayAmounts) 
-  //let lowestAmount = Math.min.apply(null,arrayAmounts) 
+let highestAmount = Math.max.apply(null,arrayAmounts) 
+//let lowestAmount = Math.min.apply(null,arrayAmounts) 
 
 
- const highestEarningCat = ()=>{
-    let selectedCategoryVar
-    for (const operation of operations){
-        const {amount, type, selectedCategory, date} = operation
-        if(amount == highestAmount && type == "Ganancia"){
-            //console.log( "mayor ganancia",operation)
-            return {selectedCategory,
-                    amount,
-                    date
-        }
+const highestEarningCat = ()=>{
+  let selectedCategoryVar
+
+  for (const operation of operations){
+    const {amount, type, selectedCategory, date} = operation
+
+    if(amount == highestAmount && type == "Ganancia"){
+      //console.log( "mayor ganancia",operation)
+      return{selectedCategory,
+      amount,
+      date
+      }
     }
+  }
 }
- }
+
 //mayor gasto
 
 
-
 const highestSpendingCat = ()=>{
-    for (const operation of operations){
-        const {amount, type, selectedCategory} = operation
-        if(amount == highestAmount && type == "Gasto"){
-            //console.log( "mayor gasto",operation)
-            return {selectedCategory,
-                    amount
-        }
+  for (const operation of operations){
+    const {amount, type, selectedCategory} = operation
+
+    if(amount == highestAmount && type == "Gasto"){
+      //console.log( "mayor gasto",operation)
+      return {
+        selectedCategory,
+        amount
+      }
     }
+  }
 }
- }
 
 //Mes con mayor Ganancia 
 
 //let highestEarningMonth = highestEarningCat().date
 //highestEarningMonth = highestEarningMonth.split("-")[1]
 
-
 //-------funcion navbar responsive
-$("#btnMenu").addEventListener('click', () => {
-  $("#menu").classList.toggle('hidden')
-})  
+
+$("#btnMenu").addEventListener('click', () => $("#menu").classList.toggle('hidden'))  
