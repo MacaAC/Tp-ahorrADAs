@@ -300,7 +300,7 @@ window.addEventListener('load', ()=>{
   const allText = document.createTextNode("Todas")
   option.appendChild(allText)
 
-  $("#selectCategoryFilters").append(option)
+  $("#selectCategoryFilters").append(option)}) //preguntar a Ro si acá cierra el evento (?)
 
 //AGREGAR CATEGORIAS A UN ARRAY DE OBJETOS EN LOCAL STORAGE
 
@@ -457,10 +457,10 @@ const todayDate = () =>{
 
   if(day<10){
     day='0'+day
-  }//agrega cero si el menor de 10
+  }
   if(month<10){
   month='0'+month
-  } 
+  }
   return inputDate.value= year + "-" + month + "-" + day
 }
 
@@ -494,8 +494,6 @@ window.onload = ()=>{
 
 }
 
-/***********************************************************/
-
 //--------------------balance de ganancias
 
 let divProfits = $("#divProfits")
@@ -514,12 +512,11 @@ const earningBalance = () =>{
   return totalProfit
 }
 
-//mañana
+//falta resolver
 const printTotalProfit = ()=>{
   //let operations = getDataInLocalStorage('operations')
  // getDataInLocalStorage("operations") ? divProfits.innerText = "0" :
   divProfits.innerText = earningBalance()
-  
 }
 
 //------------------balance de gastos
@@ -534,19 +531,19 @@ const expensesBalance = () =>{
   for (const operation of operations){
     if(operation.type === "Gasto"){
       let amountToNumber = parseInt(operation.amount)
-      arrayExpensesAmounts.push(amountToNumber) 
+      arrayExpensesAmounts.push(amountToNumber)
       totalExpenses = arrayExpensesAmounts.reduce((total,expensesAmounts)=> total + expensesAmounts)
     }
   }
   return totalExpenses
-    
-};
+
+}
 
 const printTotalExpenses = ()=>{
   //let operations = getDataInLocalStorage('operations')
   //getDataInLocalStorage("operations") ? divExpenses.innerText = "0" :
   divExpenses.innerText = expensesBalance()
-};
+}
 
 //---------------------balance total
 
@@ -555,7 +552,7 @@ const totalBalance = (a, b) => a - b
 const printTotal = ()=> {
   // let operations = getDataInLocalStorage('operations')
   // getDataInLocalStorage("operations") ? $("#divTotal").innerText = "0" :
-   $("#divTotal").innerText = totalBalance(earningBalance(),expensesBalance())
+$("#divTotal").innerText = totalBalance(earningBalance(),expensesBalance())
 }
 
 
@@ -600,15 +597,13 @@ const filterByOptions = () => {
   }else{
 
     const localS = getDataInLocalStorage("operations");
-  
+
     const filteredLocalS = localS.filter((operation) => operation.type === type);
 
     generateTableOperations(filteredLocalS);
 
     return filteredLocalS
   }
-
-     
 };
 
 /************************************************************************/
@@ -629,8 +624,8 @@ const filterByCategories = (selectedCategory, operations) => {
 
 const filteredLocalS = operations.filter((operation) => operation.selectedCategory === selectedCategory);
 
-  return filteredLocalS
-     
+return filteredLocalS
+
 };
 
 //FILTRO POR FECHA
@@ -683,7 +678,7 @@ const orderByMinorAmount = () =>{
   console.log(minorAmount.sort((a, b) => {
     return b.amount - a.amount
   }))
-  
+
 }
 
 //$("#selectType").addEventListener("change", (e) => filterByOptions(e.target.value));
@@ -716,8 +711,6 @@ const filterByOtherFilters = () => {
 /////////////////////////////////////////////////////////
 if (!localStorage.getItem("operations")) {
   localStorage.setItem("operations", JSON.stringify([]));
-
-   
 } else {
   clean( $("#frontPage"));
   show($("#doneOperations"));
