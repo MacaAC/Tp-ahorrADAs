@@ -68,6 +68,9 @@ const operationsInfo = () => {
     const description = $("#description").value
     const amount = parseInt($("#amount").value)
     const type = $("#type").value
+    const categoryName = $("#selectCategory").value
+
+  
 
     for (category of categories){
       if ( $("#selectCategory").value == category.nameCategory){
@@ -89,26 +92,13 @@ const operationsInfo = () => {
         description,
         amount,
         type,
+        categoryName,
         selectedCategory,
         date
     }
 }
 
 /**************************************************/
-
-const makeid = () => {
-    let result = '';
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    const charactersLength = characters.length;
-    for ( let i = 0; i < 10 ; i++ ) {
-        result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
-}
-
-
-/*******************************************************/
-
 
 const generateTableOperations = (operations) => {
    
@@ -121,7 +111,7 @@ const generateTableOperations = (operations) => {
     $("#table").innerHTML = "";
 
     maybeFiltedOperations.map((operation) => {
-        const { id, description, selectedCategory, date, amount, type } = operation;
+        const { id, description, selectedCategory, date, amount, type, categoryName } = operation;
         const className = type === "Gasto" ? "red-500" : "green-500";
         const operator = type === "Gasto" ? "-" : "+";
 
@@ -131,7 +121,7 @@ const generateTableOperations = (operations) => {
             
             <tr>
                 <td class="pl-0 pr-10 mt-4 pt-0 text-lg font-bold capitalize">${description}</td>
-                <td class="mt-0 pt-0 pl-10 text-xs ">${selectedCategory}</td>
+                <td class="mt-0 pt-0 pl-10 text-xs ">${categoryName}</td>
                 <td class="mt-0 pt-0 pl-10 text-sm">${formatedDate}</td>
                 <td class="mt-0 pt-0 pl-12 text-lg text-${className} font-bold">${operator}${amount}</td>
                 <td class="pl-8 mt-0 pt-0 text-xs"><button class="mr-4 btnEditOperation" data-id="${id}" onclick="operationEdit('${id}')">Editar</button><button class="mr-4 btnDeleteOperation" data-id="${id}" onclick="deleteOperation('${id}')">Eliminar</button></td>
@@ -592,8 +582,9 @@ const printTotalExpenses = ()=>{
 const totalBalance = (a, b) => a - b
 
 const printTotal = ()=> {
-  let operations = getDataInLocalStorage('operations')
-  getDataInLocalStorage("operations") ? $("#divTotal").innerText = "0" : $("#divTotal").innerText = totalBalance(earningBalance(),expensesBalance())
+  // let operations = getDataInLocalStorage('operations')
+  // getDataInLocalStorage("operations") ? $("#divTotal").innerText = "0" :
+   $("#divTotal").innerText = totalBalance(earningBalance(),expensesBalance())
 }
 
 
@@ -791,10 +782,68 @@ if (!localStorage.getItem("operations")) {
   //console.log(categories)
   let operations = getDataInLocalStorage("operations")
   //console.log(operations)
- let arrayFoodEarn = []
 const arrayAmounts = operations.map(({amount})=>amount)
-
+let arrayCategories
 let selectedCategoryVar
+let selectedCategoryName
+
+const categoriesTotal =(categoryId,gananciaOGasto)=>{
+  arrayCategories=[]
+  for (const operation of operations){
+      let {selectedCategory,amount,type, categoryName}=operation
+      amount = parseInt(amount)
+      selectedCategoryVar = selectedCategory
+      selectedCategoryName = categoryName
+      for(const category of categories){
+        if(selectedCategory== category.id && type== gananciaOGasto && category.id == categoryId){
+          arrayCategories.push(amount)
+          var categoryTotal = arrayCategories.reduce((acc,items) => {return acc = acc + items;})
+    }
+              }
+  }
+  return  categoryTotal
+           
+}
+
+let totalArrayEarns = []
+
+categories.forEach(category=>{
+  if(categoriesTotal(category.id, "Ganancia") != undefined){
+    totalArrayEarns.push(categoriesTotal(category.id, "Ganancia"))
+  }
+});
+
+const highestAmountEarn = () =>{
+
+  let highestValue = Math.max.apply(null,totalArrayEarns)
+  //me falta darle el if correcto para que me retorne correctamente el nombre de la categoría
+  return{
+   // selectedCategoryName,
+    highestValue
+  }
+}
+
+//----------
+
+
+let totalArraySpents = []
+
+categories.forEach(category=>{
+  if(categoriesTotal(category.id, "Gasto") != undefined){
+    totalArraySpents.push(categoriesTotal(category.id, "Gasto"))
+  }
+});
+
+const highestAmountSpents = () =>{
+
+  let highestValue = Math.max.apply(null,totalArraySpents)
+  //me falta darle el if correcto para que me retorne correctamente el nombre de la categoría
+  return{
+   // selectedCategoryName,
+    highestValue
+  }
+}
+//---------------------
 
 const foodTotal =()=>{
 for (const operation of operations){
@@ -830,7 +879,7 @@ return {
 
 
 //----------------------------
-   let highestAmount = Math.max.apply(null,arrayAmounts) 
+  //  let highestAmount = Math.max.apply(null,arrayAmounts) 
   //let lowestAmount = Math.min.apply(null,arrayAmounts) 
 
 
