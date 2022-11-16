@@ -9,12 +9,12 @@ const clean = (idHtml) => idHtml.classList.add("hidden");
 const show = (idHtml) => idHtml.classList.remove("hidden");
 
 const showAside = () =>{ 
-  $("#aside").classList.remove("hidden");
   categoriesSelectInput($("#selectCategoryFilters"))
+  show($("#aside"))
 };
 
 const showNewOperationForm = () => {
-  $("#formNewOperation").classList.remove("hidden")
+  show($("#formNewOperation"))
   inputDate.value = todayDate()
   categoriesSelectInput($("#selectCategory"))
 
@@ -29,24 +29,25 @@ const saveDataInLocalStorage = (key, data) => localStorage.setItem(key, JSON.str
 // AGREGAR OPERACIONES A UN ARRAY DE OBJETOS
 
 const operationsInfo = () => {
-    const operations = getDataInLocalStorage("operations") 
-    const categories = getDataInLocalStorage("categories") 
+    const operations = getDataInLocalStorage("operations")
+    const categories = getDataInLocalStorage("categories")
     const description = $("#description").value
     const amount = parseInt($("#amount").value)
     const type = $("#type").value
-    const categoryName = $("#selectCategory").value
+    //const categoryName = $("#selectCategory").value ahora categoryName no existe
+    const selectedCategory = $("#selectCategory").value
 
-  
 
-  for (category of categories){
+
+  for (const category of categories){
     if ( $("#selectCategory").value == category.nameCategory){
-      var selectedCategory = category.id
+        var categoryId = category.id//preguntar a Manu
     }
   }
 
-  var date = $("#date").value
-
+  var date = $("#date").value//preguntar a Manu
   let id = parseInt(operations.length + 1)
+  
 
   for (const operation of operations){
     if(operation.id==id){
@@ -59,7 +60,7 @@ const operationsInfo = () => {
         description,
         amount,
         type,
-        categoryName,
+        categoryId,
         selectedCategory,
         date
     }
@@ -69,37 +70,35 @@ const operationsInfo = () => {
 
 const generateTableOperations = (operations) => {
    
-  let maybeFiltedOperations = getDataInLocalStorage("operations");
+  let maybeFilteredOperations = getDataInLocalStorage("operations");
 
   if (operations) {
-    maybeFiltedOperations = operations;
+    maybeFilteredOperations = operations;
   }
       
   $("#table").innerHTML = "";
 
-    maybeFiltedOperations.map((operation) => {
-        const { id, description, selectedCategory, date, amount, type, categoryName } = operation;
+    maybeFilteredOperations.map((operation) => {
+        const { id, description, selectedCategory, date, amount, type} = operation;
         const className = type === "Gasto" ? "red-500" : "green-500";
         const operator = type === "Gasto" ? "-" : "+";
 
-    var formatedDate = correctDate(date)
+    var formatedDate = correctDate(date)//ver con Manu
 
     $("#table").innerHTML += `
             
             <tr>
                 <td class="pl-0 pr-10 mt-4 pt-0 text-lg font-bold capitalize">${description}</td>
-                <td class="mt-0 pt-0 pl-10 text-xs ">${categoryName}</td>
+                <td class="mt-0 pt-0 pl-10 text-xs ">${selectedCategory}</td>
                 <td class="mt-0 pt-0 pl-10 text-sm">${formatedDate}</td>
                 <td class="mt-0 pt-0 pl-12 text-lg text-${className} font-bold">${operator}${amount}</td>
-                <td class="pl-8 mt-0 pt-0 text-xs"><button class="mr-4 btnEditOperation" data-id="${id}" onclick="operationEdit('${id}')">Editar</button><button class="mr-4 btnDeleteOperation" data-id="${id}" onclick="deleteOperation('${id}')">Eliminar</button></td>
+                <td class="pl-8 mt-0 pt-0 text-xs"><button class="mr-4 btnEditOperation" data-id="${id}" onclick="operationEdit(${id})">Editar</button><button class="mr-4 btnDeleteOperation" data-id="${id}" onclick="deleteOperation('${id}')">Eliminar</button></td>
             </tr>
              
         `;
   });
 
 };
-
-/*-----------------------------------------------------------------------------------*/
 
 
 //Añadir las operaciones a la tabla, generar la tabla con las mismas, DOM que muestra la tabla
@@ -138,15 +137,14 @@ $("#addOperationTable").addEventListener("click", () => {
 });
 
 
-/*------------------------------------------------------------------*/
-
 //Funcion que retorna un id especifico, es decir, una operacion o categoria especifica
-
+//funciona
 const find = (objetsType, id) => {
   let results = getDataInLocalStorage(objetsType);
   console.log(results);
   return results.find((result) => result.id === id);
 };
+
 
 // Evento de editar operación, precarga los datos y botón dinámico
 
@@ -155,6 +153,7 @@ const operationEdit = (id) => {
   show($("#editOperationsForm"))
   clean($("#doneOperations"))
   clean($("#aside"))
+  clean($("#whiteBox"))
 
   const editedOperation = find("operations", id);
   console.log(editedOperation);
@@ -163,8 +162,10 @@ const operationEdit = (id) => {
   $("#editType").value = editedOperation.type;
   $("#editSelectedCategory").value = editedOperation.selectedCategory;
   $("#editDate").value = editedOperation.date;
+  
+  
 
-  $("#editContainer").innerHTML = `<button id="edit" data-id="${id}" class=" w-[91px] h-10 text-white border-none ml-2  bg-green-400 rounded-md ml-2" onclick="updateOperation('${id}')" >Editar</button>`;
+  $("#editContainer").innerHTML = `<button id="edit" data-id="${id}" class=" w-[91px] h-10 text-white border-none ml-2  bg-green-400 rounded-md ml-2" onclick="updateOperation(${id})" >Editar</button>`;
 };
 
 //funcion que edita la operación por el usuario
@@ -173,10 +174,11 @@ const newOperationData = (id) => {
   return {
     id: id,
     description: $("#editDescription").value,
-    amount: $("#editAmount").value,
+    amount: parseInt($("#editAmount").value),
     type: $("#editType").value,
     selectedCategory: $("#editSelectedCategory").value,
     date: $("#editDate").value,
+    //categoryId : 
   };
 };
 
@@ -196,6 +198,7 @@ const updateOperation = (id) => {
   clean($("#editOperationsForm"));
   show($("#doneOperations"));
   showAside();
+  show($("#whiteBox"))
   
   const optionsFiltered = filterByOptions();
   const categoriesFiltered = filterByCategories($("#selectCategoryFilters").value, optionsFiltered);
@@ -727,37 +730,52 @@ if (!localStorage.getItem("operations")) {
 
 let categories = getDataInLocalStorage("categories")
 let operations = getDataInLocalStorage("operations")
-//const arrayAmounts = operations.map(({amount})=>amount)
 let arrayCategories
 let selectedCategoryVar
 let selectedCategoryName
 let totalArrayEarns = []
 
 
-const categoriesTotal =(categoryId,gananciaOGasto)=>{
+// const categoriesTotal =(categoryIdPar,gananciaOGasto)=>{
+//   arrayCategories=[]
+//   for (const operation of operations){
+//       let {selectedCategory,amount,type, categoryId}=operation
+//       amount = parseInt(amount)
+//       selectedCategoryVar = categoryId
+//       selectedCategoryName = selectedCategory
+//       for(const category of categories){
+//         if(categoryId == category.id && type== gananciaOGasto && category.id == categoryIdPar){
+//           arrayCategories.push(amount)
+//           var categoryTotal = arrayCategories.reduce((acc,items) => {return acc = acc + items;})
+//     }
+//               }
+//   }
+//   return  categoryTotal
+ 
+// }
+
+const categoriesTotal =(categoryIdParameter,gananciaOGasto)=>{
   arrayCategories=[]
   for (const operation of operations){
-      let {selectedCategory,amount,type, categoryName}=operation
-      amount = parseInt(amount)
-      selectedCategoryVar = selectedCategory
-      selectedCategoryName = categoryName
+      let {selectedCategory,amount,type, categoryId} = operation
+      selectedCategoryVar = categoryId
+      selectedCategoryName = selectedCategory
+      
       for(const category of categories){
-        if(selectedCategory== category.id && type== gananciaOGasto && category.id == categoryId){
+        if(selectedCategoryVar == category.id && type== gananciaOGasto && category.id == categoryIdParameter){
           arrayCategories.push(amount)
           var categoryTotal = arrayCategories.reduce((acc,items) => {return acc = acc + items;})
     }
               }
   }
   return  categoryTotal
-
 }
-
 
 categories.forEach(category=>{
   if(categoriesTotal(category.id, "Ganancia") != undefined){
     totalArrayEarns.push(categoriesTotal(category.id, "Ganancia"))
   }
-});
+}); //esto me devuelve un array con los resultados de las sumas de los amount por categoria.
 
 const highestAmountEarn = () =>{
   let highestValue = Math.max.apply(null,totalArrayEarns)
@@ -766,7 +784,7 @@ const highestAmountEarn = () =>{
    // selectedCategoryName,
     highestValue
   }
-}
+}//aca se elije el valor maximo del array totalArrayEarns
 
 //----------categoria con mayor gasto
 
@@ -789,6 +807,25 @@ const highestAmountSpents = () =>{
   }
 }
 
+
+//--------------mes con mayor gasto
+
+//1ro filtro por gasto o ganancia
+
+operations = getDataInLocalStorage("operations")
+
+let filteredOperationsByProfit= operations.filter(operation => operation.type == "Ganancia")
+
+console.log(filteredOperationsByProfit)
+// ahora a ese array lo filtro por mes
+
+
 //-------funcion navbar responsive
 
-$("#btnMenu").addEventListener('click', () => $("#menu").classList.toggle('hidden'))  
+
+
+$("#btnMenu").addEventListener('click', () => $("#menu").classList.toggle('hidden'))
+
+
+
+
