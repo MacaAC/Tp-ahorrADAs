@@ -27,6 +27,8 @@ const getDataInLocalStorage = (key) => JSON.parse(localStorage.getItem(key));
 const saveDataInLocalStorage = (key, data) => localStorage.setItem(key, JSON.stringify(data));
 
 
+let filteredOperations1= []
+
 // AGREGAR OPERACIONES A UN ARRAY DE OBJETOS
 
 const operationsInfo = () => {
@@ -70,7 +72,6 @@ const operationsInfo = () => {
 /**************************************************/
 
 const generateTableOperations = (operations) => {
-   
   let maybeFilteredOperations = getDataInLocalStorage("operations");
 
   if (operations) {
@@ -113,7 +114,8 @@ $("#addOperation").addEventListener("click", () => {
   show($("#container"))
   show($("#whiteBox"))
 
-  generateTableOperations();
+  // generateTableOperations();
+  filter()
   printTotalProfit()  
   printTotalExpenses()
   printTotal()
@@ -157,7 +159,7 @@ const operationEdit = (id) => {
   clean($("#whiteBox"))
 
   const editedOperation = find("operations", id);
-  console.log(editedOperation);
+
   $("#editDescription").value = editedOperation.description;
   $("#editAmount").value = editedOperation.amount;
   $("#editType").value = editedOperation.type;
@@ -201,10 +203,11 @@ const updateOperation = (id) => {
   showAside();
   show($("#whiteBox"))
   
-  const optionsFiltered = filterByOptions();
-  const categoriesFiltered = filterByCategories($("#selectCategoryFilters").value, optionsFiltered);
+  // const optionsFiltered = filterByOptions();
+  // const categoriesFiltered = filterByCategories($("#selectCategoryFilters").value, optionsFiltered);
  
-  generateTableOperations(categoriesFiltered);
+  // generateTableOperations(categoriesFiltered);
+  filter()
 };
 
 
@@ -214,7 +217,7 @@ const updateOperation = (id) => {
 
 const removeOperation = (id) => {
   let operations = getDataInLocalStorage("operations");
-  console.log(id)
+  
   operations = operations.filter((operation) => operation.id !== id);
   saveDataInLocalStorage("operations", operations);
   return operations;
@@ -226,7 +229,7 @@ const deleteOperation = (id) => {
   id = parseInt(id);
 
   removeOperation(id);
-  filterByOptions();
+  filter();
 
   if(getDataInLocalStorage('operations').length === 0){
     show($("#frontPage"))
@@ -242,7 +245,9 @@ const deleteOperation = (id) => {
 $("#cancelEditOperation").addEventListener("click", ()=>{
   clean($("#editOperationsForm"))
   show($("#doneOperations"))
+  show($("#whiteBox"));
   showAside()
+  filter()
 })
 
 // evento para hacer desaparecer la portada y aparece el formulario de nueva op
@@ -298,21 +303,29 @@ localStorage.setItem ("categories", JSON.stringify([
 
 const categoriesSelectInput = (idInput) =>{
     let categories = getDataInLocalStorage('categories')
-    idInput.innerHTML = ""
+    idInput.innerHTML = `<option id="allCategories">Todas</option>`
     for (const category of categories) {
-        const {id, nameCategory} = category
-        idInput.innerHTML += `<option value="${nameCategory}">${nameCategory}</option>`
+      const {id, nameCategory} = category
+      idInput.innerHTML += `<option value="${nameCategory}">${nameCategory}</option>`
 
     }
 }
 
-window.addEventListener('load', ()=>{
+window.addEventListener('load', () => {
+  setFirstDayOfMonth()
   categoriesSelectInput($("#selectCategoryFilters"))
-  const option = document.createElement("option")
-  const allText = document.createTextNode("Todas")
-  option.appendChild(allText)
+  // setTimeout(() => filter(), 1000)
+  filter()
+  
+}) 
 
-  $("#selectCategoryFilters").append(option)}) //preguntar a Ro si acá cierra el evento (?)
+const getActiveFilters = () => {
+  const selectedType = $("#selectType").value
+  const selectedCategory = $("#selectCategoryFilters").value
+  const selectedDate = $("#filtersDate").value
+
+  return {type: selectedType, category: selectedCategory, date: selectedDate}
+}
 
 //AGREGAR CATEGORIAS A UN ARRAY DE OBJETOS EN LOCAL STORAGE
 
@@ -487,7 +500,7 @@ const correctDate = (date) =>{
 
 /* seteando al primer dia del mes */
 
-window.onload = ()=>{
+setFirstDayOfMonth = () => {
   const inputFiltersDate = $("#filtersDate")
 
   let newDate = new Date ()
@@ -595,53 +608,41 @@ $("#icon").addEventListener("click",()=>{
 
 //FILTROS
 
+const filter = () => {
+  filteredOperations1 = getDataInLocalStorage("operations");
+  filterByOptions()
+  filterByCategories()
+  filterByDate()
+
+  generateTableOperations(filteredOperations1)
+}
+
 // GASTO, GANANCIA, TODOS
 
-$("#selectType").addEventListener("change", (e) => filterByOptions(e.target.value));
+$("#selectType").addEventListener("change", () => filter());
 
 
 const filterByOptions = () => {
   const type = $("#selectType").value
-
-  if(type === "Todos"){
-    generateTableOperations()
-    return getDataInLocalStorage("operations")
-  }else{
-
-    const localS = getDataInLocalStorage("operations");
-
-    const filteredLocalS = localS.filter((operation) => operation.type === type);
-
-    generateTableOperations(filteredLocalS);
-
-    return filteredLocalS
+  if(type !== "Todos"){
+    filteredOperations1 = filteredOperations1.filter((operation) => operation.type === type);
   }
+  return filteredOperations1
 };
-
-
-
-
 
 /************************************************************************/
 
 //FILTRO POR CATEGORÍAS
 
-$("#selectCategoryFilters").addEventListener("change", (e) => {
-
-  const optionsFiltered = filterByOptions();
-  const categoriesFiltered = filterByCategories(e.target.value, optionsFiltered); 
-
-  generateTableOperations(categoriesFiltered)
-     
-});
+$("#selectCategoryFilters").addEventListener("change", () => filter());
 
 
-const filterByCategories = (selectedCategory, operations) => {
-
-const filteredLocalS = operations.filter((operation) => operation.selectedCategory === selectedCategory);
-
-return filteredLocalS
-
+const filterByCategories = () => {
+  const selectedCategory = $("#selectCategoryFilters").value
+  if(selectedCategory !== "Todas"){
+    filteredOperations1 = filteredOperations1.filter((operation) => operation.selectedCategory === selectedCategory);
+  }
+  return filteredOperations1
 };
 
 //FILTRO POR FECHA DESDE
@@ -656,48 +657,48 @@ return filteredLocalS
 //     console.log("f1 < f2");
 // }
 
-let operationsFilteredByDate = []
 
-const filterSince = (e) => {
+const filterByDate = () => {
+  
+ const operations = filteredOperations1
 
- const operations = getDataInLocalStorage('operations')
-
- const dates = $("#filtersDate").value.split("-")
- const dateSince = new Date (dates)
+ let dates = $("#filtersDate").value.split("-")
+ let dateSince = new Date (dates)
+ dateSince.setHours(0,0,0,0);
 
 
   operations.map((operation)=>{
 
-    let rocio = operation.date.split("-")
-
-    operation.date = new Date(rocio) 
+    let dateSplitted = operation.date.split("-")
+    operation.date = new Date(dateSplitted) 
 
     return operation
 
   })
 
 
-  operationsFilteredByDate = operations.filter((dateOp) => dateOp.date >= dateSince)
+  let operationsFilteredByDate = operations.filter((dateOp) => {
+    dateOp.date.setHours(0,0,0,0);
+    return dateOp.date >= dateSince
+  })
     
   operationsFilteredByDate.map((opTable)=> {
 
-    let luka = `${opTable.date.getDate()}-${opTable.date.getMonth() + 1}-${opTable.date.getFullYear()}`
+    let dateWithDash = `${opTable.date.getDate()}-${opTable.date.getMonth() + 1}-${opTable.date.getFullYear()}`
    
-    opTable.date = luka
+    opTable.date = dateWithDash
     return opTable
 
 
   })
   
-  return operationsFilteredByDate
+  return filteredOperations1 = operationsFilteredByDate
   
 
 
 }
 
-$("#filtersDate").addEventListener("change", ()=>{
-  generateTableOperations(filterSince())    
-})
+$("#filtersDate").addEventListener("change", ()=> filter())
 
 
 // falta pintar la tabla con estas operaciones y la fecha puesta normal
@@ -829,8 +830,9 @@ else {
   clean($("#frontPage"));
   show($("#doneOperations"));
 
-  generateTableOperations()
-   
+ // generateTableOperations()
+  // filter()
+  
   printTotalProfit()
   printTotalExpenses()
   printTotal()
