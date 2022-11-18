@@ -175,7 +175,7 @@ const newOperationData = (id) => {
   return {
     id: id,
     description: $("#editDescription").value,
-    amount: $("#editAmount").value,
+    amount: parseInt($("#editAmount").value),
     type: $("#editType").value,
     selectedCategory: $("#editSelectedCategory").value,
     date: $("#editDate").value,
@@ -726,7 +726,6 @@ $("#filtersDate").addEventListener("change", ()=>{
 
 const orderOperationsAz = () => {
 const sortAz = getDataInLocalStorage('operations')
-//generateTable?? que muestre todas las operaciones
 console.log(sortAz.sort((a, b) => {
     if (a.description.toLowerCase() < b.description.toLowerCase()) {
       return -1
@@ -850,24 +849,22 @@ let selectedCategoryName
 let totalArrayEarns = []
 
 
-const categoriesTotal =(categoryIdPar,gananciaOGasto)=>{
+const categoriesTotal =(categoryIdParameter,gananciaOGasto)=>{
   arrayCategories=[]
   for (const operation of operations){
-      let {selectedCategory,amount,type, categoryId}=operation
-      amount = parseInt(amount)
+      let {selectedCategory,amount,type, categoryId} = operation
       selectedCategoryVar = categoryId
       selectedCategoryName = selectedCategory
+      
       for(const category of categories){
-        if(categoryId == category.id && type== gananciaOGasto && category.id == categoryIdPar){
+        if(selectedCategoryVar == category.id && type== gananciaOGasto && category.id == categoryIdParameter){
           arrayCategories.push(amount)
           var categoryTotal = arrayCategories.reduce((acc,items) => {return acc = acc + items;})
     }
               }
   }
   return  categoryTotal
- 
 }
-
 
 categories.forEach(category=>{
   if(categoriesTotal(category.id, "Ganancia") != undefined){
@@ -882,7 +879,7 @@ const highestAmountEarn = () =>{
    // selectedCategoryName,
     highestValue
   }
-}
+}//aca se elije el valor maximo del array totalArrayEarns
 
 //----------categoria con mayor gasto
 
@@ -905,10 +902,24 @@ const highestAmountSpents = () =>{
   }
 }
 
+
+//--------------mes con mayor gasto
+
+//1ro filtro por gasto o ganancia
+
+operations = getDataInLocalStorage("operations")
+
+let filteredOperationsByProfit= operations.filter(operation => operation.type == "Ganancia")
+
+console.log(filteredOperationsByProfit)
+// ahora a ese array lo filtro por mes
+
+
 //-------funcion navbar responsive
 
-$("#btnMenu").addEventListener('click', () => $("#menu").classList.toggle('hidden'))
 
+
+$("#btnMenu").addEventListener('click', () => $("#menu").classList.toggle('hidden'))
 
 
 
