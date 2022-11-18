@@ -613,9 +613,16 @@ const filter = () => {
   filterByOptions()
   filterByCategories()
   filterByDate()
+  // sort()
 
   generateTableOperations(filteredOperations1)
 }
+
+// sort() => {
+  // se fija el valor en el dom (input)
+  // llama a la funcion de filtro correspondiente
+  // actualiza la variable global (filteredOperations1 = sortFunction())
+// }
 
 // GASTO, GANANCIA, TODOS
 
@@ -925,4 +932,14 @@ $("#btnMenu").addEventListener('click', () => $("#menu").classList.toggle('hidde
 
 
 
+// const hola = (nameCategory) => {
+// const operations = getDataInLocalStorage('operations')
+//  for (const operation of operations ) {
+ 
+//  }
+//  {
+//   nameCategory:8555
+//  }
 
+
+// }
