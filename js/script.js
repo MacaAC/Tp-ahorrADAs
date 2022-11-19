@@ -254,6 +254,8 @@ $("#cancelEditOperation").addEventListener("click", ()=>{
   filter()
 })
 
+
+
 // evento para hacer desaparecer la portada y aparece el formulario de nueva op
 
 $("#btnNewOperations").addEventListener("click", () => {
@@ -1146,31 +1148,31 @@ let array =[]
 
 //-------------------------------------------
 //----------------totales por mes ------------
-operations = getDataInLocalStorage("operations")
-const monthWithOperations = months(operations)
-console.log(monthWithOperations)
-const probando = ()=>{
-let array = []
-let obj
-for (const operation of operations){
-  for(const month of monthWithOperations){
-    let obj = {
-     month: 0,
-     totalProfit: 0,
-     totalSpents: 0,
-     totalBalanc: 0
-    }
-    obj.month=month
-    operations.filter(operation => operation.type == "Ganancia" && //tengo que filtrar por mes)
-    array.push(obj)
+// operations = getDataInLocalStorage("operations")
+// const monthWithOperations = months(operations)
+// console.log(monthWithOperations)
+// const probando = ()=>{
+// let array = []
+// let obj
+// for (const operation of operations){
+//   for(const month of monthWithOperations){
+//     let obj = {
+//      month: 0,
+//      totalProfit: 0,
+//      totalSpents: 0,
+//      totalBalanc: 0
+//     }
+//     obj.month=month
+//     operations.filter(operation => operation.type == "Ganancia" && //tengo que filtrar por mes)
+//     array.push(obj)
 
-   }
+//    }
  
- }
- return array
+//  }
+//  return array
 
    
-}
+// }
 
  
 
