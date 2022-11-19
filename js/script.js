@@ -905,6 +905,107 @@ let highestEarningCategory = highestProfitOrSpentCat("Ganancia")
 let highestSpendingCategory = highestProfitOrSpentCat("Gasto")
 
 
+//------------------------------------------------------------------------------------------
+//categoria con mayor balance
+ 
+
+const createObjBalance = (id) =>{
+  let profitAmountsArr=[]
+  let spendingAmountsArr=[]
+  let balanceObj = {
+    categoryName: "",
+    categoryTotalSpents: 0,
+    categoryTotalProfits: 0
+
+  }
+  let categoryName
+  for (const category of categories){
+
+      for(const operation of operations){
+
+        if (category.id == operation.categoryId && operation.type== "Ganancia" &&category.id==id){
+          profitAmountsArr.push(operation.amount)
+          var categoryTotalProfits = profitAmountsArr.reduce((acc,items) => {return acc = acc + items;})
+          categoryName =category.nameCategory
+        }
+
+        if (category.id == operation.categoryId && operation.type== "Gasto" &&category.id==id){
+          spendingAmountsArr.push(operation.amount)
+          var categoryTotalSpents = spendingAmountsArr.reduce((acc,items) => {return acc = acc + items;})
+          categoryName =category.nameCategory
+
+        }
+      }
+
+    }
+    balanceObj.categoryName= categoryName
+
+    if(categoryTotalSpents==undefined){
+      balanceObj.categoryTotalSpents= 0
+    }else{
+      balanceObj.categoryTotalSpents= categoryTotalSpents
+    }
+
+    if(categoryTotalProfits==undefined){
+    balanceObj.categoryTotalProfits= 0
+    }else{
+      balanceObj.categoryTotalProfits= categoryTotalProfits
+    }
+
+    return balanceObj
+
+
+  }
+
+const objToBalanceFunction =()=>{
+  let objToBalanceArr =[]
+for (const category of categories){
+ if (createObjBalance(category.id).categoryName!=undefined){
+  objToBalanceArr.push(createObjBalance(category.id))
+ }
+}
+//console.log(objToBalanceArr)
+return objToBalanceArr
+}
+
+const balancesObjects =()=>{
+
+  let balance
+  let arrayBalanceResult =[];
+ 
+
+  for (const obj of objToBalanceFunction()){
+    balance = obj.categoryTotalProfits - obj.categoryTotalSpents
+
+    let balanceObj = {
+      categoryName: "",
+      balanceResult: 0
+    }
+   
+    balanceObj.categoryName = obj.categoryName
+
+    balanceObj.balanceResult= balance
+  
+    arrayBalanceResult.push(balanceObj)
+  
+  }
+
+  return arrayBalanceResult
+}
+const highestBalanceCategory = ()=>{
+  let catConMayorBalance=Math.max.apply(null,balancesObjects().map(x=>x.balanceResult))
+
+  for(obj of balancesObjects()){
+    if(obj.balanceResult==catConMayorBalance){
+      return obj
+    }
+  }
+}
+
+//categoria con mayor balance : me devuelve un objeto con la categoria con mayor balance y el balance de la Misma
+
+let highestBalanceCategoryLet = highestBalanceCategory()
+
 //--------------mes con mayor gasto
 
 //1ro filtro por gasto o ganancia
@@ -998,25 +1099,80 @@ const createObjByMonthSP =()=>{
 let suma
 
 
-let array =[]
+
 //1ro itero por las categorias
 categories = getDataInLocalStorage("categories")
 operations= getDataInLocalStorage("operations")
 
-const funcion =()=>{
+const createObjTotalByCategory =()=>{
+let array =[]
   for (category of categories){
     for(const operation of operations){
       if(operation.categoryId==category.id){
-        //entonces guardame la operation.amount en un array al cual dsp le haé un reduce
-        array.push(operation.amount)
+ let ganancias = createObjForCat(category.id,"Ganancia").categoryTotal
+
+ let gastos =createObjForCat(category.id,"Gasto").categoryTotal
+
+       let totalByCatObj={
+        id:category.id,
+        name: "",
+        profits: 0,
+        spents: 0,
+        balance: 0
+      }
+
+      totalByCatObj.name=category.nameCategory
+      ganancias == undefined ?  totalByCatObj.profits = 0 : totalByCatObj.profits = ganancias
+      gastos == undefined ? totalByCatObj.spents = 0 : totalByCatObj.spents = gastos
+     
+      let balance = totalByCatObj.profits  - totalByCatObj.spents
+   
+
+      totalByCatObj.balance = balance
+    
+
+        array.push(totalByCatObj)
+
+
       }
 
     }
   }
-  console.log(array)
+  return  array
 }
 
 
+//createObjTotalByCategory() me devuelve un array con objetos que tienen los totales por categoria. el problema es que hay objetos duplicados. debo encontrrar la forma de eliminarlos, y falta pintarlos en la tabla.
+
+//-------------------------------------------
+//----------------totales por mes ------------
+operations = getDataInLocalStorage("operations")
+const monthWithOperations = months(operations)
+console.log(monthWithOperations)
+const probando = ()=>{
+let array = []
+let obj
+for (const operation of operations){
+  for(const month of monthWithOperations){
+    let obj = {
+     month: 0,
+     totalProfit: 0,
+     totalSpents: 0,
+     totalBalanc: 0
+    }
+    obj.month=month
+    operations.filter(operation => operation.type == "Ganancia" && //tengo que filtrar por mes)
+    array.push(obj)
+
+   }
+ 
+ }
+ return array
+
+   
+}
+
+ 
 
 //-------funcion navbar responsive
 
