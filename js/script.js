@@ -1,4 +1,4 @@
-//NUEVO
+
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => document.querySelectorAll(selector);
 
@@ -40,8 +40,8 @@ const operationsInfo = () => {
     const type = $("#type").value
     //const categoryName = $("#selectCategory").value ahora categoryName no existe
     const selectedCategory = $("#selectCategory").value
-
-
+    
+ 
 
   for (const category of categories){
     if ( $("#selectCategory").value == category.nameCategory){
@@ -66,11 +66,14 @@ const operationsInfo = () => {
         type,
         categoryId,
         selectedCategory,
-        date
+        date,
+
     }
 }
 
 /**************************************************/
+
+
 
 const generateTableOperations = (operations) => {
   let maybeFilteredOperations = getDataInLocalStorage("operations");
@@ -256,8 +259,6 @@ $("#cancelEditOperation").addEventListener("click", ()=>{
   filter()
 })
 
-<<<<<<< HEAD
-=======
 //CANCELAR en formulario de nueva operación
 
 $("#cancelNewOp").addEventListener("click", () =>{
@@ -277,7 +278,6 @@ $("#cancelNewOp").addEventListener("click", () =>{
   }
 
 })
->>>>>>> fa13ff70ad1790ae303916f921f9417adadf73e5
 
 
 // evento para hacer desaparecer la portada y aparece el formulario de nueva op
@@ -348,8 +348,6 @@ const categoriesSelectInput = (idInput) =>{
 
   }
 }
-
-
 
 
 window.addEventListener('load', () => {
@@ -508,10 +506,7 @@ $("#navBalance").addEventListener("click", () => {
     filter()
   }
    
-    //generateTableOperations();
-
- 
-    //falta agregar mas dom? reportes
+  //falta agregar mas dom? reportes
   
 });
 
@@ -520,7 +515,7 @@ $("#navBalance").addEventListener("click", () => {
 
 const inputDate = $("#date")
 
-//se ejecuta en el formulario nEW oPERATION FORM
+//se ejecuta en el formulario de nueva operación
 
 const todayDate = () =>{
   let newDate = new Date ()
@@ -573,7 +568,7 @@ let divProfits = $("#divProfits")
 const earningBalance = () =>{
   let operations = getDataInLocalStorage('operations')
   let arrayProfitAmounts = []
-  let totalProfit
+  let totalProfit = 0
 
   for (const operation of operations){
     if(operation.type === "Ganancia"){
@@ -582,14 +577,13 @@ const earningBalance = () =>{
         totalProfit = arrayProfitAmounts.reduce((total,profitAmounts)=> total + profitAmounts)
       }
   }
+
   return totalProfit
 }
+ 
 
-//falta resolver--manu
 const printTotalProfit = ()=>{
-  //let operations = getDataInLocalStorage('operations')
- // getDataInLocalStorage("operations") ? divProfits.innerText = "0" :
-  divProfits.innerText = earningBalance()
+return divProfits.innerText = earningBalance()
 }
 
 //------------------balance de gastos
@@ -599,7 +593,7 @@ let divExpenses = $("#divExpenses")
 const expensesBalance = () =>{
   let operations = getDataInLocalStorage('operations')
   let arrayExpensesAmounts = []
-  let totalExpenses
+  let totalExpenses =0
 
   for (const operation of operations){
     if(operation.type === "Gasto"){
@@ -613,19 +607,15 @@ const expensesBalance = () =>{
 }
 
 const printTotalExpenses = ()=>{
-  //let operations = getDataInLocalStorage('operations')
-  //getDataInLocalStorage("operations") ? divExpenses.innerText = "0" :
-  divExpenses.innerText = expensesBalance()
+ return divExpenses.innerText = expensesBalance()
 }
 
 //---------------------balance total
 
-const totalBalance = (a, b) => a - b
+const totalBalance = (a, b) => parseInt(a) - parseInt(b)
 
 const printTotal = ()=> {
-  // let operations = getDataInLocalStorage('operations')
-  // getDataInLocalStorage("operations") ? $("#divTotal").innerText = "0" :
-$("#divTotal").innerText = totalBalance(earningBalance(),expensesBalance())
+  return  $("#divTotal").innerText = totalBalance(earningBalance(),expensesBalance())
 }
 
 
@@ -661,13 +651,8 @@ const filter = () => {
   filterByOptions()
   filterByCategories()
   filterByDate()
-  // sort()
+
   sort()
-  // orderOperationsAz()
-  // orderOperationsZa()
-  // sortByLargerAmount()
-  // sortByLowerAmount()
-  // orderByMostAndLeastRecent()
   generateTableOperations(filteredOperations1)
 }
 
@@ -677,6 +662,8 @@ const filter = () => {
   // actualiza la variable global (filteredOperations1 = sortFunction())
 // }
 
+
+//refactorizar funciones de ordeBy y funcion sort
 const sort= () => {
   const orderBy = $("#orderBy").value
  
@@ -731,16 +718,6 @@ const filterByCategories = () => {
 
 //FILTRO POR FECHA DESDE
 
-// var f1 = new Date(2015, 11, 31); //31 de diciembre de 2015
-// var f2 = new Date(2014, 10, 30); //30 de noviembre de 2014
-
-// if(f1 > f2){
-//     console.log("f1 > f2");
-// }
-// if(f1 < f2){
-//     console.log("f1 < f2");
-// }
-
 
 const filterByDate = () => {
 
@@ -749,9 +726,6 @@ const filterByDate = () => {
  let dates = $("#filtersDate").value.split("-")
  let dateSince = new Date (dates)
  
- //dateSince.setHours(0,0,0,0);
-
-
   operations.map((operation)=>{
 
     let dateSplitted = operation.date.split("-")
@@ -763,7 +737,6 @@ const filterByDate = () => {
 
 
   let operationsFilteredByDate = operations.filter((dateOp) => {
-   // dateOp.date.setHours(0,0,0,0);
     return dateOp.date >= dateSince
   })
 
@@ -779,43 +752,16 @@ const filterByDate = () => {
 
   return filteredOperations1 = operationsFilteredByDate
 
-
-
 }
 
 $("#filtersDate").addEventListener("change", ()=> filter())
 
-
-// falta pintar la tabla con estas operaciones y la fecha puesta normal
-// (hacer un map de operatonsFilter??) arreglar ese nombre
-
-
-// let newDate = new Date ()
-//   let month =  newDate.getMonth() + 1
-//   let day = newDate.getDate(); //obteniendo dia
-//   let year = newDate.getFullYear();
-
-// const formatDate2 = (date, symbol) => {
-//   const arrayDate = [date.getDate(), date.getMonth() + 1, date.getFullYear()]
-//   return arrayDate.join(symbol)
-// }
-
-
-//Methods
-// console.log(date.getDay())
-// console.log(date.getFullYear())
-// console.log(date.getMonth()+1)
-// console.log(date.getDate())
-
-
 // FILTRO POR A/Z
- // modificando con el array global
-
+ 
 const orderOperationsAz = () => {
-let sortAz = filteredOperations1
-console.log(sortAz)
-//getDataInLocalStorage('operations')
-console.log(sortAz.sort((a, b) => {
+  let sortAz = filteredOperations1
+
+  sortAz.sort((a, b) => {
     if (a.description.toLowerCase() < b.description.toLowerCase()) {
       return -1
     }
@@ -823,18 +769,16 @@ console.log(sortAz.sort((a, b) => {
       return 1
     }
     return 0
-  }))
+  })
 
-  return console.log(sortAz = filteredOperations1 )
+  return sortAz = filteredOperations1
 }
 
 // FILTRO POR Z/A
 
 const orderOperationsZa = () => {
   let sortZa = filteredOperations1
-  //getDataInLocalStorage('operations')
-
-  console.log(sortZa.sort((a, b) => {
+  sortZa.sort((a, b) => {
     if (a.description.toLowerCase() < b.description.toLowerCase()) {
       return 1
     }
@@ -842,7 +786,7 @@ const orderOperationsZa = () => {
       return -1
     }
     return 0
-  }))
+  })
 
   return sortZa = filteredOperations1
 }
@@ -868,7 +812,6 @@ const sortByLowerAmount = () =>{
 }
 
 // ORDENAR POR MAS RECIENTE
-
 
 const orderByMostAndLeastRecent = () => {
 
@@ -903,31 +846,6 @@ const orderByMostAndLeastRecent = () => {
   })
 
   return console.log(byOperationDate = filteredOperations1) 
-}
-//console.log(filteredOperations1)
-
-//$("#orderBy").addEventListener("change", (e) => generateTableOperations(orderByOtherFilters()));
-
-
-//SE USA (falta terminar)
-
-const orderByOtherFilters = () => {
- const orderBy = $("#orderBy").value
-
-  if(orderBy === "A/Z" ){
-    generateTableOperations(orderOperationsAz())
-    //orderOperationsAz()
-    //y pintala en la tabla?
-  }
-  if( orderBy === "Z/A"){
-    orderOperationsZa()
-  }
-  if(orderBy === "Mayor monto"){
-    sortByLargerAmount()
-  }
-  if(orderBy === "Menor monto"){
-    sortByLowerAmount()
-  }
 
 }
 
@@ -947,10 +865,7 @@ show($("#frontPage"))
 else {
   clean($("#frontPage"));
   show($("#doneOperations"));
-
- // generateTableOperations()
-  // filter()
-  
+ 
   printTotalProfit()
   printTotalExpenses()
   printTotal()
@@ -1120,101 +1035,10 @@ const highestBalanceCategory = ()=>{
 
 let highestBalanceCategoryLet = highestBalanceCategory()
 
-//--------------mes con mayor gasto
-
-//1ro filtro por gasto o ganancia
-
-operations = getDataInLocalStorage("operations")
-
-let filteredOperationsByProfit= operations.filter(operation => operation.type == "Ganancia")
-let filteredOperationsBySpent= operations.filter(operation => operation.type == "Gasto")
-
-
-const months = (array)=>{
-  let arrayMonths = []
-
-  for(const operation of array){
-    const {date}=operation
-    !arrayMonths.includes(date.split("-")[1]) && arrayMonths.push(date.split("-")[1])
-  }
-
-  return arrayMonths
-
-} //months me retorna un array con todos los meses que tienen operaciones (strings)
-
-
-let profitMonths = months(filteredOperationsByProfit)
-let spentMonth = months(filteredOperationsBySpent)
- //-addingAmounts- que me devuelva la suma de los amounts por mes. o sea que reciba por parametro un mes y el array con operaciones y me devuelva la suma de los amounts de esas operaciones.
-
-const addingAmounts = (month,arrayOp)=>{
-  let acc = 0
-  let filteredByMonthArray = arrayOp.filter(op=>op.date.split("-")[1] == month)
-  let filteredByMonthAmountsArray = filteredByMonthArray.map(op=>op.amount)
-
-  for(amount of filteredByMonthAmountsArray){
-    acc += amount
-  }
-  return acc
-}
-
-
-
-const createObjByMonth =()=>{
-  let arrayReturn = []
-
-  for (let i = 0; i < profitMonths.length; i++) {
-    let amount = addingAmounts(profitMonths[i],filteredOperationsByProfit)
-    let month = profitMonths[i]
-
-    let obj = {
-      month: month,
-      amount: amount
-    }
-
-    arrayReturn.push(obj)
-  }
-  return arrayReturn
-
-}
-const createObjByMonthSP =()=>{
-  let arrayReturn = []
-
-  for (let i = 0; i < spentMonth.length; i++) {
-    let amount = addingAmounts(spentMonth[i],filteredOperationsBySpent)
-    let month = spentMonth[i]
-
-    let obj = {
-      month: month,
-      amount: amount
-    }
-
-    arrayReturn.push(obj)
-
-  }
-  return arrayReturn
-
-}
- //arrayX = createObjByMonth()
- //amountX= arrayX.map((x)=> x.amount)
- //montoMayor =Math.max.apply(null,amountX)
- //arrayGanador = arrayX.filter(x=> x.amount == montoMayor)
- //arrayGanador = arrayX.filter(x=> x.amount == Math.max.apply(null,prueba().map((x)=> x.amount)))
-
- //Mes con mayor ganancia
- arrayObjMonthHighestProfit = createObjByMonth().filter(x=> x.amount == Math.max.apply(null,createObjByMonth().map((x)=> x.amount)))
-//mes con mayor gasto
- arrayObjMonthHighestSpent = createObjByMonthSP().filter(x=> x.amount == Math.max.apply(null,createObjByMonthSP().map((x)=> x.amount)))
-
-
-
  //---------------------------totales por categoria
 
 let suma
 
-
-
-//1ro itero por las categorias
 categories = getDataInLocalStorage("categories")
 operations= getDataInLocalStorage("operations")
 
@@ -1260,34 +1084,76 @@ let array =[]
 
 //-------------------------------------------
 //----------------totales por mes ------------
-// operations = getDataInLocalStorage("operations")
-// const monthWithOperations = months(operations)
-// console.log(monthWithOperations)
-// const probando = ()=>{
-// let array = []
-// let obj
-// for (const operation of operations){
-//   for(const month of monthWithOperations){
-//     let obj = {
-//      month: 0,
-//      totalProfit: 0,
-//      totalSpents: 0,
-//      totalBalanc: 0
-//     }
-//     obj.month=month
-//     operations.filter(operation => operation.type == "Ganancia" && //tengo que filtrar por mes)
-//     array.push(obj)
 
-//    }
+
+for (const operation of operations){
  
-//  }
-//  return array
-
-   
-// }
+  let mes = new Date(operation.date).getMonth()+1
+  
+  let año = new Date(operation.date).getFullYear()
+ 
+  let monthYear = `${mes}-${año} `
+  
+  operation["monthYear"] = monthYear
+  
+ }
 
  
+saveDataInLocalStorage("operations", operations)
 
+operations = getDataInLocalStorage("operations")
+  let arrayMonthsYear = []
+ 
+ for(const operation of operations){
+ const {monthYear} = operation
+ !arrayMonthsYear.includes(monthYear) && arrayMonthsYear.push(monthYear)
+ }
+ 
+
+let array = []
+let object
+const hola = () =>{
+  for (const monthYear of arrayMonthsYear){
+    object = {
+    profits: 0,
+    spents: 0,
+    balance:0
+   }
+  object["monthYear"] = monthYear
+  array.push(object)
+     for (const operation of operations){
+      
+      if(monthYear == operation.monthYear && operation.type == "Ganancia"){
+        object.profits = object.profits +  operation.amount
+        
+      }
+      if(monthYear == operation.monthYear && operation.type == "Gasto"){
+        object.spents = object.spents +  operation.amount
+        
+      }
+      object.balance = object.profits - object.spents 
+     }
+    }
+  
+return array
+
+}
+//mes con mayor ganancia
+
+const highestProfitMonth = ()=>{
+const maxMonthProfit = hola().reduce((acc, i)=>(i.profits > acc.profits ? i : acc))
+
+
+ return maxMonthProfit
+}
+//mes con mayor gasto
+
+const highestSpendingMonth = ()=>{
+  const maxMonthSpents = hola().reduce((acc, i)=>(i.spents > acc.spents ? i : acc))
+
+  return maxMonthSpents
+
+}
 //-------funcion navbar responsive
 
 $("#btnMenu").addEventListener('click', () => $("#menu").classList.toggle('hidden'))
