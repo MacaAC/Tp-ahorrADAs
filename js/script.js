@@ -28,7 +28,7 @@ const getDataInLocalStorage = (key) => JSON.parse(localStorage.getItem(key));
 const saveDataInLocalStorage = (key, data) => localStorage.setItem(key, JSON.stringify(data));
 
 
-let filteredOperations1= []
+let filteredOperations= []
 
 // AGREGAR OPERACIONES A UN ARRAY DE OBJETOS
 
@@ -89,14 +89,14 @@ const generateTableOperations = (operations) => {
         const className = type === "Gasto" ? "red-500" : "green-500";
         const operator = type === "Gasto" ? "-" : "+";
 
-    var formatedDate = correctDate(date)//ver con Manu
+    //var formatedDate = correctDate(date)//
 
     $("#table").innerHTML += `
 
             <tr>
                 <td class="pl-0 pr-10 mt-4 pt-0 text-lg font-bold capitalize">${description}</td>
                 <td class="mt-0 pt-0 pl-10 text-xs ">${selectedCategory}</td>
-                <td class="mt-0 pt-0 pl-10 text-sm">${formatedDate}</td>
+                <td class="mt-0 pt-0 pl-10 text-sm">${date}</td>
                 <td class="mt-0 pt-0 pl-12 text-lg text-${className} font-bold">${operator}${amount}</td>
                 <td class="pl-8 mt-0 pt-0 text-xs"><button class="mr-4 btnEditOperation" data-id="${id}" onclick="operationEdit(${id})">Editar</button><button class="mr-4 btnDeleteOperation" data-id="${id}" onclick="deleteOperation('${id}')">Eliminar</button></td>
             </tr>
@@ -261,23 +261,23 @@ $("#cancelEditOperation").addEventListener("click", ()=>{
 
 //CANCELAR en formulario de nueva operación
 
-// $("#cancelNewOp").addEventListener("click", () =>{
+$("#cancelNewOp").addEventListener("click", () =>{
 
-//   if (!localStorage.getItem("operations")){
-//     clean($("#formNewOperations"))
-//     showAside();
-//     show($("#whiteBox"))
-//     show($("#frontPage"))
-//   }else{
-//     clean($("#formNewOperations"))
-//     showAside();
-//     show($("#whiteBox"))
-//     show($("#doneOperations"))
-  
-//     filter()
-//   }
+  if (getDataInLocalStorage('operations').length === 0){
+    clean($("#formNewOperation"))
+    show($("#whiteBox"))
+    show($("#frontPage"))
+    showAside()
+    
+  }else{
+    clean($("#formNewOperation"))
+    show($("#container"))
+    show($("#doneOperations"))
+   
+    filter()
+  }
 
-// })
+})
 
 
 // evento para hacer desaparecer la portada y aparece el formulario de nueva op
@@ -647,19 +647,19 @@ $("#icon").addEventListener("click",()=>{
 //FILTROS
 
 const filter = () => {
-  filteredOperations1 = getDataInLocalStorage("operations");
+  filteredOperations = getDataInLocalStorage("operations");
   filterByOptions()
   filterByCategories()
   filterByDate()
 
   sort()
-  generateTableOperations(filteredOperations1)
+  generateTableOperations(filteredOperations)
 }
 
 // sort() => {
   // se fija el valor en el dom (input)
   // llama a la funcion de filtro correspondiente
-  // actualiza la variable global (filteredOperations1 = sortFunction())
+  // actualiza la variable global (filteredOperations = sortFunction())
 // }
 
 
@@ -667,21 +667,19 @@ const filter = () => {
 const sort= () => {
   const orderBy = $("#orderBy").value
  
-   if(orderBy === "A/Z" ){
+  if(orderBy === "A/Z" ){
     orderOperationsAz()
-   }
-   if(orderBy === "Z/A"){
+  }
+  if(orderBy === "Z/A"){
     orderOperationsZa()
-   }
-   if(orderBy === "Mayor monto"){
-     sortByLargerAmount()
-   }
-   if(orderBy === "Menor monto"){
-     sortByLowerAmount()
-    }else{
-     orderByMostAndLeastRecent()
+  }
+  if(orderBy === "Mayor monto" || "Menor monto"){
+    sortByLargerAndLowerAmount()
+  }
+  else{
+    orderByMostAndLeastRecent()
 
-    }
+  }
    
 }
  
@@ -696,9 +694,9 @@ $("#selectType").addEventListener("change", () => filter());
 const filterByOptions = () => {
   const type = $("#selectType").value
   if(type !== "Todos"){
-    filteredOperations1 = filteredOperations1.filter((operation) => operation.type === type);
+    filteredOperations = filteredOperations.filter((operation) => operation.type === type);
   }
-  return filteredOperations1
+  return filteredOperations
 };
 
 /************************************************************************/
@@ -711,9 +709,9 @@ $("#selectCategoryFilters").addEventListener("change", () => filter());
 const filterByCategories = () => {
   const selectedCategory = $("#selectCategoryFilters").value
   if(selectedCategory !== "Todas"){
-    filteredOperations1 = filteredOperations1.filter((operation) => operation.selectedCategory === selectedCategory);
+    filteredOperations = filteredOperations.filter((operation) => operation.selectedCategory === selectedCategory);
   }
-  return filteredOperations1
+  return filteredOperations
 };
 
 //FILTRO POR FECHA DESDE
@@ -721,7 +719,7 @@ const filterByCategories = () => {
 
 const filterByDate = () => {
 
- const operations = filteredOperations1
+ const operations = filteredOperations
 
  let dates = $("#filtersDate").value.split("-")
  let dateSince = new Date (dates)
@@ -750,7 +748,11 @@ const filterByDate = () => {
 
   })
 
+<<<<<<< HEAD
+  return filteredOperations = operationsFilteredByDate
+=======
   return filteredOperations1 = operationsFilteredByDate
+>>>>>>> fdce0566b12efb0439c59256366fad78ea0ee2fe
 
 }
 
@@ -759,7 +761,7 @@ $("#filtersDate").addEventListener("change", ()=> filter())
 // FILTRO POR A/Z
  
 const orderOperationsAz = () => {
-  let sortAz = filteredOperations1
+  let sortAz = filteredOperations
 
   sortAz.sort((a, b) => {
     if (a.description.toLowerCase() < b.description.toLowerCase()) {
@@ -771,13 +773,16 @@ const orderOperationsAz = () => {
     return 0
   })
 
-  return sortAz = filteredOperations1
+  return sortAz = filteredOperations
 }
+
+
+
 
 // FILTRO POR Z/A
 
 const orderOperationsZa = () => {
-  let sortZa = filteredOperations1
+  let sortZa = filteredOperations
   sortZa.sort((a, b) => {
     if (a.description.toLowerCase() < b.description.toLowerCase()) {
       return 1
@@ -788,34 +793,44 @@ const orderOperationsZa = () => {
     return 0
   })
 
-  return sortZa = filteredOperations1
+  return sortZa = filteredOperations
 }
 
 // FILTRO MENOR MONTO
 
-const sortByLargerAmount = () =>{
-  let largerAmount = filteredOperations1
-  console.log(largerAmount.sort((a, b) => {
-    return b.amount - a.amount
-  }))
+const sortByLargerAndLowerAmount = () =>{
+  let amount = filteredOperations
 
-  return filteredOperations1 = largerAmount 
+  if($("#orderBy").value === "Mayor monto"){
+  
+    amount.sort((a, b) => {
+      return b.amount - a.amount
+    })
+  }
+  if($("#orderBy").value === "Menor monto"){
+
+    amount.sort((a, b) => {
+      return a.amount - b.amount
+    })
+  }
+
+  return filteredOperations = amount 
 }
 
-const sortByLowerAmount = () =>{
-  let minorAmount = filteredOperations1
-  console.log(minorAmount.sort((a, b) => {
-    return a.amount - b.amount
-  }))
+// const sortByLowerAmount = () =>{
+//   let minorAmount = filteredOperations
+//   minorAmount.sort((a, b) => {
+//     return a.amount - b.amount
+//   })
 
-  return filteredOperations1 = minorAmount
-}
+//   return filteredOperations = minorAmount
+// }
 
 // ORDENAR POR MAS RECIENTE
 
 const orderByMostAndLeastRecent = () => {
 
-  let byOperationDate = filteredOperations1
+  let byOperationDate = filteredOperations
   
   byOperationDate.map((operation)=>{
 
@@ -845,7 +860,7 @@ const orderByMostAndLeastRecent = () => {
 
   })
 
-  return console.log(byOperationDate = filteredOperations1) 
+  return console.log(byOperationDate = filteredOperations) 
 
 }
 
