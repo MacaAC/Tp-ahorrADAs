@@ -261,23 +261,23 @@ $("#cancelEditOperation").addEventListener("click", ()=>{
 
 //CANCELAR en formulario de nueva operación
 
-$("#cancelNewOp").addEventListener("click", () =>{
+// $("#cancelNewOp").addEventListener("click", () =>{
 
-  if (!localStorage.getItem("operations")){
-    clean($("#formNewOperations"))
-    showAside();
-    show($("#whiteBox"))
-    show($("#frontPage"))
-  }else{
-    //clean($("#formNewOperations"))
-    showAside();
-    show($("#whiteBox"))
-    show($("#doneOperations"))
+//   if (!localStorage.getItem("operations")){
+//     clean($("#formNewOperations"))
+//     showAside();
+//     show($("#whiteBox"))
+//     show($("#frontPage"))
+//   }else{
+//     clean($("#formNewOperations"))
+//     showAside();
+//     show($("#whiteBox"))
+//     show($("#doneOperations"))
   
-    filter()
-  }
+//     filter()
+//   }
 
-})
+// })
 
 
 // evento para hacer desaparecer la portada y aparece el formulario de nueva op
@@ -936,7 +936,7 @@ let highestSpendingCategory = highestProfitOrSpentCat("Gasto")
 
 //------------------------------------------------------------------------------------------
 //categoria con mayor balance
- 
+
 
 const createObjBalance = (id) =>{
   let profitAmountsArr=[]
@@ -1062,14 +1062,11 @@ let array =[]
       totalByCatObj.name=category.nameCategory
       ganancias == undefined ?  totalByCatObj.profits = 0 : totalByCatObj.profits = ganancias
       gastos == undefined ? totalByCatObj.spents = 0 : totalByCatObj.spents = gastos
-     
+
       let balance = totalByCatObj.profits  - totalByCatObj.spents
-   
-
       totalByCatObj.balance = balance
-    
 
-        array.push(totalByCatObj)
+      array.push(totalByCatObj)
 
 
       }
@@ -1087,28 +1084,28 @@ let array =[]
 
 
 for (const operation of operations){
- 
-  let mes = new Date(operation.date).getMonth()+1
-  
-  let año = new Date(operation.date).getFullYear()
- 
-  let monthYear = `${mes}-${año} `
-  
-  operation["monthYear"] = monthYear
-  
- }
 
- 
+  let mes = new Date(operation.date).getMonth()+1
+
+  let año = new Date(operation.date).getFullYear()
+
+  let monthYear = `${mes}-${año} `
+
+  operation["monthYear"] = monthYear
+
+}
+
+
 saveDataInLocalStorage("operations", operations)
 
 operations = getDataInLocalStorage("operations")
   let arrayMonthsYear = []
- 
- for(const operation of operations){
- const {monthYear} = operation
- !arrayMonthsYear.includes(monthYear) && arrayMonthsYear.push(monthYear)
- }
- 
+
+for(const operation of operations){
+  const {monthYear} = operation
+  !arrayMonthsYear.includes(monthYear) && arrayMonthsYear.push(monthYear)
+}
+
 
 let array = []
 let object
@@ -1156,11 +1153,8 @@ const highestSpendingMonth = ()=>{
 }
 //-------------
 
-$("#navReports").addEventListener("click", ()=>{
-  // show($("#reportsSection"))
-  // clean($("whiteBox"))
-  // clean($("#aside"))
-
+const printReports =()=>{
+  
   $("#summary1").innerHTML= `<span> ${highestEarningCategory.categoryName} </span>`
   $("#total1").innerHTML= `<span> + $ ${highestEarningCategory.categoryTotal} </span>`
 
@@ -1175,6 +1169,14 @@ $("#navReports").addEventListener("click", ()=>{
 
   $("#summary5").innerHTML= `<span> ${highestSpendingMonth().monthYear} </span>`
   $("#total5").innerHTML= `<span> - $ ${highestSpendingMonth().spents} </span>`
+}
+
+$("#navReports").addEventListener("click", ()=>{
+show($("#reportsSection"))
+clean($("#container"))
+clean($("#aside"))
+printReports()
+
 })
 //-------funcion navbar responsive
 
