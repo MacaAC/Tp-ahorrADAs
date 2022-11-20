@@ -1167,24 +1167,14 @@ $("#navReports").addEventListener("click", ()=>{
   $("#summary2").innerHTML= `<span> ${highestSpendingCategory.categoryName} </span>`
   $("#total2").innerHTML= `<span> - $ ${highestSpendingCategory.categoryTotal} </span>`
 
-  
   $("#summary3").innerHTML= `<span> ${highestBalanceCategoryLet.categoryName} </span>`
   $("#total3").innerHTML= `<span>  $ ${highestBalanceCategoryLet.balanceResult} </span>`
 
-  
-  
   $("#summary4").innerHTML= `<span> ${highestProfitMonth().monthYear} </span>`
   $("#total4").innerHTML= `<span> + $ ${highestProfitMonth().profits} </span>`
 
-
-  
   $("#summary5").innerHTML= `<span> ${highestSpendingMonth().monthYear} </span>`
   $("#total5").innerHTML= `<span> - $ ${highestSpendingMonth().spents} </span>`
-
-  
-
-  
-
 })
 //-------funcion navbar responsive
 
