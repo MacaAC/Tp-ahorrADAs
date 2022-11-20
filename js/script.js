@@ -1,4 +1,4 @@
-//NUEVO
+
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => document.querySelectorAll(selector);
 
@@ -28,7 +28,7 @@ const getDataInLocalStorage = (key) => JSON.parse(localStorage.getItem(key));
 const saveDataInLocalStorage = (key, data) => localStorage.setItem(key, JSON.stringify(data));
 
 
-let filteredOperations1= []
+let filteredOperations= []
 
 // AGREGAR OPERACIONES A UN ARRAY DE OBJETOS
 
@@ -86,14 +86,14 @@ const generateTableOperations = (operations) => {
         const className = type === "Gasto" ? "red-500" : "green-500";
         const operator = type === "Gasto" ? "-" : "+";
 
-    var formatedDate = correctDate(date)//ver con Manu
+    //var formatedDate = correctDate(date)//
 
     $("#table").innerHTML += `
 
             <tr>
                 <td class="pl-0 pr-10 mt-4 pt-0 text-lg font-bold capitalize">${description}</td>
                 <td class="mt-0 pt-0 pl-10 text-xs ">${selectedCategory}</td>
-                <td class="mt-0 pt-0 pl-10 text-sm">${formatedDate}</td>
+                <td class="mt-0 pt-0 pl-10 text-sm">${date}</td>
                 <td class="mt-0 pt-0 pl-12 text-lg text-${className} font-bold">${operator}${amount}</td>
                 <td class="pl-8 mt-0 pt-0 text-xs"><button class="mr-4 btnEditOperation" data-id="${id}" onclick="operationEdit(${id})">Editar</button><button class="mr-4 btnDeleteOperation" data-id="${id}" onclick="deleteOperation('${id}')">Eliminar</button></td>
             </tr>
@@ -256,28 +256,25 @@ $("#cancelEditOperation").addEventListener("click", ()=>{
   filter()
 })
 
-<<<<<<< HEAD
-=======
 //CANCELAR en formulario de nueva operación
 
 $("#cancelNewOp").addEventListener("click", () =>{
 
-  if (!localStorage.getItem("operations")){
-    clean($("#formNewOperations"))
-    showAside();
+  if (getDataInLocalStorage('operations').length === 0){
+    clean($("#formNewOperation"))
     show($("#whiteBox"))
     show($("#frontPage"))
+    showAside()
+    
   }else{
-    //clean($("#formNewOperations"))
-    showAside();
-    show($("#whiteBox"))
+    clean($("#formNewOperation"))
+    show($("#container"))
     show($("#doneOperations"))
-  
+   
     filter()
   }
 
 })
->>>>>>> fa13ff70ad1790ae303916f921f9417adadf73e5
 
 
 // evento para hacer desaparecer la portada y aparece el formulario de nueva op
@@ -348,8 +345,6 @@ const categoriesSelectInput = (idInput) =>{
 
   }
 }
-
-
 
 
 window.addEventListener('load', () => {
@@ -508,10 +503,7 @@ $("#navBalance").addEventListener("click", () => {
     filter()
   }
    
-    //generateTableOperations();
-
- 
-    //falta agregar mas dom? reportes
+  //falta agregar mas dom? reportes
   
 });
 
@@ -520,7 +512,7 @@ $("#navBalance").addEventListener("click", () => {
 
 const inputDate = $("#date")
 
-//se ejecuta en el formulario nEW oPERATION FORM
+//se ejecuta en el formulario de nueva operación
 
 const todayDate = () =>{
   let newDate = new Date ()
@@ -657,44 +649,39 @@ $("#icon").addEventListener("click",()=>{
 //FILTROS
 
 const filter = () => {
-  filteredOperations1 = getDataInLocalStorage("operations");
+  filteredOperations = getDataInLocalStorage("operations");
   filterByOptions()
   filterByCategories()
   filterByDate()
-  // sort()
+
   sort()
-  // orderOperationsAz()
-  // orderOperationsZa()
-  // sortByLargerAmount()
-  // sortByLowerAmount()
-  // orderByMostAndLeastRecent()
-  generateTableOperations(filteredOperations1)
+  generateTableOperations(filteredOperations)
 }
 
 // sort() => {
   // se fija el valor en el dom (input)
   // llama a la funcion de filtro correspondiente
-  // actualiza la variable global (filteredOperations1 = sortFunction())
+  // actualiza la variable global (filteredOperations = sortFunction())
 // }
 
+
+//refactorizar funciones de ordeBy y funcion sort
 const sort= () => {
   const orderBy = $("#orderBy").value
  
-   if(orderBy === "A/Z" ){
+  if(orderBy === "A/Z" ){
     orderOperationsAz()
-   }
-   if(orderBy === "Z/A"){
+  }
+  if(orderBy === "Z/A"){
     orderOperationsZa()
-   }
-   if(orderBy === "Mayor monto"){
-     sortByLargerAmount()
-   }
-   if(orderBy === "Menor monto"){
-     sortByLowerAmount()
-    }else{
-     orderByMostAndLeastRecent()
+  }
+  if(orderBy === "Mayor monto" || "Menor monto"){
+    sortByLargerAndLowerAmount()
+  }
+  else{
+    orderByMostAndLeastRecent()
 
-    }
+  }
    
 }
  
@@ -709,9 +696,9 @@ $("#selectType").addEventListener("change", () => filter());
 const filterByOptions = () => {
   const type = $("#selectType").value
   if(type !== "Todos"){
-    filteredOperations1 = filteredOperations1.filter((operation) => operation.type === type);
+    filteredOperations = filteredOperations.filter((operation) => operation.type === type);
   }
-  return filteredOperations1
+  return filteredOperations
 };
 
 /************************************************************************/
@@ -724,34 +711,21 @@ $("#selectCategoryFilters").addEventListener("change", () => filter());
 const filterByCategories = () => {
   const selectedCategory = $("#selectCategoryFilters").value
   if(selectedCategory !== "Todas"){
-    filteredOperations1 = filteredOperations1.filter((operation) => operation.selectedCategory === selectedCategory);
+    filteredOperations = filteredOperations.filter((operation) => operation.selectedCategory === selectedCategory);
   }
-  return filteredOperations1
+  return filteredOperations
 };
 
 //FILTRO POR FECHA DESDE
 
-// var f1 = new Date(2015, 11, 31); //31 de diciembre de 2015
-// var f2 = new Date(2014, 10, 30); //30 de noviembre de 2014
-
-// if(f1 > f2){
-//     console.log("f1 > f2");
-// }
-// if(f1 < f2){
-//     console.log("f1 < f2");
-// }
-
 
 const filterByDate = () => {
 
- const operations = filteredOperations1
+ const operations = filteredOperations
 
  let dates = $("#filtersDate").value.split("-")
  let dateSince = new Date (dates)
  
- //dateSince.setHours(0,0,0,0);
-
-
   operations.map((operation)=>{
 
     let dateSplitted = operation.date.split("-")
@@ -763,7 +737,6 @@ const filterByDate = () => {
 
 
   let operationsFilteredByDate = operations.filter((dateOp) => {
-   // dateOp.date.setHours(0,0,0,0);
     return dateOp.date >= dateSince
   })
 
@@ -777,45 +750,18 @@ const filterByDate = () => {
 
   })
 
-  return filteredOperations1 = operationsFilteredByDate
-
-
+  return filteredOperations = operationsFilteredByDate
 
 }
 
 $("#filtersDate").addEventListener("change", ()=> filter())
 
-
-// falta pintar la tabla con estas operaciones y la fecha puesta normal
-// (hacer un map de operatonsFilter??) arreglar ese nombre
-
-
-// let newDate = new Date ()
-//   let month =  newDate.getMonth() + 1
-//   let day = newDate.getDate(); //obteniendo dia
-//   let year = newDate.getFullYear();
-
-// const formatDate2 = (date, symbol) => {
-//   const arrayDate = [date.getDate(), date.getMonth() + 1, date.getFullYear()]
-//   return arrayDate.join(symbol)
-// }
-
-
-//Methods
-// console.log(date.getDay())
-// console.log(date.getFullYear())
-// console.log(date.getMonth()+1)
-// console.log(date.getDate())
-
-
 // FILTRO POR A/Z
- // modificando con el array global
-
+ 
 const orderOperationsAz = () => {
-let sortAz = filteredOperations1
-console.log(sortAz)
-//getDataInLocalStorage('operations')
-console.log(sortAz.sort((a, b) => {
+  let sortAz = filteredOperations
+
+  sortAz.sort((a, b) => {
     if (a.description.toLowerCase() < b.description.toLowerCase()) {
       return -1
     }
@@ -823,18 +769,19 @@ console.log(sortAz.sort((a, b) => {
       return 1
     }
     return 0
-  }))
+  })
 
-  return console.log(sortAz = filteredOperations1 )
+  return sortAz = filteredOperations
 }
+
+
+
 
 // FILTRO POR Z/A
 
 const orderOperationsZa = () => {
-  let sortZa = filteredOperations1
-  //getDataInLocalStorage('operations')
-
-  console.log(sortZa.sort((a, b) => {
+  let sortZa = filteredOperations
+  sortZa.sort((a, b) => {
     if (a.description.toLowerCase() < b.description.toLowerCase()) {
       return 1
     }
@@ -842,37 +789,46 @@ const orderOperationsZa = () => {
       return -1
     }
     return 0
-  }))
+  })
 
-  return sortZa = filteredOperations1
+  return sortZa = filteredOperations
 }
 
 // FILTRO MENOR MONTO
 
-const sortByLargerAmount = () =>{
-  let largerAmount = filteredOperations1
-  console.log(largerAmount.sort((a, b) => {
-    return b.amount - a.amount
-  }))
+const sortByLargerAndLowerAmount = () =>{
+  let amount = filteredOperations
 
-  return filteredOperations1 = largerAmount 
+  if($("#orderBy").value === "Mayor monto"){
+  
+    amount.sort((a, b) => {
+      return b.amount - a.amount
+    })
+  }
+  if($("#orderBy").value === "Menor monto"){
+
+    amount.sort((a, b) => {
+      return a.amount - b.amount
+    })
+  }
+
+  return filteredOperations = amount 
 }
 
-const sortByLowerAmount = () =>{
-  let minorAmount = filteredOperations1
-  console.log(minorAmount.sort((a, b) => {
-    return a.amount - b.amount
-  }))
+// const sortByLowerAmount = () =>{
+//   let minorAmount = filteredOperations
+//   minorAmount.sort((a, b) => {
+//     return a.amount - b.amount
+//   })
 
-  return filteredOperations1 = minorAmount
-}
+//   return filteredOperations = minorAmount
+// }
 
 // ORDENAR POR MAS RECIENTE
 
-
 const orderByMostAndLeastRecent = () => {
 
-  let byOperationDate = filteredOperations1
+  let byOperationDate = filteredOperations
   
   byOperationDate.map((operation)=>{
 
@@ -902,32 +858,7 @@ const orderByMostAndLeastRecent = () => {
 
   })
 
-  return console.log(byOperationDate = filteredOperations1) 
-}
-//console.log(filteredOperations1)
-
-//$("#orderBy").addEventListener("change", (e) => generateTableOperations(orderByOtherFilters()));
-
-
-//SE USA (falta terminar)
-
-const orderByOtherFilters = () => {
- const orderBy = $("#orderBy").value
-
-  if(orderBy === "A/Z" ){
-    generateTableOperations(orderOperationsAz())
-    //orderOperationsAz()
-    //y pintala en la tabla?
-  }
-  if( orderBy === "Z/A"){
-    orderOperationsZa()
-  }
-  if(orderBy === "Mayor monto"){
-    sortByLargerAmount()
-  }
-  if(orderBy === "Menor monto"){
-    sortByLowerAmount()
-  }
+  return console.log(byOperationDate = filteredOperations) 
 
 }
 
@@ -947,10 +878,7 @@ show($("#frontPage"))
 else {
   clean($("#frontPage"));
   show($("#doneOperations"));
-
- // generateTableOperations()
-  // filter()
-  
+ 
   printTotalProfit()
   printTotalExpenses()
   printTotal()
