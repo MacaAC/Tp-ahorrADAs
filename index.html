@@ -11,20 +11,6 @@
 
 
 <body class="bg-slate-200">
-    <!-- <header>
-        <nav class="flex flex-row bg-green-400 justify-between h-24 items-center text-white font-bold text-lg " 	>
-            <div id="icon" class="flex flex-row m-8">
-                <!-- <img class="text-white" src="img/savings_FILL0_wght400_GRAD0_opsz48.svg"> -->
-                <!-- <div class="m-3"><i class="fa-solid fa-piggy-bank text-3xl"></i></div>
-                <div class="m-3">AhorrADAs</div>
-            </div>
-            <div class="m-8">
-                <a id="navBalance" class="m-3">Balance</a>
-                <a id="navCategory" class="m-3">Categorías</a>
-                <a class="m-3">Reportes</a>
-            </div>
-        </nav>
-    </header>  -->
     <header>
         <nav class="flex items-center justify-between flex-wrap bg-green-400 p-6">
             <div id="icon" class="flex items-center flex-shrink-0 text-white mr-6">
@@ -44,7 +30,7 @@
                 <a href="#responsive-header" id="navCategory" class="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-green-200 mr-4">
                   Categorías
                 </a>
-                <a href="#responsive-header" class="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-green-200">
+                <a id="navReports" href="#responsive-header" class="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-green-200">
                   Reportes
                 </a>
               </div>
@@ -403,13 +389,6 @@
 
                 <div>
                     <select name="select" id="editSelectedCategory" class="block w-[100%] h-10 border border-slate-400 rounded-md" required>
-                        <!-- <option value="Comida" selected>Comida</option>
-                        <option value="Servicios">Servicios</option>
-                        <option value="Salidas">Salidas</option>
-                        <option value="Educación">Educación</option>
-                        <option value="Transporte">Transporte</option>
-                        <option value="Trabajo">Trabajo</option> -->
-                        
                     </select>
                 </div>
             </div>
@@ -440,40 +419,55 @@
 
     </section>
 
-    <section class="container flex justify-center mb-4 hidden">
+    <section id="reportsSection" class="container flex justify-center mb-4 hidden ">
         <div class="box w-[900px] h-[760px] bg-white p-6 rounded-md">
-            <h1  class="text-5xl font-bold">Reportes</h1>
-            <div class="box w-11/12 border-2 my-12">
-                <h2  class="text-4xl font-bold">Resumen</h2>
-                <div class="box w-full border-2 my-3 h-10 text-lg font-medium flex flex-row">
-                    <div class="w-1/3 border-2">Categoría con mayor ganancia</div>
-                    <div class="w-1/3 border-2"></div>
-                    <div class="w-1/3 border-2"></div>
+            <h1  class="text-5xl font-bold my-12">Reportes</h1>
+            <div class="box w-11/12  my-12">
+                <h2  class="text-4xl font-bold my-10">Resumen</h2>
+                <div class="box w-full my-3 h-10 text-lg font-medium flex flex-row">
+                    <div class="w-1/3 ">Categoría con mayor ganancia</div>
+                    <div id="summary1" class="w-1/3 flex justify-end mr-4"></div>
+                    <div id="total1" class="w-1/3  text-green-400 flex justify-end mr-4"><span></span></div>
                 </div>
-                <div class="box w-full border-2 my-3 h-10 text-lg font-medium flex flex-row">
-                    <div class="w-1/3 border-2">Categoría con mayor gasto</div>
-                    <div class="w-1/3 border-2"></div>
-                    <div class="w-1/3 border-2"></div>
+                <div class="box w-full  my-3 h-10 text-lg font-medium flex flex-row">
+                    <div class="w-1/3 ">Categoría con mayor gasto</div>
+                    <div id="summary2" class="w-1/3   flex justify-end mr-4 "></div>
+                    <div id="total2" class="w-1/3  text-red-400  flex justify-end mr-4"></div>
                 </div>
-                <div class="box w-full border-2 my-3 h-10 text-lg font-medium flex flex-row ">
-                    <div class="w-1/3 border-2">Categoría con mayor balance</div>
-                    <div class="w-1/3 border-2"></div>
-                    <div class="w-1/3 border-2"></div>
+                <div class="box w-full my-3 h-10 text-lg font-medium flex flex-row ">
+                    <div class="w-1/3 ">Categoría con mayor balance</div>
+                    <div id="summary3" class="w-1/3 flex justify-end mr-4"></div>
+                    <div id="total3" class="w-1/3  flex justify-end mr-4"></div>
                 </div>
-                <div class="box w-full border-2 my-3 h-10 text-lg font-medium flex flex-row">
-                    <div class="w-1/3 border-2">Mes con mayor ganancia</div>
-                    <div class="w-1/3 border-2"></div>
-                    <div class="w-1/3 border-2"></div>
+                <div class="box w-full  my-3 h-10 text-lg font-medium flex flex-row">
+                    <div class="w-1/3 ">Mes con mayor ganancia</div>
+                    <div id="summary4" class="w-1/3  flex justify-end mr-4"></div>
+                    <div id="total4" class="w-1/3  text-green-400 flex justify-end mr-4"></div>
                 </div>
-                <div class="box w-full border-2 my-3 h-10 text-lg font-medium flex flex-row">
-                    <div class="w-1/3 border-2">Mes con mayor gasto</div>
-                    <div class="w-1/3 border-2"></div>
-                    <div class="w-1/3 border-2"></div>
+                <div class="box w-full  my-3 h-10 text-lg font-medium flex flex-row">
+                    <div class="w-1/3 ">Mes con mayor gasto</div>
+                    <div id="summary5" class="w-1/3  flex justify-end mr-4"></div>
+                    <div id="total5" class="w-1/3  text-red-400 flex justify-end mr-4"></div>
                 </div>
             </div>
+
             <div>
                 <div>
-                    <h2 class="text-4xl font-bold">Totales por categorías </h2>
+                    <h2 class="text-4xl font-bold ">Totales por categorías </h2>
+                    <div class="flex flex-row">
+                        <div class="mx-10 text-lg font-lg ">
+                            <h3>Categoría</h3>
+                        </div>
+                        <div class="mx-10 text-lg font-lg ">
+                            <h3>Ganancias</h3>
+                        </div>
+                        <div class="mx-10 text-lg font-lg ">
+                            <h3>Gastos</h3>
+                        </div>
+                        <div class="mx-10 text-lg font-lg ">
+                            <h3>Balance</h3>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div>

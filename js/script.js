@@ -40,8 +40,8 @@ const operationsInfo = () => {
     const type = $("#type").value
     //const categoryName = $("#selectCategory").value ahora categoryName no existe
     const selectedCategory = $("#selectCategory").value
-
-
+    
+ 
 
   for (const category of categories){
     if ( $("#selectCategory").value == category.nameCategory){
@@ -66,11 +66,14 @@ const operationsInfo = () => {
         type,
         categoryId,
         selectedCategory,
-        date
+        date,
+
     }
 }
 
 /**************************************************/
+
+
 
 const generateTableOperations = (operations) => {
   let maybeFilteredOperations = getDataInLocalStorage("operations");
@@ -565,7 +568,7 @@ let divProfits = $("#divProfits")
 const earningBalance = () =>{
   let operations = getDataInLocalStorage('operations')
   let arrayProfitAmounts = []
-  let totalProfit
+  let totalProfit = 0
 
   for (const operation of operations){
     if(operation.type === "Ganancia"){
@@ -574,14 +577,13 @@ const earningBalance = () =>{
         totalProfit = arrayProfitAmounts.reduce((total,profitAmounts)=> total + profitAmounts)
       }
   }
+
   return totalProfit
 }
+ 
 
-//falta resolver--manu
 const printTotalProfit = ()=>{
-  //let operations = getDataInLocalStorage('operations')
- // getDataInLocalStorage("operations") ? divProfits.innerText = "0" :
-  divProfits.innerText = earningBalance()
+return divProfits.innerText = earningBalance()
 }
 
 //------------------balance de gastos
@@ -591,7 +593,7 @@ let divExpenses = $("#divExpenses")
 const expensesBalance = () =>{
   let operations = getDataInLocalStorage('operations')
   let arrayExpensesAmounts = []
-  let totalExpenses
+  let totalExpenses =0
 
   for (const operation of operations){
     if(operation.type === "Gasto"){
@@ -605,19 +607,15 @@ const expensesBalance = () =>{
 }
 
 const printTotalExpenses = ()=>{
-  //let operations = getDataInLocalStorage('operations')
-  //getDataInLocalStorage("operations") ? divExpenses.innerText = "0" :
-  divExpenses.innerText = expensesBalance()
+ return divExpenses.innerText = expensesBalance()
 }
 
 //---------------------balance total
 
-const totalBalance = (a, b) => a - b
+const totalBalance = (a, b) => parseInt(a) - parseInt(b)
 
 const printTotal = ()=> {
-  // let operations = getDataInLocalStorage('operations')
-  // getDataInLocalStorage("operations") ? $("#divTotal").innerText = "0" :
-$("#divTotal").innerText = totalBalance(earningBalance(),expensesBalance())
+  return  $("#divTotal").innerText = totalBalance(earningBalance(),expensesBalance())
 }
 
 
@@ -750,7 +748,11 @@ const filterByDate = () => {
 
   })
 
+<<<<<<< HEAD
   return filteredOperations = operationsFilteredByDate
+=======
+  return filteredOperations1 = operationsFilteredByDate
+>>>>>>> fdce0566b12efb0439c59256366fad78ea0ee2fe
 
 }
 
@@ -949,7 +951,7 @@ let highestSpendingCategory = highestProfitOrSpentCat("Gasto")
 
 //------------------------------------------------------------------------------------------
 //categoria con mayor balance
- 
+
 
 const createObjBalance = (id) =>{
   let profitAmountsArr=[]
@@ -1048,101 +1050,10 @@ const highestBalanceCategory = ()=>{
 
 let highestBalanceCategoryLet = highestBalanceCategory()
 
-//--------------mes con mayor gasto
-
-//1ro filtro por gasto o ganancia
-
-operations = getDataInLocalStorage("operations")
-
-let filteredOperationsByProfit= operations.filter(operation => operation.type == "Ganancia")
-let filteredOperationsBySpent= operations.filter(operation => operation.type == "Gasto")
-
-
-const months = (array)=>{
-  let arrayMonths = []
-
-  for(const operation of array){
-    const {date}=operation
-    !arrayMonths.includes(date.split("-")[1]) && arrayMonths.push(date.split("-")[1])
-  }
-
-  return arrayMonths
-
-} //months me retorna un array con todos los meses que tienen operaciones (strings)
-
-
-let profitMonths = months(filteredOperationsByProfit)
-let spentMonth = months(filteredOperationsBySpent)
- //-addingAmounts- que me devuelva la suma de los amounts por mes. o sea que reciba por parametro un mes y el array con operaciones y me devuelva la suma de los amounts de esas operaciones.
-
-const addingAmounts = (month,arrayOp)=>{
-  let acc = 0
-  let filteredByMonthArray = arrayOp.filter(op=>op.date.split("-")[1] == month)
-  let filteredByMonthAmountsArray = filteredByMonthArray.map(op=>op.amount)
-
-  for(amount of filteredByMonthAmountsArray){
-    acc += amount
-  }
-  return acc
-}
-
-
-
-const createObjByMonth =()=>{
-  let arrayReturn = []
-
-  for (let i = 0; i < profitMonths.length; i++) {
-    let amount = addingAmounts(profitMonths[i],filteredOperationsByProfit)
-    let month = profitMonths[i]
-
-    let obj = {
-      month: month,
-      amount: amount
-    }
-
-    arrayReturn.push(obj)
-  }
-  return arrayReturn
-
-}
-const createObjByMonthSP =()=>{
-  let arrayReturn = []
-
-  for (let i = 0; i < spentMonth.length; i++) {
-    let amount = addingAmounts(spentMonth[i],filteredOperationsBySpent)
-    let month = spentMonth[i]
-
-    let obj = {
-      month: month,
-      amount: amount
-    }
-
-    arrayReturn.push(obj)
-
-  }
-  return arrayReturn
-
-}
- //arrayX = createObjByMonth()
- //amountX= arrayX.map((x)=> x.amount)
- //montoMayor =Math.max.apply(null,amountX)
- //arrayGanador = arrayX.filter(x=> x.amount == montoMayor)
- //arrayGanador = arrayX.filter(x=> x.amount == Math.max.apply(null,prueba().map((x)=> x.amount)))
-
- //Mes con mayor ganancia
- arrayObjMonthHighestProfit = createObjByMonth().filter(x=> x.amount == Math.max.apply(null,createObjByMonth().map((x)=> x.amount)))
-//mes con mayor gasto
- arrayObjMonthHighestSpent = createObjByMonthSP().filter(x=> x.amount == Math.max.apply(null,createObjByMonthSP().map((x)=> x.amount)))
-
-
-
  //---------------------------totales por categoria
 
 let suma
 
-
-
-//1ro itero por las categorias
 categories = getDataInLocalStorage("categories")
 operations= getDataInLocalStorage("operations")
 
@@ -1166,14 +1077,11 @@ let array =[]
       totalByCatObj.name=category.nameCategory
       ganancias == undefined ?  totalByCatObj.profits = 0 : totalByCatObj.profits = ganancias
       gastos == undefined ? totalByCatObj.spents = 0 : totalByCatObj.spents = gastos
-     
+
       let balance = totalByCatObj.profits  - totalByCatObj.spents
-   
-
       totalByCatObj.balance = balance
-    
 
-        array.push(totalByCatObj)
+      array.push(totalByCatObj)
 
 
       }
@@ -1188,34 +1096,103 @@ let array =[]
 
 //-------------------------------------------
 //----------------totales por mes ------------
-// operations = getDataInLocalStorage("operations")
-// const monthWithOperations = months(operations)
-// console.log(monthWithOperations)
-// const probando = ()=>{
-// let array = []
-// let obj
-// for (const operation of operations){
-//   for(const month of monthWithOperations){
-//     let obj = {
-//      month: 0,
-//      totalProfit: 0,
-//      totalSpents: 0,
-//      totalBalanc: 0
-//     }
-//     obj.month=month
-//     operations.filter(operation => operation.type == "Ganancia" && //tengo que filtrar por mes)
-//     array.push(obj)
 
-//    }
- 
-//  }
-//  return array
 
-   
-// }
+for (const operation of operations){
 
- 
+  let mes = new Date(operation.date).getMonth()+1
 
+  let año = new Date(operation.date).getFullYear()
+
+  let monthYear = `${mes}-${año} `
+
+  operation["monthYear"] = monthYear
+
+}
+
+
+saveDataInLocalStorage("operations", operations)
+
+operations = getDataInLocalStorage("operations")
+  let arrayMonthsYear = []
+
+for(const operation of operations){
+  const {monthYear} = operation
+  !arrayMonthsYear.includes(monthYear) && arrayMonthsYear.push(monthYear)
+}
+
+
+let array = []
+let object
+const hola = () =>{
+  for (const monthYear of arrayMonthsYear){
+    object = {
+    profits: 0,
+    spents: 0,
+    balance:0
+   }
+  object["monthYear"] = monthYear
+  array.push(object)
+     for (const operation of operations){
+      
+      if(monthYear == operation.monthYear && operation.type == "Ganancia"){
+        object.profits = object.profits +  operation.amount
+        
+      }
+      if(monthYear == operation.monthYear && operation.type == "Gasto"){
+        object.spents = object.spents +  operation.amount
+        
+      }
+      object.balance = object.profits - object.spents 
+     }
+    }
+  
+return array
+
+}
+//mes con mayor ganancia
+
+const highestProfitMonth = ()=>{
+const maxMonthProfit = hola().reduce((acc, i)=>(i.profits > acc.profits ? i : acc))
+
+
+ return maxMonthProfit
+}
+//mes con mayor gasto
+
+const highestSpendingMonth = ()=>{
+  const maxMonthSpents = hola().reduce((acc, i)=>(i.spents > acc.spents ? i : acc))
+
+  return maxMonthSpents
+
+}
+//-------------
+
+const printReports =()=>{
+  
+  $("#summary1").innerHTML= `<span> ${highestEarningCategory.categoryName} </span>`
+  $("#total1").innerHTML= `<span> + $ ${highestEarningCategory.categoryTotal} </span>`
+
+  $("#summary2").innerHTML= `<span> ${highestSpendingCategory.categoryName} </span>`
+  $("#total2").innerHTML= `<span> - $ ${highestSpendingCategory.categoryTotal} </span>`
+
+  $("#summary3").innerHTML= `<span> ${highestBalanceCategoryLet.categoryName} </span>`
+  $("#total3").innerHTML= `<span>  $ ${highestBalanceCategoryLet.balanceResult} </span>`
+
+  $("#summary4").innerHTML= `<span> ${highestProfitMonth().monthYear} </span>`
+  $("#total4").innerHTML= `<span> + $ ${highestProfitMonth().profits} </span>`
+
+  $("#summary5").innerHTML= `<span> ${highestSpendingMonth().monthYear} </span>`
+  $("#total5").innerHTML= `<span> - $ ${highestSpendingMonth().spents} </span>`
+}
+
+$("#navReports").addEventListener("click", ()=>{
+show($("#reportsSection"))
+clean($("#container"))
+clean($("#aside"))
+printReports()
+
+})
 //-------funcion navbar responsive
 
 $("#btnMenu").addEventListener('click', () => $("#menu").classList.toggle('hidden'))
