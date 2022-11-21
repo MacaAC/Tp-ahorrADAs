@@ -244,6 +244,9 @@ const deleteOperation = (id) => {
     show($("#frontPage"))
     clean($("#doneOperations"))
   }
+  printTotalProfit()  
+  printTotalExpenses()
+  printTotal()
 
 };
 
@@ -621,7 +624,6 @@ const printTotal = ()=> {
 
 //****************************************************/
 
-
 $("#icon").addEventListener("click",()=>{
 
   if (!localStorage.getItem('operations')){
@@ -656,14 +658,8 @@ const filter = () => {
   generateTableOperations(filteredOperations)
 }
 
-// sort() => {
-  // se fija el valor en el dom (input)
-  // llama a la funcion de filtro correspondiente
-  // actualiza la variable global (filteredOperations = sortFunction())
-// }
+//ORDENAR
 
-
-//refactorizar funciones de ordeBy y funcion sort
 const sort= () => {
   const orderBy = $("#orderBy").value
  
@@ -673,8 +669,11 @@ const sort= () => {
   if(orderBy === "Z/A"){
     orderOperationsZa()
   }
-  if(orderBy === "Mayor monto" || "Menor monto"){
-    sortByLargerAndLowerAmount()
+  if(orderBy === "Mayor monto"){
+    sortByLargerAmount()
+  }
+  if(orderBy === "Menor monto"){
+  sortByLowerAmount()
   }
   else{
     orderByMostAndLeastRecent()
@@ -682,7 +681,7 @@ const sort= () => {
   }
    
 }
- 
+
 $("#orderBy").addEventListener("change", () => filter());
 
 
@@ -716,7 +715,6 @@ const filterByCategories = () => {
 
 //FILTRO POR FECHA DESDE
 
-
 const filterByDate = () => {
 
  const operations = filteredOperations
@@ -733,7 +731,6 @@ const filterByDate = () => {
 
   })
 
-
   let operationsFilteredByDate = operations.filter((dateOp) => {
     return dateOp.date >= dateSince
   })
@@ -748,12 +745,7 @@ const filterByDate = () => {
 
   })
 
-<<<<<<< HEAD
   return filteredOperations = operationsFilteredByDate
-=======
-  return filteredOperations1 = operationsFilteredByDate
->>>>>>> fdce0566b12efb0439c59256366fad78ea0ee2fe
-
 }
 
 $("#filtersDate").addEventListener("change", ()=> filter())
@@ -777,8 +769,6 @@ const orderOperationsAz = () => {
 }
 
 
-
-
 // FILTRO POR Z/A
 
 const orderOperationsZa = () => {
@@ -798,33 +788,25 @@ const orderOperationsZa = () => {
 
 // FILTRO MENOR MONTO
 
-const sortByLargerAndLowerAmount = () =>{
+const sortByLargerAmount = () =>{
   let amount = filteredOperations
 
-  if($("#orderBy").value === "Mayor monto"){
-  
-    amount.sort((a, b) => {
-      return b.amount - a.amount
-    })
-  }
-  if($("#orderBy").value === "Menor monto"){
-
-    amount.sort((a, b) => {
-      return a.amount - b.amount
-    })
-  }
+  amount.sort((a, b) => {
+    return b.amount - a.amount
+  })
 
   return filteredOperations = amount 
 }
 
-// const sortByLowerAmount = () =>{
-//   let minorAmount = filteredOperations
-//   minorAmount.sort((a, b) => {
-//     return a.amount - b.amount
-//   })
+const sortByLowerAmount = () =>{
+  let amount = filteredOperations
 
-//   return filteredOperations = minorAmount
-// }
+  amount.sort((a, b) => {
+    return a.amount - b.amount
+  })
+
+  return filteredOperations = amount
+}
 
 // ORDENAR POR MAS RECIENTE
 
@@ -848,7 +830,6 @@ const orderByMostAndLeastRecent = () => {
     byOperationDate.sort((a, b) => a.date - b.date)
   }
    
-
   byOperationDate.map((operation)=> {
 
     let dateWithDash = `${operation.date.getDate()}-${operation.date.getMonth() + 1}-${operation.date.getFullYear()}`
@@ -856,8 +837,6 @@ const orderByMostAndLeastRecent = () => {
     operation.date = dateWithDash
     
     return operation
-
-
   })
 
   return console.log(byOperationDate = filteredOperations) 
@@ -880,7 +859,7 @@ show($("#frontPage"))
 else {
   clean($("#frontPage"));
   show($("#doneOperations"));
- 
+
   printTotalProfit()
   printTotalExpenses()
   printTotal()
@@ -893,7 +872,7 @@ else {
 
 
 let categories = getDataInLocalStorage("categories")
-let operations = getDataInLocalStorage("operations")
+operations = getDataInLocalStorage("operations")
 
 let arrayAmounts = []
 
@@ -1051,9 +1030,6 @@ const highestBalanceCategory = ()=>{
 let highestBalanceCategoryLet = highestBalanceCategory()
 
  //---------------------------totales por categoria
-
-let suma
-
 categories = getDataInLocalStorage("categories")
 operations= getDataInLocalStorage("operations")
 
@@ -1114,62 +1090,55 @@ for (const operation of operations){
 saveDataInLocalStorage("operations", operations)
 
 operations = getDataInLocalStorage("operations")
-  let arrayMonthsYear = []
+let arrayMonthsYear = []
 
 for(const operation of operations){
   const {monthYear} = operation
   !arrayMonthsYear.includes(monthYear) && arrayMonthsYear.push(monthYear)
 }
 
-
-let array = []
-let object
-const hola = () =>{
+operations = getDataInLocalStorage("operations")
+let arrayObjectTotalByMonths = []
+let objectTotalByMonths
+const generateObjectTotalByMonths = () =>{
   for (const monthYear of arrayMonthsYear){
-    object = {
+    objectTotalByMonths = {
     profits: 0,
     spents: 0,
     balance:0
    }
-  object["monthYear"] = monthYear
-  array.push(object)
+   objectTotalByMonths["monthYear"] = monthYear
+  arrayObjectTotalByMonths.push(objectTotalByMonths)
      for (const operation of operations){
       
       if(monthYear == operation.monthYear && operation.type == "Ganancia"){
-        object.profits = object.profits +  operation.amount
-        
+        objectTotalByMonths.profits = objectTotalByMonths.profits +  operation.amount
       }
       if(monthYear == operation.monthYear && operation.type == "Gasto"){
-        object.spents = object.spents +  operation.amount
-        
+        objectTotalByMonths.spents = objectTotalByMonths.spents +  operation.amount
       }
-      object.balance = object.profits - object.spents 
-     }
+      objectTotalByMonths.balance = objectTotalByMonths.profits - objectTotalByMonths.spents 
+}
     }
-  
-return array
-
+return arrayObjectTotalByMonths
 }
 //mes con mayor ganancia
 
 const highestProfitMonth = ()=>{
-const maxMonthProfit = hola().reduce((acc, i)=>(i.profits > acc.profits ? i : acc))
-
-
- return maxMonthProfit
+const maxMonthProfit = generateObjectTotalByMonths().reduce((acc, i)=>(i.profits > acc.profits ? i : acc))
+return maxMonthProfit
 }
 //mes con mayor gasto
 
 const highestSpendingMonth = ()=>{
-  const maxMonthSpents = hola().reduce((acc, i)=>(i.spents > acc.spents ? i : acc))
-
+  const maxMonthSpents = generateObjectTotalByMonths().reduce((acc, i)=>(i.spents > acc.spents ? i : acc))
   return maxMonthSpents
 
 }
 //-------------
 
 const printReports =()=>{
-  
+
   $("#summary1").innerHTML= `<span> ${highestEarningCategory.categoryName} </span>`
   $("#total1").innerHTML= `<span> + $ ${highestEarningCategory.categoryTotal} </span>`
 
@@ -1186,13 +1155,72 @@ const printReports =()=>{
   $("#total5").innerHTML= `<span> - $ ${highestSpendingMonth().spents} </span>`
 }
 
-$("#navReports").addEventListener("click", ()=>{
-show($("#reportsSection"))
-clean($("#container"))
-clean($("#aside"))
-printReports()
 
-})
+
+const generatCategoryTotalsTable = ()=>{
+  $("#rowTotalsByCat").innerHTML = "";
+
+for(objCatTotals of createObjTotalByCategory()){
+  const{name,profits,spents,balance}=objCatTotals
+
+  $("#rowTotalsByCat").innerHTML += `
+<div class="flex flex-row justify-center">
+  <div class="my-5 mx-12 text-lg">
+      <div class="font-bold flex justify-start">${name}</div>
+  </div>
+  <div class="my-5 mx-12 text-lg font-lg ">
+      <div class="font-bold flex justify-end text-green-400" > +$ ${profits}</div>
+  </div>
+  <div class="my-5 mx-12 text-lg font-lg ">
+      <div class="font-bold flex justify-end text-red-400"> -$ ${spents}</div>
+  </div>
+  <div class="my-5 mx-12 text-lg font-lg ">
+      <div class="font-bold flex justify-end"> $ ${balance}</div>
+  </div>
+</div>
+  `;
+}
+
+}
+
+
+const generatMonthTotalsTable = ()=>{
+  $("#rowTotalsByMonth").innerHTML = "";
+
+for(objMonthTotals of generateObjectTotalByMonths()){
+  const{monthYear,profits,spents,balance}= objMonthTotals
+
+  $("#rowTotalsByMonth").innerHTML += `
+<div class="flex flex-row justify-center">
+  <div class="my-5 mx-12 text-lg">
+      <div class="font-bold flex justify-start bg-green-400">${monthYear}</div>
+  </div>
+  <div class="my-5 mx-12 text-lg font-lg ">
+      <div class="font-bold flex justify-end text-green-400" > +$ ${profits}</div>
+  </div>
+  <div class="my-5 mx-12 text-lg font-lg ">
+      <div class="font-bold flex justify-end text-red-400"> -$ ${spents}</div>
+  </div>
+  <div class="my-5 mx-12 text-lg font-lg ">
+      <div class="font-bold flex justify-end"> $ ${balance}</div>
+  </div>
+</div>
+  `;
+}
+
+}
+
+
+$("#navReports").addEventListener("click", ()=>{
+  show($("#reportsSection"))
+  clean($("#container"))
+  clean($("#aside"))
+  printReports()
+  generatCategoryTotalsTable()
+  generatMonthTotalsTable()
+  
+  })
+
 //-------funcion navbar responsive
 
 $("#btnMenu").addEventListener('click', () => $("#menu").classList.toggle('hidden'))
