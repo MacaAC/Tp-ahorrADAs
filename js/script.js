@@ -934,7 +934,6 @@ for(const obj of pushObjCatAndTotals(profitOrExpense)){
   objAmounts.push(obj.categoryTotal)
 }
  let highestValue = Math.max.apply(null,objAmounts)
- console.log(highestValue)
  for(const obj of pushObjCatAndTotals(profitOrExpense)){
   if(obj.categoryTotal==highestValue){
     return obj
@@ -1050,11 +1049,12 @@ let highestBalanceCategoryLet = highestBalanceCategory()
 
  //---------------------------totales por categoria
 categories = getDataInLocalStorage("categories")
-operations= getDataInLocalStorage("operations")
-
+let newArray
 const createObjTotalByCategory =()=>{
 let array =[]
   for (category of categories){
+operations= getDataInLocalStorage("operations")
+
     for(const operation of operations){
       if(operation.categoryId==category.id){
  let ganancias = createObjForCat(category.id,"Ganancia").categoryTotal
@@ -1076,18 +1076,16 @@ let array =[]
       let balance = totalByCatObj.profits  - totalByCatObj.spents
       totalByCatObj.balance = balance
 
-      array.push(totalByCatObj)
-
-
+    if(!array.some(x=> x.id == category.id)){
+          array.push(totalByCatObj)
+        }
       }
-
     }
   }
+
   return  array
 }
 
-
-//createObjTotalByCategory() me devuelve un array con objetos que tienen los totales por categoria. el problema es que hay objetos duplicados. debo encontrrar la forma de eliminarlos, y falta pintarlos en la tabla.
 
 //-------------------------------------------
 //----------------totales por mes ------------
@@ -1119,7 +1117,9 @@ for(const operation of operations){
 operations = getDataInLocalStorage("operations")
 let arrayObjectTotalByMonths = []
 let objectTotalByMonths
+
 const generateObjectTotalByMonths = () =>{
+  arrayObjectTotalByMonths = []
   for (const monthYear of arrayMonthsYear){
     objectTotalByMonths = {
     profits: 0,
@@ -1141,16 +1141,18 @@ const generateObjectTotalByMonths = () =>{
     }
 return arrayObjectTotalByMonths
 }
+
+
 //mes con mayor ganancia
 
 const highestProfitMonth = ()=>{
-const maxMonthProfit = generateObjectTotalByMonths().reduce((acc, i)=>(i.profits > acc.profits ? i : acc))
+const maxMonthProfit = generateObjectTotalByMonths().length >0 && generateObjectTotalByMonths().reduce((acc, i)=>(i.profits > acc.profits ? i : acc))
 return maxMonthProfit
 }
 //mes con mayor gasto
 
 const highestSpendingMonth = ()=>{
-  const maxMonthSpents = generateObjectTotalByMonths().reduce((acc, i)=>(i.spents > acc.spents ? i : acc))
+  const maxMonthSpents = generateObjectTotalByMonths().length >0 &&  generateObjectTotalByMonths().reduce((acc, i)=>(i.spents > acc.spents ? i : acc))
   return maxMonthSpents
 
 }
@@ -1158,25 +1160,25 @@ const highestSpendingMonth = ()=>{
 
 const printReports =()=>{
 
-  $("#summary1").innerHTML= `<span> ${highestEarningCategory.categoryName} </span>`
-  $("#total1").innerHTML= `<span> + $ ${highestEarningCategory.categoryTotal} </span>`
+  $("#summary1").innerHTML= `<span> ${highestEarningCategory ? highestEarningCategory.categoryName : "-"} </span>`
+  $("#total1").innerHTML= `<span> + $ ${highestEarningCategory? highestEarningCategory.categoryTotal : "-"} </span>`
 
-  $("#summary2").innerHTML= `<span> ${highestSpendingCategory.categoryName} </span>`
-  $("#total2").innerHTML= `<span> - $ ${highestSpendingCategory.categoryTotal} </span>`
+  $("#summary2").innerHTML= `<span> ${highestSpendingCategory ? highestSpendingCategory.categoryName : "-"} </span>`
+  $("#total2").innerHTML= `<span> - $ ${highestSpendingCategory ? highestSpendingCategory.categoryTotal : "-"} </span>`
 
-  $("#summary3").innerHTML= `<span> ${highestBalanceCategoryLet.categoryName} </span>`
-  $("#total3").innerHTML= `<span>  $ ${highestBalanceCategoryLet.balanceResult} </span>`
+  $("#summary3").innerHTML= `<span> $ ${ highestBalanceCategoryLet? highestBalanceCategoryLet.categoryName : "-"} </span>`
+  $("#total3").innerHTML= `<span>  $ ${ highestBalanceCategoryLet ?highestBalanceCategoryLet.balanceResult : "-"} </span>`
 
-  $("#summary4").innerHTML= `<span> ${highestProfitMonth().monthYear} </span>`
-  $("#total4").innerHTML= `<span> + $ ${highestProfitMonth().profits} </span>`
+  $("#summary4").innerHTML= `<span> ${highestProfitMonth() ?  highestProfitMonth().monthYear : "-"} </span>`
+  $("#total4").innerHTML= `<span> + $ ${highestProfitMonth() ? highestProfitMonth().profits : "-"} </span>`
 
-  $("#summary5").innerHTML= `<span> ${highestSpendingMonth().monthYear} </span>`
-  $("#total5").innerHTML= `<span> - $ ${highestSpendingMonth().spents} </span>`
+  $("#summary5").innerHTML= `<span> ${highestSpendingMonth() ? highestSpendingMonth().monthYear : "-"} </span>`
+  $("#total5").innerHTML= `<span> - $ ${ highestSpendingMonth() ? highestSpendingMonth().spents : "-"} </span>`
 }
 
 
 
-const generatCategoryTotalsTable = ()=>{
+const generateCategoryTotalsTable = ()=>{
   $("#rowTotalsByCat").innerHTML = "";
 
 for(objCatTotals of createObjTotalByCategory()){
@@ -1203,7 +1205,7 @@ for(objCatTotals of createObjTotalByCategory()){
 }
 
 
-const generatMonthTotalsTable = ()=>{
+const generateMonthTotalsTable = ()=>{
   $("#rowTotalsByMonth").innerHTML = "";
 
 for(objMonthTotals of generateObjectTotalByMonths()){
@@ -1212,7 +1214,8 @@ for(objMonthTotals of generateObjectTotalByMonths()){
   $("#rowTotalsByMonth").innerHTML += `
 <div class="flex flex-row justify-center">
   <div class="my-5 mx-12 text-lg">
-      <div class="font-bold flex justify-start bg-green-400">${monthYear}</div>
+      <div class="font-bold flex justify-start
+      ">${monthYear}</div>
   </div>
   <div class="my-5 mx-12 text-lg font-lg ">
       <div class="font-bold flex justify-end text-green-400" > +$ ${profits}</div>
@@ -1235,8 +1238,8 @@ $("#navReports").addEventListener("click", ()=>{
   clean($("#container"))
   clean($("#aside"))
   printReports()
-  generatCategoryTotalsTable()
-  generatMonthTotalsTable()
+  generateCategoryTotalsTable()
+  generateMonthTotalsTable()
   
   })
 
