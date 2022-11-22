@@ -89,20 +89,29 @@ const generateTableOperations = (operations) => {
         const className = type === "Gasto" ? "red-500" : "green-500";
         const operator = type === "Gasto" ? "-" : "+";
 
-    //var formatedDate = correctDate(date)//
+        $("#table").innerHTML += `<div class="flex flex-row justify-between">
+        
+        <div class="mx-2 text-[80%] md:text-base">
+          <div class="font-bold text-center">${description}</div>
+        </div>
 
-    $("#table").innerHTML += `
+        <div class="ml-6 text-[50%] leading-5 md:text-[70%]">
+          <div class="font-bold text-center">${selectedCategory}</div>
+        </div>
 
-            <tr>
-                <td class="pl-0 pr-10 mt-4 pt-0 text-lg font-bold capitalize">${description}</td>
-                <td class="mt-0 pt-0 pl-10 text-xs ">${selectedCategory}</td>
-                <td class="mt-0 pt-0 pl-10 text-sm">${date}</td>
-                <td class="mt-0 pt-0 pl-12 text-lg text-${className} font-bold">${operator}${amount}</td>
-                <td class="pl-8 mt-0 pt-0 text-xs"><button class="mr-4 btnEditOperation" data-id="${id}" onclick="operationEdit(${id})">Editar</button><button class="mr-4 btnDeleteOperation" data-id="${id}" onclick="deleteOperation('${id}')">Eliminar</button></td>
-            </tr>
+        <div class="pl-4 text-[50%] leading-5 md:text-[70%]">
+          <div class="text-center">${date}</div>
+        </div>
 
-        `;
-  });
+        <div class="pl-4 text-[70%] leading-5 md:text-[70%] text-${className}">
+          <div class="text-center">${operator}${amount}</div>
+        </div>
+        
+        <div class="pl-4 text-[50%] leading-5 md:text-[70%]">
+        <button class="mr-4 btnEditOperation" data-id="${id}" onclick="operationEdit(${id})"><i class="fa-sharp fa-solid fa-pen"></i></button><button class="mr-4 btnDeleteOperation" data-id="${id}" onclick="deleteOperation('${id}')"><i class="fa-sharp fa-solid fa-trash"></i></button>
+        </div>`
+
+    });
 
 };
 
@@ -298,14 +307,18 @@ $("#btnNewOperations").addEventListener("click", () => {
 //ver tabla de categorias
 
 $("#navCategory").addEventListener("click", () => {
-  clean($("#editOperationsForm"))
+ 
   show($("#categoriesForm"));
+   
+  clean($("#editOperationsForm"))
   clean( $("#frontPage"));
   clean($("#doneOperations"));
   clean($("#aside"));
+  
   generateCategoriesItems();
   clean( $("#editCategoryWindow"));
   clean($("#whiteBox"))
+  clean($("#reportsSection"))
 });
 
 
@@ -495,21 +508,28 @@ $("#cancelCategoryInEdition").addEventListener("click", ()=>{
 /*********************************************************/
 
 $("#navBalance").addEventListener("click", () => {
-  if (!localStorage.getItem("operations")){
+  if (localStorage.getItem("operations").length === 0){
     showAside();
     show($("#whiteBox"))
     show($("#frontPage"))
+    clean($("#categoriesForm"));
+    clean($("#formNewOperation"));
+    clean($("#reportsSection"))
+    clean($("#doneOperations"))
+    
+
   }else{
     showAside();
     show($("#whiteBox"))
     show($("#doneOperations"));
     clean($("#categoriesForm"));
     clean($("#formNewOperation"));
-
+    clean($("#reportsSection"))
+    
     filter()
   }
    
-  //falta agregar mas dom? reportes
+
   
 });
 
@@ -624,22 +644,28 @@ const printTotal = ()=> {
 
 //****************************************************/
 
+
 $("#icon").addEventListener("click",()=>{
 
-  if (!localStorage.getItem('operations')){
+  if (localStorage.getItem('operations').length === 0){
     show($("#whiteBox"))
     showAside()
+    show($("#frontPage"))
+    clean($("#doneOperations"))
+    
   }else{
     clean($("#categoriesForm"))
     clean($("#editOperationsForm"))
     clean($("#formNewOperation"))
+    clean($("#reportsSection"))
     clean( $("#frontPage"))
     show($("#doneOperations"))
     showAside()
-
-    generateTableOperations()
-
     show($("#whiteBox"))
+
+
+    filter()
+
   }
 
 });
@@ -658,8 +684,14 @@ const filter = () => {
   generateTableOperations(filteredOperations)
 }
 
-//ORDENAR
+// sort() => {
+  // se fija el valor en el dom (input)
+  // llama a la funcion de filtro correspondiente
+  // actualiza la variable global (filteredOperations = sortFunction())
+// }
 
+
+//refactorizar funciones de ordeBy y funcion sort
 const sort= () => {
   const orderBy = $("#orderBy").value
  
@@ -669,11 +701,8 @@ const sort= () => {
   if(orderBy === "Z/A"){
     orderOperationsZa()
   }
-  if(orderBy === "Mayor monto"){
-    sortByLargerAmount()
-  }
-  if(orderBy === "Menor monto"){
-  sortByLowerAmount()
+  if(orderBy === "Mayor monto" || "Menor monto"){
+    sortByLargerAndLowerAmount()
   }
   else{
     orderByMostAndLeastRecent()
@@ -681,7 +710,7 @@ const sort= () => {
   }
    
 }
-
+ 
 $("#orderBy").addEventListener("change", () => filter());
 
 
@@ -715,6 +744,7 @@ const filterByCategories = () => {
 
 //FILTRO POR FECHA DESDE
 
+
 const filterByDate = () => {
 
  const operations = filteredOperations
@@ -730,6 +760,7 @@ const filterByDate = () => {
     return operation
 
   })
+
 
   let operationsFilteredByDate = operations.filter((dateOp) => {
     return dateOp.date >= dateSince
@@ -769,6 +800,8 @@ const orderOperationsAz = () => {
 }
 
 
+
+
 // FILTRO POR Z/A
 
 const orderOperationsZa = () => {
@@ -788,25 +821,33 @@ const orderOperationsZa = () => {
 
 // FILTRO MENOR MONTO
 
-const sortByLargerAmount = () =>{
+const sortByLargerAndLowerAmount = () =>{
   let amount = filteredOperations
 
-  amount.sort((a, b) => {
-    return b.amount - a.amount
-  })
+  if($("#orderBy").value === "Mayor monto"){
+  
+    amount.sort((a, b) => {
+      return b.amount - a.amount
+    })
+  }
+  if($("#orderBy").value === "Menor monto"){
+
+    amount.sort((a, b) => {
+      return a.amount - b.amount
+    })
+  }
 
   return filteredOperations = amount 
 }
 
-const sortByLowerAmount = () =>{
-  let amount = filteredOperations
+// const sortByLowerAmount = () =>{
+//   let minorAmount = filteredOperations
+//   minorAmount.sort((a, b) => {
+//     return a.amount - b.amount
+//   })
 
-  amount.sort((a, b) => {
-    return a.amount - b.amount
-  })
-
-  return filteredOperations = amount
-}
+//   return filteredOperations = minorAmount
+// }
 
 // ORDENAR POR MAS RECIENTE
 
@@ -830,6 +871,7 @@ const orderByMostAndLeastRecent = () => {
     byOperationDate.sort((a, b) => a.date - b.date)
   }
    
+
   byOperationDate.map((operation)=> {
 
     let dateWithDash = `${operation.date.getDate()}-${operation.date.getMonth() + 1}-${operation.date.getFullYear()}`
@@ -837,6 +879,8 @@ const orderByMostAndLeastRecent = () => {
     operation.date = dateWithDash
     
     return operation
+
+
   })
 
   return console.log(byOperationDate = filteredOperations) 
@@ -1157,7 +1201,7 @@ const printReports =()=>{
 
 
 
-const generatCategoryTotalsTable = ()=>{
+const generateCategoryTotalsTable = ()=>{
   $("#rowTotalsByCat").innerHTML = "";
 
 for(objCatTotals of createObjTotalByCategory()){
@@ -1184,7 +1228,7 @@ for(objCatTotals of createObjTotalByCategory()){
 }
 
 
-const generatMonthTotalsTable = ()=>{
+const generateMonthTotalsTable = ()=>{
   $("#rowTotalsByMonth").innerHTML = "";
 
 for(objMonthTotals of generateObjectTotalByMonths()){
@@ -1212,15 +1256,24 @@ for(objMonthTotals of generateObjectTotalByMonths()){
 
 
 $("#navReports").addEventListener("click", ()=>{
-  show($("#reportsSection"))
-  clean($("#container"))
-  clean($("#aside"))
-  printReports()
-  generatCategoryTotalsTable()
-  generatMonthTotalsTable()
+    
+    show($("#reportsSection"))
+    show($("#reportsSection"))
+
+    clean($("#container"))
+    clean($("#aside"))
+    clean($("#doneOperations"))
+    clean($("#categoriesForm"))
+    clean($("#frontPage"))
   
-  })
+    printReports()
+    generateCategoryTotalsTable()
+    generateMonthTotalsTable()
+    
+})
+  
 
 //-------funcion navbar responsive
 
 $("#btnMenu").addEventListener('click', () => $("#menu").classList.toggle('hidden'))
+
