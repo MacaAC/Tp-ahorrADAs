@@ -89,28 +89,15 @@ const generateTableOperations = (operations) => {
         const className = type === "Gasto" ? "red-500" : "green-500";
         const operator = type === "Gasto" ? "-" : "+";
 
-        $("#table").innerHTML += `<div class="flex flex-row justify-between">
-        
-        <div class="mx-2 text-[80%] md:text-base">
-          <div class="font-bold text-center">${description}</div>
-        </div>
-
-        <div class="ml-6 text-[50%] leading-5 md:text-[70%]">
-          <div class="font-bold text-center">${selectedCategory}</div>
-        </div>
-
-        <div class="pl-4 text-[50%] leading-5 md:text-[70%]">
-          <div class="text-center">${date}</div>
-        </div>
-
-        <div class="pl-4 text-[70%] leading-5 md:text-[70%] text-${className}">
-          <div class="text-center">${operator}${amount}</div>
-        </div>
-        
-        <div class="pl-4 text-[50%] leading-5 md:text-[70%]">
-        <button class="mr-4 btnEditOperation" data-id="${id}" onclick="operationEdit(${id})"><i class="fa-sharp fa-solid fa-pen"></i></button><button class="mr-4 btnDeleteOperation" data-id="${id}" onclick="deleteOperation('${id}')"><i class="fa-sharp fa-solid fa-trash"></i></button>
-        </div>`
-
+        $("#table").innerHTML += `
+            <tr>
+                <td class="pl-0 pr-10 mt-4 pt-0 text-lg font-bold capitalize">${description}</td>
+                <td class="mt-0 pt-0 pl-10 text-xs ">${selectedCategory}</td>
+                <td class="mt-0 pt-0 pl-10 text-sm">${date}</td>
+                <td class="mt-0 pt-0 pl-12 text-lg text-${className} font-bold">${operator}${amount}</td>
+                <td class="pl-8 mt-0 pt-0 text-xs"><button class="mr-4 btnEditOperation" data-id="${id}" onclick="operationEdit(${id})">Editar</button><button class="mr-4 btnDeleteOperation" data-id="${id}" onclick="deleteOperation('${id}')">Eliminar</button></td>
+            </tr>
+        `;
     });
 
 };
@@ -127,7 +114,7 @@ $("#addOperation").addEventListener("click", () => {
   show($("#container"))
   show($("#whiteBox"))
 
-  // generateTableOperations();
+ 
   filter()
   printTotalProfit()  
   printTotalExpenses()
@@ -508,8 +495,9 @@ $("#cancelCategoryInEdition").addEventListener("click", ()=>{
 /*********************************************************/
 
 $("#navBalance").addEventListener("click", () => {
-  if (localStorage.getItem("operations").length === 0){
+  if (getDataInLocalStorage('operations').length === 0){
     showAside();
+    show($("#container"))
     show($("#whiteBox"))
     show($("#frontPage"))
     clean($("#categoriesForm"));
@@ -519,6 +507,7 @@ $("#navBalance").addEventListener("click", () => {
     
 
   }else{
+    show($("#container"))
     showAside();
     show($("#whiteBox"))
     show($("#doneOperations"));
@@ -647,11 +636,14 @@ const printTotal = ()=> {
 
 $("#icon").addEventListener("click",()=>{
 
-  if (localStorage.getItem('operations').length === 0){
+  if (getDataInLocalStorage('operations').length === 0){
     show($("#whiteBox"))
     showAside()
     show($("#frontPage"))
+    show($("#container"))
     clean($("#doneOperations"))
+    clean($("#reportsSection"))
+    clean($("#categoriesForm"))
     
   }else{
     clean($("#categoriesForm"))
@@ -662,7 +654,7 @@ $("#icon").addEventListener("click",()=>{
     show($("#doneOperations"))
     showAside()
     show($("#whiteBox"))
-
+    show($("#container"))
 
     filter()
 
@@ -1209,8 +1201,10 @@ const generateCategoryTotalsTable = ()=>{
 for(objCatTotals of createObjTotalByCategory()){
   const{name,profits,spents,balance}=objCatTotals
 
-  $("#rowTotalsByCat").innerHTML += `
-<div class="flex flex-row justify-center">
+
+
+$("#rowTotalsByCat").innerHTML += `
+  <div class="flex flex-row justify-center">
   <div class="my-5 mx-12 text-lg">
       <div class="font-bold flex justify-start">${name}</div>
   </div>
@@ -1221,10 +1215,12 @@ for(objCatTotals of createObjTotalByCategory()){
       <div class="font-bold flex justify-end text-red-400"> -$ ${spents}</div>
   </div>
   <div class="my-5 mx-12 text-lg font-lg ">
-      <div class="font-bold flex justify-end"> $ ${balance}</div>
+<div class="font-bold flex justify-end"> $ ${balance}</div>
   </div>
 </div>
   `;
+
+
 }
 
 }
@@ -1261,13 +1257,13 @@ for(objMonthTotals of generateObjectTotalByMonths()){
 $("#navReports").addEventListener("click", ()=>{
     
     show($("#reportsSection"))
-    show($("#reportsSection"))
 
     clean($("#container"))
     clean($("#aside"))
     clean($("#doneOperations"))
     clean($("#categoriesForm"))
     clean($("#frontPage"))
+    clean($("#whiteBox"))
   
     printReports()
     generateCategoryTotalsTable()
