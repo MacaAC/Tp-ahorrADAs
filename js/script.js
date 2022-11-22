@@ -89,10 +89,7 @@ const generateTableOperations = (operations) => {
         const className = type === "Gasto" ? "red-500" : "green-500";
         const operator = type === "Gasto" ? "-" : "+";
 
-    //var formatedDate = correctDate(date)//
-
-    $("#table").innerHTML += `
-
+        $("#table").innerHTML += `
             <tr>
                 <td class="pl-0 pr-10 mt-4 pt-0 text-lg font-bold capitalize">${description}</td>
                 <td class="mt-0 pt-0 pl-10 text-xs ">${selectedCategory}</td>
@@ -100,9 +97,8 @@ const generateTableOperations = (operations) => {
                 <td class="mt-0 pt-0 pl-12 text-lg text-${className} font-bold">${operator}${amount}</td>
                 <td class="pl-8 mt-0 pt-0 text-xs"><button class="mr-4 btnEditOperation" data-id="${id}" onclick="operationEdit(${id})">Editar</button><button class="mr-4 btnDeleteOperation" data-id="${id}" onclick="deleteOperation('${id}')">Eliminar</button></td>
             </tr>
-
         `;
-  });
+    });
 
 };
 
@@ -118,7 +114,7 @@ $("#addOperation").addEventListener("click", () => {
   show($("#container"))
   show($("#whiteBox"))
 
-  // generateTableOperations();
+ 
   filter()
   printTotalProfit()  
   printTotalExpenses()
@@ -298,14 +294,18 @@ $("#btnNewOperations").addEventListener("click", () => {
 //ver tabla de categorias
 
 $("#navCategory").addEventListener("click", () => {
-  clean($("#editOperationsForm"))
+ 
   show($("#categoriesForm"));
+   
+  clean($("#editOperationsForm"))
   clean( $("#frontPage"));
   clean($("#doneOperations"));
   clean($("#aside"));
+  
   generateCategoriesItems();
   clean( $("#editCategoryWindow"));
   clean($("#whiteBox"))
+  clean($("#reportsSection"))
 });
 
 
@@ -495,21 +495,30 @@ $("#cancelCategoryInEdition").addEventListener("click", ()=>{
 /*********************************************************/
 
 $("#navBalance").addEventListener("click", () => {
-  if (!localStorage.getItem("operations")){
+  if (getDataInLocalStorage('operations').length === 0){
     showAside();
+    show($("#container"))
     show($("#whiteBox"))
     show($("#frontPage"))
+    clean($("#categoriesForm"));
+    clean($("#formNewOperation"));
+    clean($("#reportsSection"))
+    clean($("#doneOperations"))
+    
+
   }else{
+    show($("#container"))
     showAside();
     show($("#whiteBox"))
     show($("#doneOperations"));
     clean($("#categoriesForm"));
     clean($("#formNewOperation"));
-
+    clean($("#reportsSection"))
+    
     filter()
   }
    
-  //falta agregar mas dom? reportes
+
   
 });
 
@@ -627,20 +636,28 @@ const printTotal = ()=> {
 
 $("#icon").addEventListener("click",()=>{
 
-  if (!localStorage.getItem('operations')){
+  if (getDataInLocalStorage('operations').length === 0){
     show($("#whiteBox"))
     showAside()
+    show($("#frontPage"))
+    show($("#container"))
+    clean($("#doneOperations"))
+    clean($("#reportsSection"))
+    clean($("#categoriesForm"))
+    
   }else{
     clean($("#categoriesForm"))
     clean($("#editOperationsForm"))
     clean($("#formNewOperation"))
+    clean($("#reportsSection"))
     clean( $("#frontPage"))
     show($("#doneOperations"))
     showAside()
-
-    generateTableOperations()
-
     show($("#whiteBox"))
+    show($("#container"))
+
+    filter()
+
   }
 
 });
@@ -1184,8 +1201,10 @@ const generateCategoryTotalsTable = ()=>{
 for(objCatTotals of createObjTotalByCategory()){
   const{name,profits,spents,balance}=objCatTotals
 
-  $("#rowTotalsByCat").innerHTML += `
-<div class="flex flex-row justify-center">
+
+
+$("#rowTotalsByCat").innerHTML += `
+  <div class="flex flex-row justify-center">
   <div class="my-5 mx-12 text-lg">
       <div class="font-bold flex justify-start">${name}</div>
   </div>
@@ -1196,10 +1215,12 @@ for(objCatTotals of createObjTotalByCategory()){
       <div class="font-bold flex justify-end text-red-400"> -$ ${spents}</div>
   </div>
   <div class="my-5 mx-12 text-lg font-lg ">
-      <div class="font-bold flex justify-end"> $ ${balance}</div>
+<div class="font-bold flex justify-end"> $ ${balance}</div>
   </div>
 </div>
   `;
+
+
 }
 
 }
@@ -1234,15 +1255,24 @@ for(objMonthTotals of generateObjectTotalByMonths()){
 
 
 $("#navReports").addEventListener("click", ()=>{
-  show($("#reportsSection"))
-  clean($("#container"))
-  clean($("#aside"))
-  printReports()
-  generateCategoryTotalsTable()
-  generateMonthTotalsTable()
+    
+    show($("#reportsSection"))
+
+    clean($("#container"))
+    clean($("#aside"))
+    clean($("#doneOperations"))
+    clean($("#categoriesForm"))
+    clean($("#frontPage"))
+    clean($("#whiteBox"))
   
-  })
+    printReports()
+    generateCategoryTotalsTable()
+    generateMonthTotalsTable()
+    
+})
+  
 
 //-------funcion navbar responsive
 
 $("#btnMenu").addEventListener('click', () => $("#menu").classList.toggle('hidden'))
+

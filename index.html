@@ -11,6 +11,7 @@
 
 
 <body class="bg-slate-200">
+  
     <header>
         <nav class="flex items-center justify-between flex-wrap bg-green-400 p-6">
             <div id="icon" class="flex items-center flex-shrink-0 text-white mr-6">
@@ -30,20 +31,20 @@
                 <a href="#responsive-header" id="navCategory" class="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-green-200 mr-4">
                   Categorías
                 </a>
-                <a id="navReports" href="#responsive-header" class="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-green-200">
+                <a href="#responsive-header" id="navReports" class="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-green-200">
                   Reportes
                 </a>
               </div>
              </div>
-          </nav>
+        </nav>
     </header> 
 
 
     
-        <section id="container" class="flex flex-col justify-center items-center my-10  ">
+        <section id="container" class="flex flex-row justify-center my-10 ">
     
-            <aside id="aside" class="w-4/5 mr-5 flex flex-col md:w-1/5">
-
+            <aside id="aside" class="w-1/5 mr-5 ">
+                
                     <div class="h-50 mb-8 border-2 rounded-lg bg-white">
                         <h1 class="m-2 text-xl font-extrabold">
                             Balances
@@ -138,20 +139,20 @@
                                   <th class="p-12 text-lg">Monto</th>
                                   <th class="p-10 text-lg">Acciones</th>
                                 </tr>
-
+                
                               </thead>
-
+                
                             <tbody id="table">
-
+                
                             </tbody>
-                        </table>
-
-                        </div>
-
-                    </div>
-           </section>
-        </section>
-
+                          </table>
+                
+                        </div>  
+                
+                    </div>        
+           </section>    
+        </section>  
+    
 
 <!-- Agregar, editar y/o eliminar categorias -->
 
@@ -159,7 +160,7 @@
         <div class="box w-[771px] bg-white p-6 rounded-md">
             <div>
                 <h2 class="text-4xl font-bold">Categorías</h2>
-            </div>
+            </div> 
 
             <div class="mt-8 mb-2" >
                 <label for="" class=" text-lg font-bold">Nombre</label>
@@ -169,7 +170,7 @@
                <div>
                   <input type="text" id="nameCategory" class="block w-[605px] h-10 border border-slate-400 rounded-md">
                </div>
-
+               
                <div class="">
                   <button id="addCategory" class=" w-[110px] h-10 text-white border-none ml-2  bg-green-400 hover:bg-green-600  rounded-md">Agregar</button>
                </div>
@@ -179,7 +180,7 @@
             <div id="categoriesItems" class="flex flex-col mt-6">
 
             </div>
-
+                
         </div>
     </section>
 
@@ -190,7 +191,7 @@
            <div>
                <h2 class="text-4xl font-bold">Editar categoría</h2>
            </div>
-
+        
            <div class="mt-8 mb-2">
               <label for="" class=" text-lg font-bold">Nombre</label>
            </div>
@@ -216,18 +217,18 @@
 
         </div>
      </div>
-
+        
     </section>
 
     <!-- Reportes insuficientes (inicio)  -->
-
+    
     <section class="container flex justify-center mb-4 hidden">
 
             <div class="box w-[771px] h-[584px] bg-white p-6 rounded-md ">
                 <div>
                     <h2 class="text-4xl font-bold">Reportes</h2>
-                </div>
-
+                </div> 
+    
                 <div class="w-[720px] flex flex-col mt-8">
                     <figure class=" flex justify-center">
                         <img src="img/reportes.png" alt="Reportes" class="w-[60%]">
@@ -235,7 +236,7 @@
                     <h4 class=" text-xl font-bold text-center mt-6">Operaciones insuficientes</h4>
                     <p class=" text-[18px] text-center mt-4">Prueba agregando más operaciones</p>
                 </div>
-
+                      
             </div>
 
     </section>
@@ -243,13 +244,13 @@
 <!-- Formulario de nueva operación -->
 
     <section id="formNewOperation" class="container flex justify-center my-12 hidden">
-
+        
         <div class="box w-[771px] h-[760px] bg-white p-6 rounded-md ">
 
             <div>
                <h2 class="text-4xl font-bold">Nueva operación</h2>
-            </div>
-
+            </div> 
+   
             <div>
                 <div class="mt-8 mb-2" >
                     <label for="description" class=" text-lg font-bold">Descripción</label>
@@ -259,7 +260,7 @@
                     <div>
                        <input type="text" id="description" class="p-2 block w-[100%] h-10 border border-slate-400 rounded-md capitalize" maxlength="10" required>
                     </div>
-
+    
                 </div>
 
             </div>
@@ -269,12 +270,12 @@
                     <label for="amount" class=" text-lg font-bold">Monto</label>
                 </div>
 
-
+                
                 <div>
                     <input type="number" id="amount" class="block w-[100%] h-10 p-2 border border-slate-400 rounded-md" required>
                 </div>
-
-
+    
+                
             </div>
 
             <div>
@@ -282,15 +283,16 @@
                     <label for="type" class=" text-lg font-bold">Tipo</label>
                 </div>
 
-
+                
                 <div>
                     <select name="select" id="type" class="block w-[100%] h-10 border border-slate-400 rounded-md" required>
                         <option value="Gasto" selected>Gasto</option>
                         <option value="Ganancia">Ganancia</option>
+                            
                     </select>
                 </div>
-
-
+    
+                
             </div>
 
             <div>
@@ -300,8 +302,12 @@
 
                 <div>
                     <select name="select" id="selectCategory" class="block w-[100%] h-10 border border-slate-400 rounded-md" required>
+                      
+                        
                     </select>
+
                 </div>
+
             </div>
 
             <div>
@@ -315,17 +321,20 @@
 
             </div>
 
-
+            
             <div class="flex flex-row justify-end mt-12">
                 <div >
                     <button id="cancelNewOp" class="w-[91px] h-10 rounded-md">Cancelar</button>
                 </div>
-
+    
                 <div class="">
                     <button id="addOperation" class=" w-[91px] h-10 text-white border-none ml-2  bg-green-400 hover:bg-green-600 rounded-md ml-2">Agregar</button>
                 </div>
+                    
             </div>
-        </div>
+            
+    
+        </div> 
 
     </section>
 
@@ -338,8 +347,8 @@
 
             <div>
                <h2 class="text-4xl font-bold">Editar operación</h2>
-            </div>
-
+            </div> 
+   
             <div>
                 <div class="mt-8 mb-2" >
                     <label for="editDescription" class=" text-lg font-bold">Descripción</label>
@@ -349,7 +358,7 @@
                     <div>
                        <input type="text" id="editDescription" class="block w-[100%] h-10 border border-slate-400 rounded-md" maxlength="10" required>
                     </div>
-
+    
                 </div>
 
             </div>
@@ -358,12 +367,12 @@
                     <label for="editAmount" class=" text-lg font-bold">Monto</label>
                 </div>
 
-
+                
                 <div>
                     <input type="number" id="editAmount" class="block w-[100%] h-10 border border-slate-400 rounded-md" required>
                 </div>
-
-
+    
+                
             </div>
 
             <div>
@@ -371,14 +380,16 @@
                     <label for="type" class=" text-lg font-bold">Tipo</label>
                 </div>
 
-
+                
                 <div>
                     <select name="select" id="editType" class="block w-[100%] h-10 border border-slate-400 rounded-md" required>
                         <option value="Gasto" selected>Gasto</option>
                         <option value="Ganancia">Ganancia</option>
+                            
                     </select>
                 </div>
-
+    
+                
             </div>
 
             <div>
@@ -388,8 +399,17 @@
 
                 <div>
                     <select name="select" id="editSelectedCategory" class="block w-[100%] h-10 border border-slate-400 rounded-md" required>
+                        <!-- <option value="Comida" selected>Comida</option>
+                        <option value="Servicios">Servicios</option>
+                        <option value="Salidas">Salidas</option>
+                        <option value="Educación">Educación</option>
+                        <option value="Transporte">Transporte</option>
+                        <option value="Trabajo">Trabajo</option> -->
+                        
                     </select>
+
                 </div>
+
             </div>
 
             <div>
@@ -400,26 +420,31 @@
                 <div>
                     <input type="date" name="fecha" id="editDate" class="block w-[100%] h-10 border border-slate-400 rounded-md" required>
                 </div>
+
             </div>
 
-
+            
             <div class="flex flex-row justify-end mt-12">
                 <div id="cancelEditOperation">
                     <button  class=" w-[91px] h-10 rounded-md">Cancelar</button>
                 </div>
-
+    
                 <div id="editContainer">
-
+                 
                 </div>
-
+                    
             </div>
+            
+       
 
-        </div>
+        </div> 
 
     </section>
+    
+   <!-- Sección reportes -->
 
-    <section id="reportsSection" class="container flex justify-center mb-4 hidden ">
-        <div class="box w-[900px] bg-white p-6 rounded-md">
+    <section id="reportsSection" class="container flex justify-center mb-4 hidden">
+        <div class="box w-[900px]  bg-white p-6 rounded-md">
             <h1  class="text-5xl font-bold my-12">Reportes</h1>
             <div class="box w-11/12  my-12">
                 <h2  class="text-4xl font-bold my-10">Resumen</h2>
@@ -477,7 +502,7 @@
                     <h2 class="text-4xl font-bold">Totales por mes </h2>
                     <div class="flex flex-row justify-center">
                         <div class="m-8 text-xl">
-                            <h3 class="font-bold ">Mes</h3>
+                            <h3 class="font-bold bg-green-400 ">Mes</h3>
                         </div>
                         <div class="m-8 text-xl ">
                             <h3 class="font-bold" >Ganancias</h3>
@@ -498,6 +523,8 @@
     </section>
 
 
+
+    
     <footer><p></p></footer>
     <script src="js/script.js"></script>
 </body>
