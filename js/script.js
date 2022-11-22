@@ -1183,7 +1183,7 @@ const printReports =()=>{
   $("#summary2").innerHTML= `<span> ${highestSpendingCategory ? highestSpendingCategory.categoryName : "-"} </span>`
   $("#total2").innerHTML= `<span> - $ ${highestSpendingCategory ? highestSpendingCategory.categoryTotal : "-"} </span>`
 
-  $("#summary3").innerHTML= `<span> $ ${ highestBalanceCategoryLet? highestBalanceCategoryLet.categoryName : "-"} </span>`
+  $("#summary3").innerHTML= `<span>  ${ highestBalanceCategoryLet? highestBalanceCategoryLet.categoryName : "-"} </span>`
   $("#total3").innerHTML= `<span>  $ ${ highestBalanceCategoryLet ?highestBalanceCategoryLet.balanceResult : "-"} </span>`
 
   $("#summary4").innerHTML= `<span> ${highestProfitMonth() ?  highestProfitMonth().monthYear : "-"} </span>`
@@ -1255,7 +1255,7 @@ for(objMonthTotals of generateObjectTotalByMonths()){
 
 
 $("#navReports").addEventListener("click", ()=>{
-    
+
     show($("#reportsSection"))
 
     clean($("#container"))
@@ -1264,11 +1264,10 @@ $("#navReports").addEventListener("click", ()=>{
     clean($("#categoriesForm"))
     clean($("#frontPage"))
     clean($("#whiteBox"))
-  
+
     printReports()
     generateCategoryTotalsTable()
     generateMonthTotalsTable()
-    
 })
   
 
